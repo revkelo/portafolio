@@ -390,12 +390,13 @@ body {
 
 
 
-/* Carrusel infinito de tecnologias */
-@keyframes marquee-forward {
+/* Carrusel infinito de tecnologias — -50% sobre lista 2x */
+@keyframes marquee-fwd {
   0%   { transform: translateX(0); }
-  100% { transform: translateX(calc(-100% / 3)); }
+  100% { transform: translateX(-50%); }
 }
-@keyframes marquee-reverse {
-  0%   { transform: translateX(calc(-100% / 3)); }
+@keyframes marquee-rev {
+  0%   { transform: translateX(-50%); }
   100% { transform: translateX(0); }
 }
+

@@ -1,99 +1,107 @@
-# Portafolio — Kevin Gonzalez
+# Portfolio — Kevin Gonzalez
 
-Portafolio web profesional de **Kevin Gonzalez** — Cloud & DevOps Engineer · Full-Stack Developer · Data Governance.
+**Live:** `revkelo.vercel.app` (pending deploy) · [GitHub](https://github.com/revkelo) · [LinkedIn](https://linkedin.com/in/kagonzalezdev)
 
-Concepto visual: **Dark Tech + Orange Fire** — minimalista oscuro con el naranja como energia.
+Portafolio web profesional con escena 3D inmersiva, animaciones de scroll, carrusel de tecnologías, modo oscuro/claro y soporte bilingüe ES/EN.
 
-## Paleta
+**Concepto visual:** Dark Tech + Orange Fire — oscuro, minimalista, con naranja como energía.
 
-| Color     | Uso                          |
-| --------- | ---------------------------- |
-| `#0D0D0D` | Fondo principal              |
-| `#F06400` | Naranja primario (acento)    |
-| `#C44A00` | Naranja oscuro (hover)       |
-| `#FFFFFF` | Texto principal              |
-| `#C0C0C0` | Texto secundario             |
+---
 
 ## Stack
 
-- **Next.js 16** (App Router) + **TypeScript**
-- **Tailwind CSS v4** (paleta personalizada vía `@theme` en `app/globals.css`)
-- **Framer Motion** — animaciones de entrada (fade + slide)
-- **Lenis** — smooth scroll
-- **GSAP** + `@gsap/react` — instalado para scroll animations futuras
-- **React Three Fiber** + `@react-three/drei` + `three` — instalado para un hero 3D futuro
+| Capa | Tecnología |
+|------|-----------|
+| Framework | Next.js 16 (App Router) + TypeScript |
+| Estilos | Tailwind CSS v4 con `@theme` dinámico |
+| Animaciones | Framer Motion + GSAP |
+| 3D | React Three Fiber + @react-three/drei + Three.js |
+| Scroll | Lenis (smooth scroll) |
+| i18n | Context bilingüe ES/EN con `localStorage` |
+| Tema | Dark/Light mode via CSS variables + `data-theme` |
+| Deploy | Vercel |
+
+## Características
+
+- **Escena 3D** — Wave Field: superficie ondulante de partículas que reacciona al cursor con efecto ripple
+- **Scroll animations** — barra de progreso naranja, letras cayendo, texto que se ilumina, timeline que crece
+- **Carrusel infinito** — 2 filas de tecnologías deslizando en sentidos opuestos, pausa al hover
+- **Bilingüe** — toggle ES/EN con persistencia
+- **Dark/Light mode** — toggle sol/luna, persiste en localStorage
+- **Cursor custom** — anillo naranja con trail (solo desktop)
+- **Responsive** — mobile, tablet, desktop
+- **ngrok support** — `allowedDevOrigins` configurado en `next.config.ts`
 
 ## Correr localmente
 
 ```bash
 npm install
 npm run dev      # http://localhost:3000
-npm run build    # build de produccion (Turbopack por defecto en Next 16)
-npm run start    # servir el build
+npm run build    # build de producción
 ```
 
-Requisitos: Node.js 20.9+.
+Requisitos: Node.js 20.9+
 
 ## Estructura
 
 ```
 app/
-├── layout.tsx          metadata, fuentes (Space Grotesk + Inter), SmoothScroll + CustomCursor
-├── page.tsx            ensambla todas las secciones en orden
-└── globals.css         tema Tailwind v4, scrollbar naranja, cursor custom
+├── layout.tsx          metadata, fuentes, providers
+├── page.tsx            secciones en orden + SectionDividers
+└── globals.css         tokens CSS, keyframes, dark/light vars
 
 components/
 ├── sections/
-│   ├── Hero.tsx        nombre, roles alternados, CTA, separador diagonal
-│   ├── About.tsx       bio + highlights del stack
-│   ├── Stack.tsx       grid de iconos (skillicons.dev)
-│   ├── Projects.tsx    grid de cards de proyectos
-│   └── Contact.tsx     email, GitHub, LinkedIn, footer
-└── ui/
-    ├── Navbar.tsx      navegacion sticky con blur
-    ├── CustomCursor.tsx  cursor naranja (solo desktop)
-    ├── SmoothScroll.tsx  wrapper de Lenis
-    ├── SectionTitle.tsx  titulo de seccion con linea naranja
-    └── ProjectCard.tsx   card individual con hover naranja
+│   ├── Hero.tsx        nombre animado, roles rotativos, métricas, CTA
+│   ├── About.tsx       foto sticky, bio scrub, code block, highlights
+│   ├── Experience.tsx  timeline con badges de empresa y bullets ▹
+│   ├── Stack.tsx       bento grid de categorías con tilt 3D
+│   ├── Projects.tsx    cards con tags de colores, scroll horizontal featured
+│   └── Contact.tsx     CTA full-width, email copiable, footer
+├── ui/
+│   ├── Navbar.tsx      sticky + blur, active indicator, drawer mobile
+│   ├── TechCarousel.tsx carrusel infinito de tecnologías
+│   ├── CustomCursor.tsx anillo naranja con trail (desktop)
+│   ├── ScrollProgress.tsx barra de progreso naranja
+│   ├── SectionTitle.tsx  número + línea naranja + título
+│   └── ProjectCard.tsx   card con branded tags y decoración diagonal
+└── 3d/
+    ├── GlobalScene.tsx    Wave Field — ola de partículas, ripple del cursor
+    └── GlobalSceneWrapper.tsx mobile detection, dynamic import ssr:false
 
 lib/
-├── data/
-│   └── projects.ts     array de proyectos (fuente de datos unica)
-└── utils/
-    └── smooth-scroll.ts  configuracion de Lenis
-
-public/
-└── cv-kevin-gonzalez.pdf  (agregar el CV aqui para el boton "Descargar CV")
+├── data/projects.ts    fuente única de proyectos del portafolio
+├── i18n/
+│   ├── LangContext.tsx  Context + Provider + hook useLang()
+│   └── translations.ts todas las cadenas ES + EN
+└── theme/
+    └── ThemeContext.tsx Context dark/light + hook useTheme()
 ```
 
-## Como agregar un proyecto (guia para IA futuras)
+## Agregar un proyecto
 
-Toda la data de proyectos vive en `lib/data/projects.ts`. Para agregar uno nuevo,
-añade un objeto al array `projects` con esta estructura:
+Editar `lib/data/projects.ts`:
 
 ```ts
 {
-  id: "mi-proyecto",            // unico, kebab-case
+  id: "mi-proyecto",
   title: "Mi Proyecto",
-  description: "Descripcion corta de una o dos frases.",
-  tags: ["TypeScript", "AWS"], // tecnologias (se muestran como pills)
-  github: "https://github.com/revkelo/mi-proyecto", // o null si es privado
-  demo: null,                   // url del demo o null
-  status: "Completado",         // o "En desarrollo"
+  description: "Descripción en español.",
+  description_en: "English description.",
+  tags: ["TypeScript", "AWS"],
+  github: "https://github.com/revkelo/mi-proyecto", // null si privado
+  demo: null,
+  status: "completed", // o "in-progress"
   featured: true,
 }
 ```
 
-No hay que tocar ningun componente: `Projects.tsx` renderiza automaticamente todo el array.
+## Agregar una sección
 
-## Como agregar una seccion nueva
+1. Crear `components/sections/MiSeccion.tsx` con `"use client"`
+2. Importar en `app/page.tsx` y colocar en orden con `<SectionDivider />`
+3. Añadir las cadenas en `lib/i18n/translations.ts` (ES + EN)
 
-1. Crear el componente en `components/sections/MiSeccion.tsx` (usar `"use client"` si usa hooks/animaciones).
-2. Importarlo en `app/page.tsx` y colocarlo en el orden deseado dentro de `<main>`.
-3. Si necesita un titulo, reutilizar `components/ui/SectionTitle.tsx`.
+---
 
-## Enlaces
-
-- GitHub: [github.com/revkelo](https://github.com/revkelo)
-- LinkedIn: [linkedin.com/in/kagonzalezdev](https://linkedin.com/in/kagonzalezdev)
-- Email: kgagudelo@gmail.com
+Desarrollado por **Kevin Gonzalez** · Bogotá, Colombia

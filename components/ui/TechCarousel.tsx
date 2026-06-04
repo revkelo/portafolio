@@ -1,10 +1,14 @@
 "use client";
 
 // PORTAFOLIO DE KEVIN GONZALEZ — revkelo
-// TechCarousel: carrusel infinito de tecnologias con dos filas en sentidos opuestos.
-// Sin dependencias externas — CSS animation pura para el loop infinito.
+// TechCarousel: carrusel infinito de tecnologias — 2 filas en sentidos opuestos.
+// - Loop via translateX(-50%) sobre lista duplicada 2x
+// - Pausa al hover sobre cualquier item
+// - Glow naranja en hover + scale
+// - Fade en los bordes
 
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 const ROW_1 = [
   { name: "Python",      icon: "https://skillicons.dev/icons?i=python" },
@@ -17,6 +21,8 @@ const ROW_1 = [
   { name: "Flutter",     icon: "https://skillicons.dev/icons?i=flutter" },
   { name: "Docker",      icon: "https://skillicons.dev/icons?i=docker" },
   { name: "AWS",         icon: "https://skillicons.dev/icons?i=aws" },
+  { name: "Databricks",  icon: "https://skillicons.dev/icons?i=spark" },
+  { name: "GraphQL",     icon: "https://skillicons.dev/icons?i=graphql" },
 ];
 
 const ROW_2 = [
@@ -30,50 +36,64 @@ const ROW_2 = [
   { name: "Linux",       icon: "https://skillicons.dev/icons?i=linux" },
   { name: "JavaScript",  icon: "https://skillicons.dev/icons?i=js" },
   { name: "Dart",        icon: "https://skillicons.dev/icons?i=dart" },
+  { name: "Redis",       icon: "https://skillicons.dev/icons?i=redis" },
+  { name: "GitHub",      icon: "https://skillicons.dev/icons?i=github" },
 ];
 
 function TechItem({ name, icon }: { name: string; icon: string }) {
   return (
-    <div
-      className="group flex shrink-0 items-center gap-2.5 rounded-full border border-white/5 bg-surface/60 px-4 py-2.5 backdrop-blur-sm transition-colors hover:border-orange-primary/40 hover:bg-surface"
+    <motion.div
+      whileHover={{ scale: 1.08, y: -2 }}
+      transition={{ type: "spring", stiffness: 400, damping: 20 }}
+      className="group relative flex shrink-0 cursor-default items-center gap-2.5 rounded-full border border-white/5 bg-surface/60 px-4 py-2.5 backdrop-blur-sm"
       data-cursor-hover
     >
+      {/* Glow naranja al hover */}
+      <span className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{ boxShadow: "0 0 18px rgba(240,100,0,0.3)", border: "1px solid rgba(240,100,0,0.4)" }}
+      />
       <img
         src={icon}
         alt={name}
         width={22}
         height={22}
-        className="opacity-75 transition-opacity group-hover:opacity-100"
+        className="relative z-10 opacity-70 transition-all duration-300 group-hover:opacity-100 group-hover:drop-shadow-[0_0_6px_rgba(240,100,0,0.7)]"
         loading="lazy"
       />
-      <span className="font-display text-sm font-medium text-text-secondary group-hover:text-text-primary transition-colors whitespace-nowrap">
+      <span className="relative z-10 whitespace-nowrap font-display text-sm font-medium text-text-secondary transition-colors duration-300 group-hover:text-text-primary">
         {name}
       </span>
-    </div>
+    </motion.div>
   );
 }
 
 function MarqueeRow({
   items,
   reverse = false,
-  speed = 35,
+  duration = 35,
 }: {
   items: typeof ROW_1;
   reverse?: boolean;
-  speed?: number;
+  duration?: number;
 }) {
-  // Duplicar 3 veces para loop sin cortes
-  const doubled = [...items, ...items, ...items];
+  const [paused, setPaused] = useState(false);
+  // 2 copias exactas → mover -50% = una copia, loop perfecto
+  const list = [...items, ...items];
 
   return (
-    <div className="overflow-hidden">
+    <div
+      className="overflow-hidden"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
       <div
-        className="flex gap-3"
+        className="flex w-max gap-3"
         style={{
-          animation: `marquee-${reverse ? "reverse" : "forward"} ${speed}s linear infinite`,
+          animation: `marquee-${reverse ? "rev" : "fwd"} ${duration}s linear infinite`,
+          animationPlayState: paused ? "paused" : "running",
         }}
       >
-        {doubled.map((tech, i) => (
+        {list.map((tech, i) => (
           <TechItem key={`${tech.name}-${i}`} name={tech.name} icon={tech.icon} />
         ))}
       </div>
@@ -84,20 +104,20 @@ function MarqueeRow({
 export default function TechCarousel() {
   return (
     <motion.section
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.6 }}
-      className="relative overflow-hidden py-10"
-      aria-label="Tecnologías"
+      transition={{ duration: 0.7, ease: "easeOut" }}
+      className="relative overflow-hidden py-8"
+      aria-label="Stack tecnológico"
     >
-      {/* Gradiente en los bordes para efecto fade */}
-      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-background to-transparent" />
-      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-background to-transparent" />
+      {/* Fade en bordes */}
+      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-32 bg-gradient-to-r from-background to-transparent" />
+      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-32 bg-gradient-to-l from-background to-transparent" />
 
       <div className="flex flex-col gap-3">
-        <MarqueeRow items={ROW_1} speed={40} />
-        <MarqueeRow items={ROW_2} reverse speed={38} />
+        <MarqueeRow items={ROW_1} duration={45} />
+        <MarqueeRow items={ROW_2} reverse duration={40} />
       </div>
     </motion.section>
   );
