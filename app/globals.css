@@ -35,16 +35,17 @@
 
 /* Tailwind v4: definimos la paleta personalizada como tokens del tema.
    Esto habilita utilidades como bg-background, text-orange-primary, etc. */
-@theme inline {
-  --color-background: #0d0d0d;
-  --color-surface: #1a1a1a;
-  --color-surface-alt: #111111;
+@theme {
+  /* Colores dinamicos: apuntan a variables CSS para que dark/light mode funcione */
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
 
+  /* Naranja: fijo en ambos modos */
   --color-orange-primary: #f06400;
   --color-orange-dark: #c44a00;
-
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #c0c0c0;
 
   --font-display: var(--font-space-grotesk);
   --font-sans: var(--font-inter);
@@ -386,4 +387,5 @@ body {
     transition: none;
   }
 }
+
 
