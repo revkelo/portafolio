@@ -13,11 +13,7 @@ export default function About() {
       id="about"
       className="section-glass relative overflow-hidden py-10 md:py-14 lg:py-20"
     >
-      {/* Watermark */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -top-8 -left-4 select-none font-display text-[200px] font-bold leading-none text-orange-primary opacity-5"
-      >
+      <span aria-hidden className="pointer-events-none absolute -top-8 -left-4 select-none font-display text-[200px] font-bold leading-none text-orange-primary opacity-5">
         {t.about.number}
       </span>
 
@@ -29,41 +25,39 @@ export default function About() {
           subtitle={t.about.subtitle}
         />
 
-        {/* Fila 1: foto | bio + código */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-12">
+        {/* ── Fila 1: foto | bio + código ── */}
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-[280px_1fr] md:items-stretch md:gap-14">
 
-          {/* ── Foto — llena toda la altura de la fila ── */}
+          {/* Foto — igual que antes */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="relative min-h-[320px] overflow-hidden rounded-2xl"
+            className="mx-auto w-full max-w-[280px] md:max-w-none"
           >
-            <img
-              src="/photo.jpg"
-              alt="Kevin Gonzalez"
-              className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: "center 12%" }}
-            />
-            {/* Gradiente sutil inferior */}
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(to top, rgba(13,13,13,0.4) 0%, transparent 50%)" }}
-            />
-            {/* Marco naranja */}
-            <motion.div
-              aria-hidden
-              className="pointer-events-none absolute rounded-2xl"
-              style={{ inset: "-2px", border: "1.5px solid rgba(245,111,13,0.7)" }}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            />
+            <div className="relative aspect-[4/5] rounded-2xl">
+              <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                <img
+                  src="/photo.jpg"
+                  alt="Kevin Gonzalez"
+                  className="h-full w-full object-cover"
+                  style={{ objectPosition: "center 15%" }}
+                />
+              </div>
+              <motion.div
+                aria-hidden
+                className="pointer-events-none absolute rounded-[20px]"
+                style={{ inset: "-3px", border: "1.5px solid #f56f0d" }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 0.75 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
+              />
+            </div>
           </motion.div>
 
-          {/* ── Bio + código ── */}
+          {/* Bio + código — justify-between llena la altura de la foto */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -71,39 +65,25 @@ export default function About() {
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
             className="flex flex-col justify-between gap-6"
           >
-            {/* Bio */}
-            <p
-              className="text-base leading-relaxed md:text-lg"
-              style={{ color: "var(--text-primary)" }}
-            >
+            <p className="text-base leading-relaxed md:text-[1.05rem]" style={{ color: "var(--text-primary)" }}>
               {t.about.bio}
             </p>
 
-            {/* Código */}
             <div
               className="rounded-xl p-4 font-mono text-xs leading-relaxed"
               style={{ background: "rgba(0,0,0,0.45)", border: "1px solid rgba(245,111,13,0.15)" }}
             >
               <span style={{ color: "var(--text-secondary)" }}>const </span>
               <span style={{ color: "#f56f0d" }}>kevin</span>
-              <span style={{ color: "var(--text-primary)" }}> = &#123;</span>
-              <br />
+              <span style={{ color: "var(--text-primary)" }}> = &#123;</span><br />
               <span className="block pl-4" style={{ color: "var(--text-secondary)" }}>
                 available: <span style={{ color: "#4ade80" }}>true</span>,
               </span>
               <span className="block pl-4" style={{ color: "var(--text-secondary)" }}>
-                location:{" "}
-                <span style={{ color: "#f56f0d" }}>
-                  &#39;Bogotá{" "}
-                  <img
-                    src="https://flagcdn.com/16x12/co.png"
-                    alt="🇨🇴"
-                    width={16}
-                    height={12}
-                    style={{ display: "inline", verticalAlign: "middle", marginBottom: 2 }}
-                  />
-                  &#39;
-                </span>,
+                location: <span style={{ color: "#f56f0d" }}>&#39;Bogotá{" "}
+                  <img src="https://flagcdn.com/16x12/co.png" alt="🇨🇴" width={16} height={12}
+                    style={{ display: "inline", verticalAlign: "middle", marginBottom: 2 }} />
+                &#39;</span>,
               </span>
               <span className="block pl-4" style={{ color: "var(--text-secondary)" }}>
                 focus: <span style={{ color: "#f56f0d" }}>&#39;Cloud &amp; DevOps&#39;</span>,
@@ -116,7 +96,7 @@ export default function About() {
           </motion.div>
         </div>
 
-        {/* Fila 2: cards de highlights — fila completa */}
+        {/* ── Fila 2: highlight cards — fila completa ── */}
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
           {t.about.highlights.map((item, i) => (
             <motion.div
@@ -129,24 +109,12 @@ export default function About() {
               style={{ background: "var(--surface)" }}
               data-cursor-hover
             >
-              <span
-                aria-hidden
-                className="pointer-events-none absolute -top-1 right-2 select-none font-display text-4xl font-bold text-orange-primary"
-                style={{ opacity: 0.12 }}
-              >
+              <span aria-hidden className="pointer-events-none absolute -top-1 right-2 select-none font-display text-4xl font-bold text-orange-primary" style={{ opacity: 0.12 }}>
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span
-                aria-hidden
-                className="mb-3 block h-1 w-6 bg-orange-primary"
-                style={{ clipPath: "polygon(30% 0, 100% 0, 70% 100%, 0 100%)" }}
-              />
-              <h3 className="relative font-display text-base font-bold text-orange-primary">
-                {item.title}
-              </h3>
-              <p className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
-                {item.desc}
-              </p>
+              <span aria-hidden className="mb-3 block h-1 w-6 bg-orange-primary" style={{ clipPath: "polygon(30% 0, 100% 0, 70% 100%, 0 100%)" }} />
+              <h3 className="relative font-display text-base font-bold text-orange-primary">{item.title}</h3>
+              <p className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>{item.desc}</p>
             </motion.div>
           ))}
         </div>
