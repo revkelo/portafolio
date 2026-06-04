@@ -9,6 +9,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
+import GlobalSceneWrapper from "@/components/3d/GlobalSceneWrapper";
 import { LangProvider } from "@/lib/i18n/LangContext";
 
 const spaceGrotesk = Space_Grotesk({
@@ -65,11 +66,15 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-background text-text-primary">
+        {/* Canvas 3D fijo detras de todo el contenido (el viaje persistente) */}
+        <GlobalSceneWrapper />
         <LangProvider>
           <div aria-hidden className="grain-overlay" />
           <ScrollProgress />
           <CustomCursor />
-          <SmoothScroll>{children}</SmoothScroll>
+          <SmoothScroll>
+            <div className="relative z-10">{children}</div>
+          </SmoothScroll>
         </LangProvider>
       </body>
     </html>

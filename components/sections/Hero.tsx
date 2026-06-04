@@ -7,7 +7,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { useLang } from "@/lib/i18n/LangContext";
-import HeroSceneWrapper from "@/components/3d/HeroSceneWrapper";
+import HeroPlanetWrapper from "@/components/3d/HeroPlanetWrapper";
 
 // Hook simple para contar de 0 a `target` cuando el elemento entra en viewport.
 function useCountUp(target: number, active: boolean, duration = 1400) {
@@ -47,10 +47,10 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-screen items-center overflow-hidden bg-background"
+      className="relative flex min-h-screen items-center overflow-hidden"
     >
-      {/* Escena 3D de particulas (carga client-only via dynamic ssr:false) */}
-      <HeroSceneWrapper />
+      {/* Planeta 3D interactivo (carga client-only via dynamic ssr:false) */}
+      <HeroPlanetWrapper />
 
       {/* Grid de puntos animado */}
       <div aria-hidden className="dot-grid pointer-events-none absolute inset-0 z-0" />

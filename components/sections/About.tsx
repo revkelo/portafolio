@@ -6,13 +6,20 @@
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useLang } from "@/lib/i18n/LangContext";
+import AboutGeometryWrapper from "@/components/3d/AboutGeometryWrapper";
 
 export default function About() {
   const { t } = useLang();
 
   return (
-    <section id="about" className="bg-background py-16 md:py-24 lg:py-32">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <section
+      id="about"
+      className="relative overflow-hidden bg-background/70 py-16 md:py-24 lg:py-32"
+    >
+      {/* Geometrias 3D flotantes que reaccionan al mouse (detras del contenido) */}
+      <AboutGeometryWrapper />
+
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionTitle
           number={t.about.number}
           label={t.about.label}
