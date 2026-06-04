@@ -9,13 +9,13 @@
 :root {
   --orange: #f56f0d;
   --orange-dark: #ae5400;
-  --background: #25211c;
-  --surface: #312c26;
-  --surface-alt: #1e1b16;
+  --background: #0d0d0d;
+  --surface: #161616;
+  --surface-alt: #0a0a0a;
   --text-primary: #ffffff;
   --text-secondary: #c0b8b0;
-  --border: rgba(255,255,255,0.07);
-  --glass-bg: rgba(37,33,28,0.55);
+  --border: rgba(255,255,255,0.10);
+  --glass-bg: rgba(13,13,13,0.80);
 }
 
 /* Modo claro — extraido del banner de LinkedIn */
@@ -58,7 +58,6 @@
 }
 
 html {
-  scroll-behavior: smooth;
   transition: background-color 0.3s ease;
 }
 
@@ -145,6 +144,18 @@ h1, h2, h3, h4, h5, h6, p, span, a, li, label, button {
   100% {
     background-position: 28px 28px;
   }
+}
+
+/* Grid de puntos en esquinas — decoración estilo banner de LinkedIn */
+.corner-dots {
+  width: 88px;
+  height: 88px;
+  background-image: radial-gradient(
+    circle,
+    rgba(245, 111, 13, 0.45) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 14px 14px;
 }
 
 /* Lineas diagonales naranjas sutiles del hero (banner original de Kevin) */

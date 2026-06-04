@@ -1,9 +1,9 @@
-﻿"use client";
+"use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ â€” revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
 // GlobalScene: UN SOLO Canvas WebGL fijo que persiste en TODA la pagina.
 //
-// CONCEPTO: "Wave Field" â€” una superficie viva de puntos que ondea como un
+// CONCEPTO: "Wave Field" — una superficie viva de puntos que ondea como un
 // campo de datos o una funcion matematica. Elegante, organico, tecnico.
 // Un grid NxN de puntos cuya altura (Y) oscila con ondas senoidales superpuestas
 // que parten del centro; una malla de lineas une los puntos (solo desktop) creando
@@ -20,7 +20,7 @@
 // Variacion por seccion (progress 0..1):
 //   - hero:    amplitud normal, ola estandar
 //   - about:   amplitud sube, ola mas dramatica
-//   - stack:   frecuencia aumenta â€” ola mas rapida y compacta
+//   - stack:   frecuencia aumenta — ola mas rapida y compacta
 //   - contact: los puntos convergen en espiral hacia dentro y se aplanan
 //
 // Interaccion del cursor:
@@ -44,8 +44,8 @@ import { Stars } from "@react-three/drei";
 import * as THREE from "three";
 
 // Paleta del Wave Field.
-const ORANGE = "#f06400";
-const ORANGE_DARK = "#c44a00";
+const ORANGE = "#ff6600";
+const ORANGE_DARK = "#cc3300";
 
 // Hook: textura circular para que Points se vean como bolitas, no cuadrados.
 function useCircleTexture() {
@@ -65,15 +65,15 @@ function useCircleTexture() {
   }, []);
 }
 
-// Gradiente de color por altura de la ola.
-const COLOR_PEAK = new THREE.Color("#ff8c00"); // pico (y alto)
-const COLOR_BASE = new THREE.Color("#f06400"); // medio
-const COLOR_VALLEY = new THREE.Color("#7a3000"); // valle (y bajo)
+// Gradiente de color por altura — contraste dramático: negro profundo → llama.
+const COLOR_PEAK   = new THREE.Color("#ffa020"); // pico: naranja cálido
+const COLOR_BASE   = new THREE.Color("#ff6800"); // medio: naranja puro
+const COLOR_VALLEY = new THREE.Color("#1a0800"); // valle: casi negro cálido
 
 // Parametros del grid.
-const GRID_DESKTOP = 30; // 30x30 = 900 puntos
-const GRID_MOBILE = 20; // 20x20 = 400 puntos
-const SPACING = 0.42; // mas grande
+const GRID_DESKTOP = 52; // 52x52 — cubre todo el viewport desktop
+const GRID_MOBILE  = 26; // 26x26 — mobile
+const SPACING      = 0.48; // separacion entre puntos
 
 // Rangos de scroll por seccion (progress 0..1). Orden real de la pagina:
 // hero, about, experience, stack, projects, contact.
@@ -129,10 +129,10 @@ function WaveSolid({ shared }: { shared: WaveShared }) {
     return idx;
   }, [n]);
 
-  // Colores del gradiente: valle oscuro → base → pico brillante
-  const colorLow  = useMemo(() => new THREE.Color('#ff5500'), []); // naranja vivo base
-  const colorMid  = useMemo(() => new THREE.Color('#ff8c00'), []); // naranja brillante
-  const colorHigh = useMemo(() => new THREE.Color('#ffd000'), []); // amarillo naranja caliente
+  // Colores del sólido — contraste profundo: negro → naranja-amarillento → blanco caliente
+  const colorLow  = useMemo(() => new THREE.Color('#0d0400'), []); // negro-naranja
+  const colorMid  = useMemo(() => new THREE.Color('#ff6800'), []); // naranja puro
+  const colorHigh = useMemo(() => new THREE.Color('#000000'), []); // negro en pico
 
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
@@ -154,20 +154,33 @@ function WaveSolid({ shared }: { shared: WaveShared }) {
     (posAttr.array as Float32Array).set(shared.positions);
     posAttr.needsUpdate = true;
 
-    // Calcular gradiente segun altura Y de cada vertice
+    // Calcular gradiente segun altura Y + degradado por X (derecha más vivo)
     const amp = shared.amp.current || 1;
     const n = shared.positions.length / 3;
     const tmp = new THREE.Color();
     for (let i = 0; i < n; i++) {
+      const x = shared.positions[i * 3];
       const y = shared.positions[i * 3 + 1];
-      // Normalizar: -amp..amp → 0..1
-      const t = Math.max(0, Math.min(1, (y / amp + 1) * 0.5));
-      if (t < 0.5) {
-        tmp.lerpColors(colorLow, colorMid, t * 2);
+      // 4 stops: negro → naranja → llama → blanco caliente en picos
+      const norm = (y / amp); // ~-1..1
+      if (norm >= 0.55) {
+        // Pico absoluto: naranja → negro
+        const tt = Math.min(1, (norm - 0.55) / 0.45);
+        tmp.set(
+          THREE.MathUtils.lerp(colorMid.r, 0.0, tt),
+          THREE.MathUtils.lerp(colorMid.g, 0.0, tt),
+          THREE.MathUtils.lerp(colorMid.b, 0.0, tt),
+        );
+      } else if (norm >= 0) {
+        tmp.lerpColors(colorMid, colorHigh, norm / 0.55);
+      } else if (norm >= -0.55) {
+        tmp.lerpColors(colorLow, colorMid, (norm + 0.55) / 0.55);
       } else {
-        tmp.lerpColors(colorMid, colorHigh, (t - 0.5) * 2);
+        tmp.copy(colorLow);
       }
-      colAttr.setXYZ(i, tmp.r, tmp.g, tmp.b);
+      // Degradado por X: izquierda 40%, derecha 100%
+      const xBright = 0.40 + ((x / shared.half) * 0.5 + 0.5) * 0.60;
+      colAttr.setXYZ(i, tmp.r * xBright, tmp.g * xBright, tmp.b * xBright);
     }
     colAttr.needsUpdate = true;
     geo.computeVertexNormals();
@@ -177,9 +190,12 @@ function WaveSolid({ shared }: { shared: WaveShared }) {
     <mesh ref={meshRef} geometry={geometry}>
       <meshStandardMaterial
         vertexColors
-        emissiveIntensity={0.6}
-        roughness={0.15}
-        metalness={0.1}
+        emissive="#ff6600"
+        emissiveIntensity={1.5}
+        roughness={0.08}
+        metalness={0.15}
+        transparent
+        opacity={0.82}
         side={THREE.DoubleSide}
         toneMapped={false}
       />
@@ -335,25 +351,33 @@ function WaveGrid({
         y += cursorRipple(x, z, t, mw, strength) * (1 - flat * 0.5);
         positions[idx + 1] = y;
 
-        // Gradiente de color por altura: valle -> base -> pico.
+        // Gradiente 4 stops: negro → naranja → llama → blanco caliente en picos.
         if (colorAttr) {
           const ci = (i * n + j) * 3;
-          // norm en ~[-1,1] segun la altura relativa a la amplitud.
           const norm = THREE.MathUtils.clamp(y / ampSpan, -1, 1);
           let r: number, g: number, b: number;
-          if (norm >= 0) {
-            r = THREE.MathUtils.lerp(COLOR_BASE.r, COLOR_PEAK.r, norm);
-            g = THREE.MathUtils.lerp(COLOR_BASE.g, COLOR_PEAK.g, norm);
-            b = THREE.MathUtils.lerp(COLOR_BASE.b, COLOR_PEAK.b, norm);
+          if (norm >= 0.6) {
+            // Pico absoluto: naranja → negro
+            const tt = (norm - 0.6) / 0.4;
+            r = THREE.MathUtils.lerp(COLOR_PEAK.r, 0.0, tt);
+            g = THREE.MathUtils.lerp(COLOR_PEAK.g, 0.0, tt);
+            b = THREE.MathUtils.lerp(COLOR_PEAK.b, 0.0, tt);
+          } else if (norm >= 0) {
+            const tt = norm / 0.6;
+            r = THREE.MathUtils.lerp(COLOR_BASE.r, COLOR_PEAK.r, tt);
+            g = THREE.MathUtils.lerp(COLOR_BASE.g, COLOR_PEAK.g, tt);
+            b = THREE.MathUtils.lerp(COLOR_BASE.b, COLOR_PEAK.b, tt);
           } else {
             const tt = -norm;
             r = THREE.MathUtils.lerp(COLOR_BASE.r, COLOR_VALLEY.r, tt);
             g = THREE.MathUtils.lerp(COLOR_BASE.g, COLOR_VALLEY.g, tt);
             b = THREE.MathUtils.lerp(COLOR_BASE.b, COLOR_VALLEY.b, tt);
           }
-          colors[ci] = r;
-          colors[ci + 1] = g;
-          colors[ci + 2] = b;
+          // Degradado por X: izquierda 40%, derecha 100%
+          const xBright = 0.40 + ((positions[idx] / shared.half) * 0.5 + 0.5) * 0.60;
+          colors[ci] = r * xBright;
+          colors[ci + 1] = g * xBright;
+          colors[ci + 2] = b * xBright;
         }
       }
     }
@@ -373,10 +397,10 @@ function WaveGrid({
       <pointsMaterial
         map={circleTex}
         alphaTest={0.2}
-        size={0.055}
+        size={0.060}
         vertexColors
         transparent
-        opacity={0.85}
+        opacity={0.95}
         sizeAttenuation
         toneMapped={false}
       />
@@ -385,7 +409,7 @@ function WaveGrid({
 }
 
 // ----------------------------------------------------------------------------
-// WAVE MESH â€” la red de lineas entre puntos adyacentes del grid (solo desktop).
+// WAVE MESH — la red de lineas entre puntos adyacentes del grid (solo desktop).
 // Lee el MISMO array de posiciones que WaveGrid (ya actualizado este frame) y
 // vuelca cada par adyacente en su propio buffer de lineas.
 // ----------------------------------------------------------------------------
@@ -446,7 +470,7 @@ function WaveMesh({ shared }: { shared: WaveShared }) {
       <lineBasicMaterial
         color={ORANGE}
         transparent
-        opacity={0.12}
+        opacity={0.22}
         toneMapped={false}
       />
     </lineSegments>
@@ -454,7 +478,7 @@ function WaveMesh({ shared }: { shared: WaveShared }) {
 }
 
 // ----------------------------------------------------------------------------
-// WAVE PARTICLES â€” particulas flotantes sobre la ola. Mas grandes y brillantes
+// WAVE PARTICLES — particulas flotantes sobre la ola. Mas grandes y brillantes
 // que los puntos del grid. Cada una tiene velocidad propia, rebota en los limites
 // del grid y deja una "estela" sutil via opacidad ligada a su velocidad.
 // ----------------------------------------------------------------------------
@@ -504,7 +528,7 @@ function WaveParticles({
   // Estela: color por particula (mas brillante = mas rapida).
   const colors = useMemo(() => new Float32Array(count * 3), [count]);
 
-  const trailColor = useMemo(() => new THREE.Color("#ff8c2a"), []);
+  const trailColor = useMemo(() => new THREE.Color("#ff7700"), []);
 
   useFrame(({ clock }, delta) => {
     const t = clock.elapsedTime;
@@ -592,7 +616,7 @@ function WaveParticles({
 }
 
 // ----------------------------------------------------------------------------
-// CENTRAL HALO â€” sistema de anillos concentricos emissive en el origen. Es el
+// CENTRAL HALO — sistema de anillos concentricos emissive en el origen. Es el
 // "origen" de la ola de donde parten las ondas concentricas. Tres torus de
 // distinto tamano rotan en ejes/velocidades distintas + una esfera que pulsa.
 // ----------------------------------------------------------------------------
@@ -655,7 +679,7 @@ function CentralHalo() {
 }
 
 // ----------------------------------------------------------------------------
-// Cursor 3D â€” anillo (torus) + nucleo brillante que se posan sobre la ola donde
+// Cursor 3D — anillo (torus) + nucleo brillante que se posan sobre la ola donde
 // esta el cursor (mouseWorld). El anillo rota y pulsa; el nucleo brilla fuerte.
 // La altura sigue mouseWorld.y (la proyeccion al plano) + offset, asi que flota
 // justo sobre la superficie de la ola.
@@ -716,15 +740,19 @@ function CursorOrb({ shared }: { shared: WaveShared }) {
 // Ajustada para la ola: vista desde arriba que deriva lateralmente.
 // ----------------------------------------------------------------------------
 const CAMERA_KEYS: { at: number; pos: [number, number, number] }[] = [
-  { at: 0.0, pos: [0, 3, 8] },
-  { at: 0.25, pos: [2, 2, 7] },
-  { at: 0.5, pos: [-2, 1, 6] },
-  { at: 0.75, pos: [1, 2, 7] },
-  { at: 1.0, pos: [0, 2, 6] },
+  { at: 0.00, pos: [-1.5, 2.2, 7.0] },  // hero: arranca izquierda
+  { at: 0.12, pos: [ 4.5, 1.8, 5.6] },  // sweep derecha fuerte
+  { at: 0.22, pos: [ 1.5, 1.4, 5.0] },  // zoom in diagonal
+  { at: 0.35, pos: [-4.5, 2.0, 6.8] },  // sweep izquierda fuerte
+  { at: 0.48, pos: [-1.0, 1.2, 5.2] },  // zoom in izquierda
+  { at: 0.60, pos: [ 3.5, 2.4, 7.2] },  // sube y barre derecha
+  { at: 0.72, pos: [ 0.5, 1.5, 5.4] },  // cierra hacia centro
+  { at: 0.85, pos: [-3.0, 1.8, 6.2] },  // último sweep izquierda
+  { at: 1.00, pos: [ 0.0, 1.8, 6.0] },  // contact: centro
 ];
 
 function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
-  const target = useMemo(() => new THREE.Vector3(0, 3, 8), []);
+  const target = useMemo(() => new THREE.Vector3(-1.5, 2.2, 7.0), []);
 
   useFrame(({ camera }) => {
     const p = THREE.MathUtils.clamp(progress.current ?? 0, 0, 1);
@@ -746,7 +774,7 @@ function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
       THREE.MathUtils.lerp(a.pos[2], b.pos[2], local),
     );
 
-    camera.position.lerp(target, 0.025);
+    camera.position.lerp(target, 0.038);
     camera.lookAt(0, 0, 0);
   });
 
@@ -754,7 +782,7 @@ function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
 }
 
 // ----------------------------------------------------------------------------
-// MOUSE PROJECTOR â€” proyecta el mouse 2D al plano Y=0 del mundo via raycaster y
+// MOUSE PROJECTOR — proyecta el mouse 2D al plano Y=0 del mundo via raycaster y
 // escribe el resultado en shared.mouseWorld. Tambien gestiona rippleStrength:
 // sube cuando el rayo intersecta el plano (cursor sobre la ola), baja si no.
 // Vive dentro del <group> para que la proyeccion respete la inclinacion aplicada.
@@ -865,7 +893,7 @@ function SceneContents({
       <pointLight position={[-5, 2, -3]} color={ORANGE_DARK} intensity={1} />
       <pointLight position={[5, 1, 4]} color="#ff8c42" intensity={0.8} />
 
-      {/* Cielo estrellado muy sutil â€” la ola es la protagonista. */}
+      {/* Cielo estrellado muy sutil — la ola es la protagonista. */}
       <Stars
         radius={120}
         depth={60}
@@ -886,7 +914,7 @@ function SceneContents({
         {/* Superficie sólida naranja — debajo de los puntos para dar profundidad */}
         <WaveSolid shared={shared} />
         <WaveGrid shared={shared} progress={progress} />
-        {!isMobile && <WaveMesh shared={shared} />}
+        <WaveMesh shared={shared} />
         <WaveParticles shared={shared} count={particleCount} />
       </group>
     </>
@@ -918,20 +946,14 @@ export default function GlobalScene() {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
-  // Progreso de scroll 0..1.
+  // Progreso 0..1 basado en sección activa (emitido por FullPageScroll).
   useEffect(() => {
-    const onScroll = () => {
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      progress.current = docHeight > 0 ? window.scrollY / docHeight : 0;
+    const onSection = (e: Event) => {
+      const { index, total } = (e as CustomEvent<{ index: number; total: number }>).detail;
+      progress.current = total > 1 ? index / (total - 1) : 0;
     };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
+    window.addEventListener("sectionchange", onSection);
+    return () => window.removeEventListener("sectionchange", onSection);
   }, []);
 
   const starCount = isMobile ? 600 : 1500;
@@ -939,7 +961,7 @@ export default function GlobalScene() {
   return (
     <Canvas
       frameloop="always"
-      camera={{ position: [0, 3, 8], fov: 60 }}
+      camera={{ position: [0, 2.2, 6.5], fov: 72 }}
       dpr={[1, isMobile ? 1 : 1.5]}
       gl={{
         alpha: true,

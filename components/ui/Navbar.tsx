@@ -102,14 +102,21 @@ export default function Navbar() {
   );
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "border-b border-orange-primary/20 bg-background/80 backdrop-blur-md"
-          : "border-b border-transparent bg-transparent"
-      }`}
-    >
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 sm:px-6">
+      <nav
+        className="flex h-14 w-full max-w-5xl items-center justify-between rounded-2xl px-5 sm:px-7 transition-all duration-500"
+        style={{
+          border: "1px solid rgba(245,111,13,0.22)",
+          background: scrolled
+            ? "rgba(13,13,13,0.88)"
+            : "rgba(13,13,13,0.55)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+          boxShadow: scrolled
+            ? "0 4px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(245,111,13,0.08)"
+            : "none",
+        }}
+      >
         <motion.a
           href="#hero"
           whileHover={{ scale: 1.05 }}
@@ -167,7 +174,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Drawer movil */}
+      {/* Drawer móvil */}
       <AnimatePresence>
         {open && (
           <>

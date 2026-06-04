@@ -71,31 +71,22 @@ export default function Hero() {
       {/* Lineas diagonales naranjas sutiles (banner original de Kevin) */}
       <div aria-hidden className="diagonal-lines pointer-events-none absolute inset-0 z-0" />
 
-      {/* Orbes flotantes decorativos (borrosos, animados desfasados) */}
-      <div
-        aria-hidden
-        className="orb-float pointer-events-none absolute left-[8%] top-[20%] z-0 h-48 w-48 rounded-full bg-orange-primary blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="orb-float pointer-events-none absolute right-[12%] top-[12%] z-0 h-64 w-64 rounded-full bg-orange-primary blur-3xl"
-        style={{ animationDelay: "2s" }}
-      />
-      <div
-        aria-hidden
-        className="orb-float pointer-events-none absolute bottom-[15%] left-[40%] z-0 h-36 w-36 rounded-full bg-orange-dark blur-3xl"
-        style={{ animationDelay: "4s" }}
-      />
+      {/* Puntos de esquina — esquina superior izquierda */}
+      <div aria-hidden className="corner-dots pointer-events-none absolute left-7 top-7 z-0 opacity-50" />
 
-      {/* Glow naranja */}
+      {/* Puntos de esquina — esquina inferior derecha */}
+      <div aria-hidden className="corner-dots pointer-events-none absolute bottom-14 right-7 z-0 opacity-50" />
+
+      {/* Línea vertical separadora — estilo banner */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -bottom-40 -right-40 z-0 h-[36rem] w-[36rem] rounded-full opacity-30 blur-3xl"
+        className="pointer-events-none absolute bottom-0 left-[54%] top-0 z-0 hidden w-px lg:block"
         style={{
           background:
-            "radial-gradient(circle, rgba(245,111,13,0.55) 0%, rgba(174,84,0,0.15) 45%, transparent 70%)",
+            "linear-gradient(to bottom, transparent 5%, rgba(245,111,13,0.30) 25%, rgba(245,111,13,0.30) 75%, transparent 95%)",
         }}
       />
+
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 sm:py-28 lg:px-8">
         <motion.p
@@ -254,7 +245,7 @@ export default function Hero() {
             href="/cv-kevin-gonzalez.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="cta-shine rounded-full border border-orange-primary px-7 py-3 text-center font-medium text-orange-primary transition-colors hover:bg-orange-primary hover:text-background"
+            className="cta-shine rounded-full bg-black border border-orange-primary/60 px-7 py-3 text-center font-medium text-white transition-colors hover:bg-orange-primary hover:text-black hover:border-orange-primary"
             data-cursor-hover
           >
             {t.hero.cta2}

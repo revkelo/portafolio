@@ -111,11 +111,7 @@ export default function TechCarousel() {
       className="relative overflow-hidden py-8"
       aria-label="Stack tecnológico"
     >
-      {/* Fade en bordes */}
-      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-32 bg-gradient-to-r from-background to-transparent" />
-      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-32 bg-gradient-to-l from-background to-transparent" />
-
-      <div className="flex flex-col gap-3">
+<div className="flex flex-col gap-3">
         <MarqueeRow items={ROW_1} duration={45} />
         <MarqueeRow items={ROW_2} reverse duration={40} />
       </div>

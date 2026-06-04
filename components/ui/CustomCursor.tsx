@@ -84,6 +84,7 @@ export default function CustomCursor() {
           opacity: hovering ? 0 : 1,
           transition: 'opacity 0.15s',
           pointerEvents: 'none',
+          boxShadow: '0 0 0 1.5px rgba(0,0,0,0.85)',
         }}
       />
 
@@ -109,7 +110,14 @@ export default function CustomCursor() {
             <path d="M18 4v8M18 24v8M4 18h8M24 18h8" />
           </svg>
         ) : (
-          <span style={{ display: 'block', width: 36, height: 36, borderRadius: '50%', border: `1px solid rgba(245,111,13,0.6)` }} />
+          <span style={{
+            display: 'block',
+            width: 36,
+            height: 36,
+            borderRadius: '50%',
+            border: `1.5px solid ${ORANGE}`,
+            boxShadow: '0 0 0 1px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(0,0,0,0.4)',
+          }} />
         )}
       </div>
     </div>

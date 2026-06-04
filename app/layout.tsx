@@ -6,9 +6,7 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
-import SmoothScroll from "@/components/ui/SmoothScroll";
 import CustomCursor from "@/components/ui/CustomCursor";
-import ScrollProgress from "@/components/ui/ScrollProgress";
 import PageLoader from "@/components/ui/PageLoader";
 import GlobalSceneWrapper from "@/components/3d/GlobalSceneWrapper";
 import { LangProvider } from "@/lib/i18n/LangContext";
@@ -86,11 +84,8 @@ export default function RootLayout({
           <LangProvider>
             <PageLoader />
             <div aria-hidden className="grain-overlay" />
-            <ScrollProgress />
             <CustomCursor />
-            <SmoothScroll>
-              <div className="relative z-10">{children}</div>
-            </SmoothScroll>
+            <div className="relative z-10">{children}</div>
           </LangProvider>
         </ThemeProvider>
       </body>

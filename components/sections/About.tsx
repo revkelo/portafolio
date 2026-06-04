@@ -5,6 +5,7 @@
 
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
+import TechCarousel from "@/components/ui/TechCarousel";
 import { useLang } from "@/lib/i18n/LangContext";
 
 export default function About() {
@@ -156,6 +157,17 @@ export default function About() {
           </div>
         </div>
       </div>
+
+      {/* Carrusel de tecnologías debajo del bloque de código */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
+        className="mt-12"
+      >
+        <TechCarousel />
+      </motion.div>
     </section>
   );
 }
