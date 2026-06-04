@@ -26,8 +26,12 @@ export default function GlobalSceneWrapper() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Mobile: sin WebGL. Fondo CSS con gradiente oscuro radial naranja sutil.
-  if (mounted && isMobile) {
+  // Esperar a que el cliente esté montado para saber si es mobile.
+  // Evita que el Canvas se monte brevemente en mobile antes de detectarse.
+  if (!mounted) return null;
+
+  // Mobile: sin WebGL — fondo CSS con gradiente oscuro radial naranja sutil.
+  if (isMobile) {
     return (
       <div
         aria-hidden

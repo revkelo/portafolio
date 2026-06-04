@@ -677,15 +677,26 @@ export default function GlobalScene() {
     };
   }, []);
 
-  const particleCount = isMobile ? 100 : 200;
-  const starCount = isMobile ? 1500 : 3000;
+  const particleCount = isMobile ? 60 : 120;
+  const starCount = isMobile ? 800 : 2000;
 
   return (
     <Canvas
       frameloop="always"
       camera={{ position: [0, 0, 5], fov: 60 }}
-      dpr={[1, isMobile ? 1 : 2]}
-      gl={{ alpha: true, antialias: true }}
+      dpr={[1, isMobile ? 1 : 1.5]}
+      gl={{
+        alpha: true,
+        antialias: !isMobile,
+        powerPreference: "high-performance",
+        failIfMajorPerformanceCaveat: false,
+        stencil: false,
+        depth: true,
+      }}
+      onCreated={({ gl }) => {
+        // Previene que el navegador descarte el contexto WebGL al minimizar/cambiar tab
+        gl.domElement.addEventListener("webglcontextlost", (e) => e.preventDefault(), false);
+      }}
       style={{ position: "fixed", inset: 0, zIndex: 0, background: "transparent" }}
     >
       <SceneContents
