@@ -96,27 +96,27 @@ export default function About() {
 
             <div
               className="rounded-xl p-4 font-mono text-xs leading-relaxed"
-              style={{ background: "rgba(0,0,0,0.45)", border: "1px solid rgba(245,111,13,0.15)" }}
+              style={{ background: "var(--code-bg)", border: "1px solid var(--code-border)" }}
             >
-              <span style={{ color: "var(--text-secondary)" }}>const </span>
-              <span style={{ color: "#f56f0d" }}>kevin</span>
-              <span style={{ color: "var(--text-primary)" }}> = &#123;</span><br />
-              <span className="block pl-4" style={{ color: "var(--text-secondary)" }}>
-                available: <span style={{ color: "#4ade80" }}>true</span>,
+              <span style={{ color: "var(--code-keyword)" }}>const </span>
+              <span style={{ color: "var(--code-str)" }}>kevin</span>
+              <span style={{ color: "var(--code-brace)" }}> = &#123;</span><br />
+              <span className="block pl-4" style={{ color: "var(--code-keyword)" }}>
+                available: <span style={{ color: "var(--code-bool)" }}>true</span>,
               </span>
-              <span className="block pl-4" style={{ color: "var(--text-secondary)" }}>
-                location: <span style={{ color: "#f56f0d" }}>&#39;Bogotá{" "}
+              <span className="block pl-4" style={{ color: "var(--code-keyword)" }}>
+                location: <span style={{ color: "var(--code-str)" }}>&#39;Bogotá{" "}
                   <img src="https://flagcdn.com/16x12/co.png" alt="🇨🇴" width={16} height={12}
                     style={{ display: "inline", verticalAlign: "middle", marginBottom: 2 }} />
                 &#39;</span>,
               </span>
-              <span className="block pl-4" style={{ color: "var(--text-secondary)" }}>
-                focus: <span style={{ color: "#f56f0d" }}>&#39;Cloud &amp; DevOps&#39;</span>,
+              <span className="block pl-4" style={{ color: "var(--code-keyword)" }}>
+                focus: <span style={{ color: "var(--code-str)" }}>&#39;Cloud &amp; DevOps&#39;</span>,
               </span>
-              <span className="block pl-4" style={{ color: "var(--text-secondary)" }}>
-                english: <span style={{ color: "#f56f0d" }}>&#39;B1 (iTEP)&#39;</span>
+              <span className="block pl-4" style={{ color: "var(--code-keyword)" }}>
+                english: <span style={{ color: "var(--code-str)" }}>&#39;B1 (iTEP)&#39;</span>
               </span>
-              <span style={{ color: "var(--text-primary)" }}>&#125;</span>
+              <span style={{ color: "var(--code-brace)" }}>&#125;</span>
             </div>
           </motion.div>
         </div>
