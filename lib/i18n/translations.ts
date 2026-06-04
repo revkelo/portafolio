@@ -25,7 +25,7 @@ export const translations = {
       metrics: {
         years: "años exp.",
         repos: "repositorios",
-        countries: "empresas",
+        countries: "proyectos",
       },
     },
     about: {

@@ -36,12 +36,12 @@ export default function Hero() {
 
   const years = useCountUp(2, inView);
   const repos = useCountUp(35, inView);
-  const companies = useCountUp(3, inView);
+  const projects = useCountUp(6, inView);
 
   const metrics = [
     { value: `${years}+`, label: t.hero.metrics.years },
     { value: `${repos}+`, label: t.hero.metrics.repos },
-    { value: `${companies}`, label: t.hero.metrics.countries },
+    { value: `${projects}+`, label: t.hero.metrics.countries },
   ];
 
   return (
