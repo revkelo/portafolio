@@ -33,14 +33,14 @@ export default function Hero() {
   const metricsRef = useRef<HTMLDivElement>(null);
   const inView = useInView(metricsRef, { once: true, margin: "-40px" });
 
-  const years = useCountUp(5, inView);
-  const repos = useCountUp(15, inView);
-  const countries = useCountUp(3, inView);
+  const years = useCountUp(2, inView);
+  const repos = useCountUp(35, inView);
+  const companies = useCountUp(3, inView);
 
   const metrics = [
-    { value: `+${years}`, label: t.hero.metrics.years },
+    { value: `${years}+`, label: t.hero.metrics.years },
     { value: `${repos}+`, label: t.hero.metrics.repos },
-    { value: `${countries}`, label: t.hero.metrics.countries },
+    { value: `${companies}`, label: t.hero.metrics.countries },
   ];
 
   return (

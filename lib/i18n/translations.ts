@@ -9,6 +9,7 @@ export const translations = {
     nav: {
       home: "Inicio",
       about: "Sobre mí",
+      experience: "Experiencia",
       stack: "Stack",
       projects: "Proyectos",
       contact: "Contacto",
@@ -22,9 +23,9 @@ export const translations = {
       cta2: "Descargar CV",
       scroll: "Scroll",
       metrics: {
-        years: "años de proyectos",
+        years: "años exp.",
         repos: "repositorios",
-        countries: "países impactados",
+        countries: "empresas",
       },
     },
     about: {
@@ -33,31 +34,72 @@ export const translations = {
       title: "Sobre mí",
       subtitle:
         "Ingeniero enfocado en construir software confiable de punta a punta.",
-      bio: "Ingeniero de Sistemas (UEB, 2026) con experiencia en Cloud & DevOps, desarrollo full-stack y gobernanza de datos. He construido sistemas médicos 3D en AWS, migrado plataformas institucionales a Microsoft 365 y desarrollado aplicaciones móviles con IA.",
+      bio: "Ingeniero de Sistemas de la Universidad El Bosque con enfoque en Arquitectura Cloud, prácticas DevOps y Gobierno de Datos. Mi trabajo combina el desarrollo de software Full-Stack con la automatización de plataformas de datos de alta escala en entornos corporativos.",
       photoHint: "Agrega tu foto en public/photo.jpg",
       highlights: [
         {
           title: "Cloud & AWS",
-          desc: "Infraestructura en AWS y Azure, Docker, CI/CD y arquitecturas serverless.",
+          desc: "Lambda · EC2 · S3 · RDS · Kubernetes",
         },
         {
-          title: "Data Governance",
-          desc: "Calidad, gobierno y migración de datos preservando seguridad y estructura.",
+          title: "Gobierno de Datos",
+          desc: "DAMA-DMBOK · Great Expectations · Databricks",
         },
         {
           title: "Full-Stack Dev",
-          desc: "APIs con FastAPI y Java, frontends con React, Next.js y Flutter.",
+          desc: "Python · FastAPI · Java · TypeScript · Flutter",
+        },
+      ],
+    },
+    experience: {
+      number: "02",
+      label: "EXPERIENCE",
+      title: "Experiencia",
+      subtitle: "Donde he construido, automatizado y gobernado datos.",
+      items: [
+        {
+          company: "Corona",
+          role: "Practicante Gobierno de Datos",
+          period: "Feb 2026 – presente",
+          type: "Híbrido, Bogotá",
+          bullets: [
+            "Reglas de calidad con Great Expectations + Databricks",
+            "DAMA-DMBOK: políticas, flujos y dashboards en Power BI",
+            "Automatizó el 100% de las pruebas de calidad de datos",
+            "Catalogación de metadatos y linaje con Azure DevOps",
+          ],
+        },
+        {
+          company: "Proyectos Independientes",
+          role: "Ingeniero DevOps & Cloud",
+          period: "Jun 2024 – presente",
+          type: "Remoto",
+          bullets: [
+            "Arquitecturas Serverless con AWS Lambda",
+            "Kubernetes: pods, servicios y escalado",
+            "Migración 365 UEB (Google Drive → Microsoft 365, cero pérdidas)",
+          ],
+        },
+        {
+          company: "Universidad El Bosque",
+          role: "Ing. Full-Stack — Proyecto Meritorio",
+          period: "Ene 2025 – Nov 2025",
+          type: "Bogotá",
+          bullets: [
+            "SOM3D: pipeline DICOM → modelo 3D médico",
+            "AWS EC2/S3/RDS, FastAPI, Docker y Three.js",
+          ],
         },
       ],
     },
     stack: {
-      number: "02",
+      number: "03",
       label: "STACK",
       title: "Stack",
       subtitle: "Tecnologías con las que construyo a diario.",
     },
     projects: {
-      number: "03",
+      number: "04",
       label: "PROJECTS",
       title: "Proyectos",
       subtitle: "Una selección de lo que he construido recientemente.",
@@ -70,7 +112,7 @@ export const translations = {
       statusCompleted: "Completado",
     },
     contact: {
-      number: "04",
+      number: "05",
       label: "CONTACT",
       title: "Contacto",
       subtitle: "¿Tienes un proyecto en mente? Hablemos.",
@@ -87,6 +129,7 @@ export const translations = {
     nav: {
       home: "Home",
       about: "About",
+      experience: "Experience",
       stack: "Stack",
       projects: "Projects",
       contact: "Contact",
@@ -100,9 +143,9 @@ export const translations = {
       cta2: "Download CV",
       scroll: "Scroll",
       metrics: {
-        years: "years of projects",
+        years: "yrs exp.",
         repos: "repositories",
-        countries: "countries impacted",
+        countries: "companies",
       },
     },
     about: {
@@ -110,31 +153,72 @@ export const translations = {
       label: "ABOUT",
       title: "About me",
       subtitle: "Engineer focused on building reliable software end to end.",
-      bio: "Systems Engineer (UEB, 2026) with experience in Cloud & DevOps, full-stack development and data governance. I've built 3D medical systems on AWS, migrated institutional platforms to Microsoft 365, and developed AI-powered mobile apps.",
+      bio: "Systems Engineer from Universidad El Bosque focused on Cloud Architecture, DevOps practices, and Data Governance. My work combines Full-Stack software development with large-scale data platform automation in corporate environments.",
       photoHint: "Add your photo at public/photo.jpg",
       highlights: [
         {
           title: "Cloud & AWS",
-          desc: "Infrastructure on AWS and Azure, Docker, CI/CD and serverless architectures.",
+          desc: "Lambda · EC2 · S3 · RDS · Kubernetes",
         },
         {
           title: "Data Governance",
-          desc: "Data quality, governance and migration preserving security and structure.",
+          desc: "DAMA-DMBOK · Great Expectations · Databricks",
         },
         {
           title: "Full-Stack Dev",
-          desc: "APIs with FastAPI and Java, frontends with React, Next.js and Flutter.",
+          desc: "Python · FastAPI · Java · TypeScript · Flutter",
+        },
+      ],
+    },
+    experience: {
+      number: "02",
+      label: "EXPERIENCE",
+      title: "Experience",
+      subtitle: "Where I've built, automated, and governed data.",
+      items: [
+        {
+          company: "Corona",
+          role: "Data Governance Intern",
+          period: "Feb 2026 – present",
+          type: "Hybrid, Bogotá",
+          bullets: [
+            "Data quality rules with Great Expectations + Databricks",
+            "DAMA-DMBOK: policies, workflows and Power BI dashboards",
+            "Automated 100% of data quality testing",
+            "Metadata cataloging and lineage with Azure DevOps",
+          ],
+        },
+        {
+          company: "Independent Projects",
+          role: "DevOps & Cloud Engineer",
+          period: "Jun 2024 – present",
+          type: "Remote",
+          bullets: [
+            "Serverless architectures with AWS Lambda",
+            "Kubernetes: pods, services and scaling",
+            "365 UEB Migration (Google Drive → Microsoft 365, zero data loss)",
+          ],
+        },
+        {
+          company: "Universidad El Bosque",
+          role: "Full-Stack Eng. — Meritorious Project",
+          period: "Jan 2025 – Nov 2025",
+          type: "Bogotá",
+          bullets: [
+            "SOM3D: DICOM → 3D medical model pipeline",
+            "AWS EC2/S3/RDS, FastAPI, Docker and Three.js",
+          ],
         },
       ],
     },
     stack: {
-      number: "02",
+      number: "03",
       label: "STACK",
       title: "Stack",
       subtitle: "Technologies I build with every day.",
     },
     projects: {
-      number: "03",
+      number: "04",
       label: "PROJECTS",
       title: "Projects",
       subtitle: "A selection of what I've built recently.",
@@ -147,7 +231,7 @@ export const translations = {
       statusCompleted: "Completed",
     },
     contact: {
-      number: "04",
+      number: "05",
       label: "CONTACT",
       title: "Contact",
       subtitle: "Got a project in mind? Let's talk.",

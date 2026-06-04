@@ -11,6 +11,7 @@ import { useLang } from "@/lib/i18n/LangContext";
 const sections = [
   { id: "hero", key: "home" },
   { id: "about", key: "about" },
+  { id: "experience", key: "experience" },
   { id: "stack", key: "stack" },
   { id: "proyectos", key: "projects" },
   { id: "contacto", key: "contact" },
