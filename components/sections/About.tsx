@@ -74,6 +74,7 @@ export default function About() {
               {[
                 { icon: "🟢", label: "Disponible" },
                 { icon: "☁️", label: "Cloud & DevOps" },
+                { icon: "📊", label: "Data Governance" },
                 { icon: "📍", label: "Bogotá, Colombia" },
                 { icon: "🎓", label: "Ing. Sistemas — UEB" },
               ].map((pill) => (
