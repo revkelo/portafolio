@@ -164,22 +164,6 @@ export default function Contact() {
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionTitle number={t.contact.number} label={t.contact.label} title={t.contact.title} subtitle={t.contact.subtitle} />
 
-        {/* Badge de disponibilidad */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2"
-        >
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-400" />
-          </span>
-          <span className="font-display text-sm font-semibold text-green-400">
-            {lang === "es" ? "Disponible para proyectos" : "Available for projects"}
-          </span>
-        </motion.div>
 
         {/* CTA grande */}
         <h3
