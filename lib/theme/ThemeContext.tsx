@@ -5,7 +5,7 @@
 // Persiste en localStorage y aplica data-theme en <html>.
 // Uso: const { theme, toggle } = useTheme()
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 type Theme = "dark" | "light";
 
@@ -17,19 +17,24 @@ const ThemeContext = createContext<{ theme: Theme; toggle: () => void }>({
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");
 
+  // Hidrata desde localStorage una vez montado.
   useEffect(() => {
-    const stored = localStorage.getItem("theme") as Theme | null;
-    const initial = stored ?? "dark";
-    setTheme(initial);
-    document.documentElement.setAttribute("data-theme", initial);
+    const stored = (localStorage.getItem("theme") as Theme | null) ?? "dark";
+    setTheme(stored);
+    document.documentElement.setAttribute("data-theme", stored);
   }, []);
 
-  const toggle = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    localStorage.setItem("theme", next);
-    document.documentElement.setAttribute("data-theme", next);
-  };
+  // Usa updater funcional para evitar closures stale.
+  const toggle = useCallback(() => {
+    setTheme((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      localStorage.setItem("theme", next);
+      document.documentElement.setAttribute("data-theme", next);
+      // Forzar repaint en el body para que los CSS vars se apliquen
+      document.body.style.background = "";
+      return next;
+    });
+  }, []);
 
   return (
     <ThemeContext.Provider value={{ theme, toggle }}>
