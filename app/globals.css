@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* PORTAFOLIO DE KEVIN GONZALEZ — revkelo
    Paleta: #25211c fondo | #f56f0d naranja | #ffffff texto
