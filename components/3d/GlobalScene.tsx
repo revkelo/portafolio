@@ -16,8 +16,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float, Stars, Text } from "@react-three/drei";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
+// Note: EffectComposer removido — causa WebGL Context Lost con alpha:true
+// El glow naranja se logra via CSS (.glow-pulse, emissiveIntensity en materiales)
 import * as THREE from "three";
 
 // Rangos de scroll por seccion (progress 0..1). Orden real de la pagina:
@@ -625,15 +625,7 @@ function SceneContents({
         <ContactParticles active={inContact} isMobile={isMobile} />
       </group>
 
-      <EffectComposer>
-        <Bloom
-          intensity={0.8}
-          luminanceThreshold={0.3}
-          luminanceSmoothing={0.9}
-          blendFunction={BlendFunction.ADD}
-          mipmapBlur
-        />
-      </EffectComposer>
+{/* Bloom removido — usa CSS emissive para el glow naranja */}
     </>
   );
 }
