@@ -63,11 +63,36 @@ export default function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-            className="flex flex-col justify-between gap-6"
+            className="flex flex-col gap-6"
           >
             <p className="text-base leading-relaxed md:text-[1.05rem]" style={{ color: "var(--text-primary)" }}>
               {t.about.bio}
             </p>
+
+            {/* Info pills */}
+            <div className="flex flex-wrap gap-2">
+              {[
+                { icon: "🟢", label: "Disponible" },
+                { icon: "☁️", label: "Cloud & DevOps" },
+                { icon: "📍", label: "Bogotá, Colombia" },
+                { icon: "🎓", label: "Ing. Sistemas — UEB" },
+              ].map((pill) => (
+                <span
+                  key={pill.label}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: "0.35rem",
+                    padding: "0.3rem 0.75rem", borderRadius: "999px",
+                    background: "rgba(245,111,13,0.07)",
+                    border: "1px solid rgba(245,111,13,0.18)",
+                    fontSize: "0.75rem", color: "var(--text-secondary)",
+                    fontFamily: "var(--font-display)",
+                  }}
+                >
+                  <span>{pill.icon}</span>
+                  <span>{pill.label}</span>
+                </span>
+              ))}
+            </div>
 
             <div
               className="rounded-xl p-4 font-mono text-xs leading-relaxed"
