@@ -11,6 +11,7 @@ import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import GlobalSceneWrapper from "@/components/3d/GlobalSceneWrapper";
 import { LangProvider } from "@/lib/i18n/LangContext";
+import { ThemeProvider } from "@/lib/theme/ThemeContext";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -68,14 +69,16 @@ export default function RootLayout({
       <body className="min-h-full bg-background text-text-primary">
         {/* Canvas 3D fijo detras de todo el contenido (el viaje persistente) */}
         <GlobalSceneWrapper />
-        <LangProvider>
-          <div aria-hidden className="grain-overlay" />
-          <ScrollProgress />
-          <CustomCursor />
-          <SmoothScroll>
-            <div className="relative z-10">{children}</div>
-          </SmoothScroll>
-        </LangProvider>
+        <ThemeProvider>
+          <LangProvider>
+            <div aria-hidden className="grain-overlay" />
+            <ScrollProgress />
+            <CustomCursor />
+            <SmoothScroll>
+              <div className="relative z-10">{children}</div>
+            </SmoothScroll>
+          </LangProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -5,13 +5,33 @@
 
 @import "tailwindcss";
 
+/* Modo oscuro (default) */
 :root {
   --orange: #f06400;
   --orange-dark: #c44a00;
   --background: #0d0d0d;
+  --surface: #1a1a1a;
+  --surface-alt: #111111;
   --text-primary: #ffffff;
   --text-secondary: #c0c0c0;
+  --border: rgba(255,255,255,0.06);
+  --glass-bg: rgba(13,13,13,0.82);
 }
+
+/* Modo claro */
+[data-theme="light"] {
+  --background: #f5f0eb;
+  --surface: #eae5e0;
+  --surface-alt: #e0dbd5;
+  --text-primary: #0d0d0d;
+  --text-secondary: #4a4a4a;
+  --border: rgba(0,0,0,0.08);
+  --glass-bg: rgba(245,240,235,0.88);
+}
+
+/* Scrollbar en modo claro */
+[data-theme="light"] ::-webkit-scrollbar-track { background: #f5f0eb; }
+[data-theme="light"] .section-glass { background: var(--glass-bg); }
 
 /* Tailwind v4: definimos la paleta personalizada como tokens del tema.
    Esto habilita utilidades como bg-background, text-orange-primary, etc. */
@@ -41,6 +61,7 @@ html {
 body {
   background: var(--background);
   color: var(--text-primary);
+  transition: background 0.3s ease, color 0.3s ease;
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;

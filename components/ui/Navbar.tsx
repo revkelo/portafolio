@@ -7,6 +7,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLang } from "@/lib/i18n/LangContext";
+import { useTheme } from "@/lib/theme/ThemeContext";
 
 const sections = [
   { id: "hero", key: "home" },
@@ -19,6 +20,7 @@ const sections = [
 
 export default function Navbar() {
   const { t, lang, setLang } = useLang();
+  const { theme, toggle: toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>("hero");
   const [open, setOpen] = useState(false);
@@ -68,6 +70,29 @@ export default function Navbar() {
     </div>
   );
 
+  const ThemeToggle = ({ className = "" }: { className?: string }) => (
+    <button
+      onClick={toggleTheme}
+      data-cursor-hover
+      aria-label="Toggle theme"
+      className={`flex h-8 w-8 items-center justify-center rounded-full border border-orange-primary/30 text-text-secondary transition-colors hover:border-orange-primary hover:text-orange-primary ${className}`}
+    >
+      {theme === "dark" ? (
+        /* Sol — cambiar a claro */
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-14a6 6 0 1 0 0 12A6 6 0 0 0 12 6z" opacity="0"/>
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+      ) : (
+        /* Luna — cambiar a oscuro */
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      )}
+    </button>
+  );
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
@@ -108,6 +133,7 @@ export default function Navbar() {
         </ul>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle className="hidden sm:flex" />
           <LangToggle className="hidden sm:flex" />
           <a
             href="#contacto"
@@ -176,7 +202,8 @@ export default function Navbar() {
                 </a>
               ))}
 
-              <div className="mt-6">
+              <div className="mt-6 flex items-center gap-3">
+                <ThemeToggle />
                 <LangToggle />
               </div>
             </motion.aside>
