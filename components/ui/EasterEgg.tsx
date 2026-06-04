@@ -104,8 +104,8 @@ export default function EasterEgg() {
                 </motion.div>
               ))}
               <motion.span
-                animate={{ opacity: [1, 0, 1] }}
-                transition={{ repeat: Infinity, duration: 1, ease: "steps(1)" }}
+                animate={{ opacity: [1, 0] }}
+                transition={{ repeat: Infinity, duration: 0.8, ease: "linear", repeatType: "reverse" }}
                 style={{ color: "rgba(245,111,13,0.5)", fontSize: "0.85rem" }}
               >
                 █

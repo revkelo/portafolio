@@ -1,51 +1,64 @@
 "use client";
 
-// Música ambient generada con Web Audio API — sin archivos externos.
-// Drone armónico en La (A2/A3) con LFO sutil para movimiento orgánico.
+// Música ambient con Web Audio API.
+// Acorde Am7 en ondas seno suaves con breathing lento — sonido orgánico, no áspero.
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 export default function MusicPlayer() {
   const [playing, setPlaying] = useState(false);
-  const ctxRef   = useRef<AudioContext | null>(null);
-  const gainRef  = useRef<GainNode | null>(null);
+  const ctxRef  = useRef<AudioContext | null>(null);
+  const gainRef = useRef<GainNode | null>(null);
 
   function start() {
-    const ctx = new AudioContext();
+    const ctx    = new AudioContext();
     const master = ctx.createGain();
     master.gain.setValueAtTime(0, ctx.currentTime);
-    master.gain.linearRampToValueAtTime(0.07, ctx.currentTime + 2.5);
+    master.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 3);
     master.connect(ctx.destination);
 
-    // Capas de osciladores armónicos
-    const layers: [number, OscillatorType, number][] = [
-      [55,  "sawtooth", 0.35],
-      [110, "sine",     0.28],
-      [165, "sine",     0.18],
-      [220, "sine",     0.12],
-      [330, "sine",     0.07],
-      [440, "sine",     0.04],
+    // Am7: A C E G — suaves, musicales
+    const freqs: [number, number][] = [
+      [110,  0.35],  // A2
+      [130.8,0.22],  // C3
+      [164.8,0.18],  // E3
+      [196,  0.14],  // G3
+      [220,  0.20],  // A3
+      [261.6,0.12],  // C4
+      [329.6,0.08],  // E4
     ];
 
-    layers.forEach(([freq, type, vol]) => {
+    freqs.forEach(([freq, vol], i) => {
       const osc  = ctx.createOscillator();
       const gain = ctx.createGain();
-      osc.type = type;
+
+      // LFO de vibrato muy sutil
+      const vib     = ctx.createOscillator();
+      const vibGain = ctx.createGain();
+      vib.frequency.value  = 0.2 + i * 0.07;
+      vibGain.gain.value   = 0.8;
+      vib.connect(vibGain);
+      vibGain.connect(osc.frequency);
+      vib.start();
+
+      osc.type = "sine";
       osc.frequency.value = freq;
-      gain.gain.value = vol;
+      gain.gain.value = vol * 0.06;
+
+      // "Breathing" — cada voz respira a ritmo diferente
+      const breathe     = ctx.createOscillator();
+      const breatheGain = ctx.createGain();
+      breathe.frequency.value  = 0.05 + i * 0.015;
+      breatheGain.gain.value   = gain.gain.value * 0.4;
+      breathe.connect(breatheGain);
+      breatheGain.connect(gain.gain);
+      breathe.start();
+
       osc.connect(gain);
       gain.connect(master);
       osc.start();
     });
-
-    // LFO suave para movimiento
-    const lfo     = ctx.createOscillator();
-    const lfoGain = ctx.createGain();
-    lfo.frequency.value = 0.12;
-    lfoGain.gain.value  = 3;
-    lfo.connect(lfoGain);
-    lfo.start();
 
     ctxRef.current  = ctx;
     gainRef.current = master;
@@ -54,12 +67,12 @@ export default function MusicPlayer() {
   function stop() {
     if (gainRef.current && ctxRef.current) {
       const now = ctxRef.current.currentTime;
-      gainRef.current.gain.linearRampToValueAtTime(0, now + 1.8);
+      gainRef.current.gain.linearRampToValueAtTime(0, now + 2);
       setTimeout(() => {
         try { ctxRef.current?.close(); } catch {}
         ctxRef.current = null;
         gainRef.current = null;
-      }, 2000);
+      }, 2200);
     }
   }
 
@@ -88,22 +101,19 @@ export default function MusicPlayer() {
       }}
     >
       {playing ? (
-        // Barra de pausa animada
-        <motion.div style={{ display: "flex", gap: 2, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 2, alignItems: "center" }}>
           {[0, 1, 2].map(i => (
             <motion.span
               key={i}
-              animate={{ height: ["6px", "12px", "6px"] }}
-              transition={{ repeat: Infinity, duration: 0.8, delay: i * 0.15, ease: "easeInOut" }}
-              style={{ display: "block", width: 2, background: "#f56f0d", borderRadius: 1 }}
+              animate={{ height: ["5px", "11px", "5px"] }}
+              transition={{ repeat: Infinity, duration: 0.9, delay: i * 0.18, ease: "easeInOut" }}
+              style={{ display: "block", width: 2.5, background: "#f56f0d", borderRadius: 2 }}
             />
           ))}
-        </motion.div>
+        </div>
       ) : (
         <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M9 18V5l12-2v13" />
-          <circle cx="6" cy="18" r="3" />
-          <circle cx="18" cy="16" r="3" />
+          <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
         </svg>
       )}
     </motion.button>

@@ -25,16 +25,14 @@ export default function Experience() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: i * 0.1 }}
+              className="grid grid-cols-1 lg:grid-cols-[260px_1fr]"
               style={{
-                display: "grid",
-                gridTemplateColumns: "1fr",
                 borderRadius: "1.25rem",
                 overflow: "hidden",
                 border: "1px solid rgba(245,111,13,0.10)",
                 background: "var(--surface)",
                 transition: "border-color 0.3s, box-shadow 0.3s",
               }}
-              className="lg:grid-cols-[280px_1fr]"
               whileHover={{ boxShadow: "0 0 0 1px rgba(245,111,13,0.25), 0 8px 40px rgba(245,111,13,0.08)" }}
               data-cursor-hover
             >

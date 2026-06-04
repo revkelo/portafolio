@@ -140,15 +140,15 @@ export default function KeyboardShortcuts() {
                     <span style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>{s.desc}</span>
                     <div style={{ display: "flex", gap: "0.2rem", alignItems: "center", flexShrink: 0 }}>
                       {s.keys.map((k, ki) => (
-                        <>
-                          {ki > 0 && <span key={`plus-${ki}`} style={{ color: "var(--text-secondary)", fontSize: "0.65rem", margin: "0 1px" }}>then</span>}
-                          <kbd key={k} style={{
+                        <span key={`${k}-${ki}`} style={{ display: "flex", alignItems: "center", gap: "0.2rem" }}>
+                          {ki > 0 && <span style={{ color: "var(--text-secondary)", fontSize: "0.62rem" }}>then</span>}
+                          <kbd style={{
                             fontFamily: "monospace", fontSize: "0.7rem", fontWeight: 700,
                             padding: "2px 8px", borderRadius: "0.3rem",
                             background: "rgba(245,111,13,0.1)", color: "#f56f0d",
                             border: "1px solid rgba(245,111,13,0.22)",
                           }}>{k}</kbd>
-                        </>
+                        </span>
                       ))}
                     </div>
                   </div>
