@@ -113,15 +113,18 @@ export default function About() {
               <span className="text-white"> = </span>
               <span className="text-[#c0c0c0]">&#123;</span>
               <br />
-              <span className="pl-4 text-[#c0c0c0]">available: </span>
-              <span className="text-green-400">true</span>
-              <span className="text-[#c0c0c0]">,</span>
-              <br />
-              <span className="pl-4 text-[#c0c0c0]">location: </span>
-              <span className="text-[#c0c0c0]">&#39;</span>
-              <span className="text-orange-300">Bogotá 🇨🇴</span>
-              <span className="text-[#c0c0c0]">&#39;</span>
-              <br />
+              <span className="block pl-4 text-[#c0c0c0]">
+                available: <span className="text-green-400">true</span>,
+              </span>
+              <span className="block pl-4 text-[#c0c0c0]">
+                location: <span className="text-orange-300">&#39;Bogotá 🇨🇴&#39;</span>,
+              </span>
+              <span className="block pl-4 text-[#c0c0c0]">
+                focus: <span className="text-orange-300">&#39;Cloud &amp; DevOps&#39;</span>,
+              </span>
+              <span className="block pl-4 text-[#c0c0c0]">
+                english: <span className="text-orange-300">&#39;B1 (iTEP)&#39;</span>
+              </span>
               <span className="text-[#c0c0c0]">&#125;</span>
             </motion.div>
           </div>

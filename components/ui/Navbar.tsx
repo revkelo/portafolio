@@ -152,6 +152,7 @@ export default function Navbar() {
           >
             <span className="h-0.5 w-5 bg-text-primary" />
             <span className="h-0.5 w-5 bg-text-primary" />
+            <span className="h-0.5 w-5 bg-text-primary" />
           </button>
         </div>
       </nav>
@@ -172,7 +173,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.3, ease: "easeOut" }}
-              className="fixed right-0 top-0 z-50 flex h-full w-72 flex-col gap-2 border-l border-orange-primary/20 bg-surface p-8 md:hidden"
+              className="fixed right-0 top-0 z-50 flex h-full w-72 flex-col gap-2 border-l border-orange-primary/20 bg-background/95 p-8 backdrop-blur-xl md:hidden"
             >
               <div className="mb-6 flex items-center justify-between">
                 <span className="font-display text-xl font-bold text-orange-primary">

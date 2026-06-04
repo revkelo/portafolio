@@ -29,7 +29,15 @@ const categories: Category[] = [
   {
     icon: "cloud",
     title: "Cloud & DevOps",
-    techs: ["AWS", "Docker", "Kubernetes", "Terraform", "Azure"],
+    techs: [
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "Terraform",
+      "Azure",
+      "GitHub Actions",
+      "CI/CD",
+    ],
   },
   {
     icon: "backend",

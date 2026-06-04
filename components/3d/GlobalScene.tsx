@@ -178,15 +178,20 @@ function HeroPlanetObjects({
   return (
     <Float speed={1.5} floatIntensity={0.3} rotationIntensity={0.4}>
       <group ref={groupRef} scale={scale}>
-        {/* Esfera central naranja con emissive (brilla con el bloom) */}
+        {/* PointLight naranja suave dentro del Canvas, cerca del planeta del hero.
+            Compensa el glow que antes daba el EffectComposer/Bloom (ya removido). */}
+        <pointLight position={[0, 0, 1.5]} color="#f06400" intensity={3} distance={8} decay={2} />
+
+        {/* Esfera central naranja con emissive alto (compensa el bloom removido) */}
         <mesh ref={meshRef}>
           <sphereGeometry args={[1, 64, 64]} />
           <meshStandardMaterial
             color="#f06400"
             emissive="#f06400"
-            emissiveIntensity={0.6}
+            emissiveIntensity={2.2}
             roughness={0.2}
             metalness={0.3}
+            toneMapped={false}
           />
         </mesh>
 
@@ -196,7 +201,7 @@ function HeroPlanetObjects({
           <meshStandardMaterial
             color="#f06400"
             emissive="#f06400"
-            emissiveIntensity={1.5}
+            emissiveIntensity={3}
             toneMapped={false}
           />
         </mesh>
@@ -207,7 +212,7 @@ function HeroPlanetObjects({
           <meshStandardMaterial
             color="#f06400"
             emissive="#f06400"
-            emissiveIntensity={1.2}
+            emissiveIntensity={2.5}
             toneMapped={false}
           />
         </mesh>
@@ -303,9 +308,10 @@ function AboutGeometryObjects({
         <meshStandardMaterial
           color="#f06400"
           emissive="#f06400"
-          emissiveIntensity={0.5}
+          emissiveIntensity={2}
           roughness={0.3}
           metalness={0.4}
+          toneMapped={false}
         />
       </mesh>
 
@@ -676,10 +682,11 @@ export default function GlobalScene() {
 
   return (
     <Canvas
+      frameloop="always"
       camera={{ position: [0, 0, 5], fov: 60 }}
       dpr={[1, isMobile ? 1 : 2]}
       gl={{ alpha: true, antialias: true }}
-      style={{ background: "transparent" }}
+      style={{ position: "fixed", inset: 0, zIndex: 0, background: "transparent" }}
     >
       <SceneContents
         mouse={mouse}

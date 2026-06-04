@@ -4,6 +4,7 @@
 // Projects: destacados en cards grandes (3 col) y el resto en cards pequenas.
 // La data vive en lib/data/projects.ts
 
+import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
 import ProjectCard from "@/components/ui/ProjectCard";
 import { projects } from "@/lib/data/projects";
@@ -29,9 +30,15 @@ export default function Projects() {
         <div className="relative">
           {/* Indicador de deslizar (solo desktop, donde el scroll es lateral) */}
           <div className="mb-4 hidden items-center gap-2 text-sm text-text-secondary/70 md:flex">
-            <span aria-hidden className="text-orange-primary">←</span>
             <span className="uppercase tracking-[0.2em]">{t.projects.slideHint}</span>
-            <span aria-hidden className="text-orange-primary">→</span>
+            <motion.span
+              aria-hidden
+              className="text-lg text-orange-primary"
+              animate={{ x: [0, 8, 0] }}
+              transition={{ duration: 1.4, ease: "easeInOut", repeat: Infinity }}
+            >
+              →
+            </motion.span>
           </div>
 
           <div className="no-scrollbar flex flex-col gap-6 md:snap-x md:snap-mandatory md:flex-row md:overflow-x-auto md:pb-4">

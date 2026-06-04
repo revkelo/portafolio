@@ -101,7 +101,7 @@ export default function Contact() {
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
           {/* CTA grande: split por palabras con stagger */}
-          <h3 className="font-display text-3xl font-bold text-text-primary sm:text-4xl md:text-6xl">
+          <h3 className="font-display text-5xl font-bold leading-[1.05] text-text-primary sm:text-7xl">
             {t.contact.cta.split(" ").map((word, i) => (
               <motion.span
                 key={`${word}-${i}`}
@@ -157,8 +157,8 @@ export default function Contact() {
             ))}
           </div>
 
-          {/* Frase final */}
-          <p className="mt-16 font-display text-2xl font-bold text-orange-primary sm:text-3xl">
+          {/* Frase final centrada y en cursiva naranja */}
+          <p className="mt-16 text-center font-display text-2xl font-bold italic text-orange-primary sm:text-3xl">
             {t.contact.closing}
           </p>
         </motion.div>
