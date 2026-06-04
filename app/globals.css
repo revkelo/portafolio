@@ -207,6 +207,22 @@ body {
   animation: pulse-orange 1.8s ease-in-out infinite;
 }
 
+/* Orbes flotantes decorativos del hero (circulos borrosos naranjas) */
+@keyframes float-orb {
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+    opacity: 0.25;
+  }
+}
+.orb-float {
+  animation: float-orb 6s ease-in-out infinite;
+}
+
 /* Capa de grano/ruido sutil sobre todo el sitio */
 .grain-overlay {
   position: fixed;
@@ -223,6 +239,7 @@ body {
   .terminal-cursor,
   .scroll-arrow,
   .pulse-dot,
+  .orb-float,
   .glitch:hover::before,
   .glitch:hover::after {
     animation: none;

@@ -88,6 +88,31 @@ export default function About() {
                 </motion.div>
               ))}
             </div>
+
+            {/* Bloque de codigo decorativo */}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+              className="mt-6 rounded-lg bg-[#111] p-4 font-mono text-xs"
+            >
+              <span className="text-[#c0c0c0]">const </span>
+              <span className="text-[#f06400]">kevin</span>
+              <span className="text-white"> = </span>
+              <span className="text-[#c0c0c0]">&#123;</span>
+              <br />
+              <span className="pl-4 text-[#c0c0c0]">available: </span>
+              <span className="text-green-400">true</span>
+              <span className="text-[#c0c0c0]">,</span>
+              <br />
+              <span className="pl-4 text-[#c0c0c0]">location: </span>
+              <span className="text-[#c0c0c0]">&#39;</span>
+              <span className="text-orange-300">Bogotá 🇨🇴</span>
+              <span className="text-[#c0c0c0]">&#39;</span>
+              <br />
+              <span className="text-[#c0c0c0]">&#125;</span>
+            </motion.div>
           </div>
         </div>
       </div>

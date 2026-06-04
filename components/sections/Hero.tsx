@@ -7,6 +7,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { useLang } from "@/lib/i18n/LangContext";
+import HeroSceneWrapper from "@/components/3d/HeroSceneWrapper";
 
 // Hook simple para contar de 0 a `target` cuando el elemento entra en viewport.
 function useCountUp(target: number, active: boolean, duration = 1400) {
@@ -48,13 +49,32 @@ export default function Hero() {
       id="hero"
       className="relative flex min-h-screen items-center overflow-hidden bg-background"
     >
+      {/* Escena 3D de particulas (carga client-only via dynamic ssr:false) */}
+      <HeroSceneWrapper />
+
       {/* Grid de puntos animado */}
-      <div aria-hidden className="dot-grid pointer-events-none absolute inset-0" />
+      <div aria-hidden className="dot-grid pointer-events-none absolute inset-0 z-0" />
+
+      {/* Orbes flotantes decorativos (borrosos, animados desfasados) */}
+      <div
+        aria-hidden
+        className="orb-float pointer-events-none absolute left-[8%] top-[20%] z-0 h-48 w-48 rounded-full bg-orange-primary blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="orb-float pointer-events-none absolute right-[12%] top-[12%] z-0 h-64 w-64 rounded-full bg-orange-primary blur-3xl"
+        style={{ animationDelay: "2s" }}
+      />
+      <div
+        aria-hidden
+        className="orb-float pointer-events-none absolute bottom-[15%] left-[40%] z-0 h-36 w-36 rounded-full bg-orange-dark blur-3xl"
+        style={{ animationDelay: "4s" }}
+      />
 
       {/* Glow naranja */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -bottom-40 -right-40 h-[36rem] w-[36rem] rounded-full opacity-30 blur-3xl"
+        className="pointer-events-none absolute -bottom-40 -right-40 z-0 h-[36rem] w-[36rem] rounded-full opacity-30 blur-3xl"
         style={{
           background:
             "radial-gradient(circle, rgba(240,100,0,0.55) 0%, rgba(196,74,0,0.15) 45%, transparent 70%)",

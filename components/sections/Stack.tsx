@@ -56,6 +56,21 @@ const categories: Category[] = [
 export default function Stack() {
   const { t } = useLang();
 
+  // Efecto tilt 3D: calcula el angulo de rotacion segun la posicion del cursor.
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    e.currentTarget.style.transform = `perspective(600px) rotateY(${
+      x * 12
+    }deg) rotateX(${-y * 12}deg) scale(1.02)`;
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.currentTarget.style.transform =
+      "perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)";
+  };
+
   return (
     <section id="stack" className="bg-surface-alt py-16 md:py-24 lg:py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -74,7 +89,10 @@ export default function Stack() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.45, delay: i * 0.07 }}
-              className="group rounded-2xl border border-white/5 bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-orange-primary hover:shadow-[0_0_30px_-10px_rgba(240,100,0,0.5)]"
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              style={{ transition: "transform 0.15s ease" }}
+              className="group rounded-2xl border border-white/5 bg-surface p-6 hover:border-orange-primary hover:shadow-[0_0_30px_-10px_rgba(240,100,0,0.5)]"
               data-cursor-hover
             >
               <div className="mb-4 flex items-center gap-3">
