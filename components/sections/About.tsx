@@ -1,8 +1,5 @@
 "use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
-// About: foto sticky, bio, highlights y bloque de código.
-
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
 import TechCarousel from "@/components/ui/TechCarousel";
@@ -32,45 +29,60 @@ export default function About() {
           subtitle={t.about.subtitle}
         />
 
-        <div className="grid gap-10 md:grid-cols-[300px_1fr] md:items-start md:gap-14">
+        {/* Fila 1: foto | bio + código */}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-12">
 
-          {/* ── Columna izquierda: foto + código ── */}
+          {/* ── Foto — llena toda la altura de la fila ── */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="mx-auto w-full max-w-[280px] md:max-w-none flex flex-col gap-5"
+            className="relative min-h-[320px] overflow-hidden rounded-2xl"
           >
-            {/* Foto */}
-            <div className="relative aspect-[4/5] rounded-2xl">
-              <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                <img
-                  src="/photo.jpg"
-                  alt="Kevin Gonzalez"
-                  className="h-full w-full object-cover"
-                  style={{ objectPosition: "center 15%" }}
-                />
-              </div>
-              <motion.div
-                aria-hidden
-                className="pointer-events-none absolute rounded-[20px]"
-                style={{ inset: "-3px", border: "1.5px solid #f56f0d" }}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 0.75 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
-              />
-            </div>
-
-            {/* Código decorativo — bajo la foto */}
+            <img
+              src="/photo.jpg"
+              alt="Kevin Gonzalez"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: "center 12%" }}
+            />
+            {/* Gradiente sutil inferior */}
+            <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(to top, rgba(13,13,13,0.4) 0%, transparent 50%)" }}
+            />
+            {/* Marco naranja */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.5, ease: "easeOut", delay: 0.25 }}
+              aria-hidden
+              className="pointer-events-none absolute rounded-2xl"
+              style={{ inset: "-2px", border: "1.5px solid rgba(245,111,13,0.7)" }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            />
+          </motion.div>
+
+          {/* ── Bio + código ── */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+            className="flex flex-col justify-between gap-6"
+          >
+            {/* Bio */}
+            <p
+              className="text-base leading-relaxed md:text-lg"
+              style={{ color: "var(--text-primary)" }}
+            >
+              {t.about.bio}
+            </p>
+
+            {/* Código */}
+            <div
               className="rounded-xl p-4 font-mono text-xs leading-relaxed"
-              style={{ background: "rgba(0,0,0,0.40)", border: "1px solid rgba(245,111,13,0.15)" }}
+              style={{ background: "rgba(0,0,0,0.45)", border: "1px solid rgba(245,111,13,0.15)" }}
             >
               <span style={{ color: "var(--text-secondary)" }}>const </span>
               <span style={{ color: "#f56f0d" }}>kevin</span>
@@ -80,10 +92,18 @@ export default function About() {
                 available: <span style={{ color: "#4ade80" }}>true</span>,
               </span>
               <span className="block pl-4" style={{ color: "var(--text-secondary)" }}>
-                location: <span style={{ color: "#f56f0d" }}>&#39;Bogotá{" "}
-                  <img src="https://flagcdn.com/16x12/co.png" alt="🇨🇴" width={16} height={12}
-                    style={{ display: "inline", verticalAlign: "middle", marginBottom: 2 }} />
-                &#39;</span>,
+                location:{" "}
+                <span style={{ color: "#f56f0d" }}>
+                  &#39;Bogotá{" "}
+                  <img
+                    src="https://flagcdn.com/16x12/co.png"
+                    alt="🇨🇴"
+                    width={16}
+                    height={12}
+                    style={{ display: "inline", verticalAlign: "middle", marginBottom: 2 }}
+                  />
+                  &#39;
+                </span>,
               </span>
               <span className="block pl-4" style={{ color: "var(--text-secondary)" }}>
                 focus: <span style={{ color: "#f56f0d" }}>&#39;Cloud &amp; DevOps&#39;</span>,
@@ -92,71 +112,56 @@ export default function About() {
                 english: <span style={{ color: "#f56f0d" }}>&#39;B1 (iTEP)&#39;</span>
               </span>
               <span style={{ color: "var(--text-primary)" }}>&#125;</span>
-            </motion.div>
+            </div>
           </motion.div>
+        </div>
 
-          {/* ── Columna derecha: bio + highlights ── */}
-          <div className="flex flex-col gap-8">
-
-            {/* Bio */}
-            <motion.p
+        {/* Fila 2: cards de highlights — fila completa */}
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {t.about.highlights.map((item, i) => (
+            <motion.div
+              key={item.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="text-lg leading-relaxed"
-              style={{ color: "var(--text-primary)" }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.1 }}
+              className="relative overflow-hidden rounded-2xl border border-white/5 p-5 transition-all hover:border-orange-primary/40"
+              style={{ background: "var(--surface)" }}
+              data-cursor-hover
             >
-              {t.about.bio}
-            </motion.p>
-
-            {/* Highlights */}
-            <div className="grid gap-4 sm:grid-cols-3">
-              {t.about.highlights.map((item, i) => (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.1 }}
-                  className="relative overflow-hidden rounded-2xl border border-white/5 p-5 transition-colors hover:border-orange-primary/40"
-                  style={{ background: "var(--surface)" }}
-                  data-cursor-hover
-                >
-                  <span aria-hidden
-                    className="pointer-events-none absolute -top-1 right-2 select-none font-display text-4xl font-bold text-orange-primary"
-                    style={{ opacity: 0.12 }}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span aria-hidden
-                    className="mb-3 block h-1 w-6 bg-orange-primary"
-                    style={{ clipPath: "polygon(30% 0, 100% 0, 70% 100%, 0 100%)" }}
-                  />
-                  <h3 className="relative font-display text-base font-bold text-orange-primary">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
-                    {item.desc}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-
-          </div>
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -top-1 right-2 select-none font-display text-4xl font-bold text-orange-primary"
+                style={{ opacity: 0.12 }}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span
+                aria-hidden
+                className="mb-3 block h-1 w-6 bg-orange-primary"
+                style={{ clipPath: "polygon(30% 0, 100% 0, 70% 100%, 0 100%)" }}
+              />
+              <h3 className="relative font-display text-base font-bold text-orange-primary">
+                {item.title}
+              </h3>
+              <p className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
+                {item.desc}
+              </p>
+            </motion.div>
+          ))}
         </div>
-      </div>
 
-      {/* Carrusel de tecnologías debajo del bloque de código */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
-        className="mt-12"
-      >
-        <TechCarousel />
-      </motion.div>
+        {/* Carrusel */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+          className="mt-10"
+        >
+          <TechCarousel />
+        </motion.div>
+      </div>
     </section>
   );
 }
