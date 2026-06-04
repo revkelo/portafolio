@@ -70,6 +70,12 @@ body {
   overflow-x: hidden;
 }
 
+/* Fallbacks CSS para cuando las utilities de Tailwind no cargan en dev mode */
+h1, h2, h3, h4, h5, h6, p, span, a, li, label, button {
+  color: inherit;
+}
+* { box-sizing: border-box; }
+
 /* Scrollbar custom naranja */
 ::-webkit-scrollbar {
   width: 4px;
@@ -91,15 +97,11 @@ body {
   color: #ffffff;
 }
 
-/* Cursor personalizado: ocultamos el nativo solo en desktop con hover fino */
-@media (hover: hover) and (pointer: fine) {
-  body {
-    cursor: none;
-  }
-  a,
-  button {
-    cursor: none;
-  }
+/* Cursor personalizado: solo ocultar cuando el custom cursor JS ya está activo */
+.custom-cursor-active,
+.custom-cursor-active a,
+.custom-cursor-active button {
+  cursor: none !important;
 }
 
 /* Secciones con glass effect sobre el canvas 3D global (un solo Canvas WebGL

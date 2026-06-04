@@ -22,6 +22,8 @@ export default function CustomCursor() {
     const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
     if (!mq.matches) return;
     setEnabled(true);
+    // Solo ocultar el cursor nativo cuando el custom ya está activo
+    document.documentElement.classList.add("custom-cursor-active");
 
     const move = (e: MouseEvent) => {
       target.current = { x: e.clientX, y: e.clientY };
