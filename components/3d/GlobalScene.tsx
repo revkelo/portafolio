@@ -129,30 +129,55 @@ function WaveSolid({ shared }: { shared: WaveShared }) {
     return idx;
   }, [n]);
 
+  // Colores del gradiente: valle oscuro → base → pico brillante
+  const colorLow  = useMemo(() => new THREE.Color('#7a2500'), []);
+  const colorMid  = useMemo(() => new THREE.Color('#f56f0d'), []);
+  const colorHigh = useMemo(() => new THREE.Color('#ffe066'), []);
+
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     geo.setIndex(new THREE.BufferAttribute(indices, 1));
     const posCopy = new Float32Array(shared.positions.length);
     posCopy.set(shared.positions);
     geo.setAttribute('position', new THREE.BufferAttribute(posCopy, 3));
+    // Buffer de colores por vertice (RGB, 3 valores por vertice)
+    const colors = new Float32Array(shared.positions.length); // n*n * 3
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     return geo;
   }, [shared.positions, indices]);
 
   useFrame(() => {
     if (!meshRef.current) return;
-    const attr = meshRef.current.geometry.attributes.position as THREE.BufferAttribute;
-    (attr.array as Float32Array).set(shared.positions);
-    attr.needsUpdate = true;
-    meshRef.current.geometry.computeVertexNormals();
+    const geo = meshRef.current.geometry;
+    const posAttr = geo.attributes.position as THREE.BufferAttribute;
+    const colAttr = geo.attributes.color as THREE.BufferAttribute;
+    (posAttr.array as Float32Array).set(shared.positions);
+    posAttr.needsUpdate = true;
+
+    // Calcular gradiente segun altura Y de cada vertice
+    const amp = shared.amp.current || 1;
+    const n = shared.positions.length / 3;
+    const tmp = new THREE.Color();
+    for (let i = 0; i < n; i++) {
+      const y = shared.positions[i * 3 + 1];
+      // Normalizar: -amp..amp → 0..1
+      const t = Math.max(0, Math.min(1, (y / amp + 1) * 0.5));
+      if (t < 0.5) {
+        tmp.lerpColors(colorLow, colorMid, t * 2);
+      } else {
+        tmp.lerpColors(colorMid, colorHigh, (t - 0.5) * 2);
+      }
+      colAttr.setXYZ(i, tmp.r, tmp.g, tmp.b);
+    }
+    colAttr.needsUpdate = true;
+    geo.computeVertexNormals();
   });
 
-  const orange = '#ff8c35'; // naranja mas claro/brillante
   return (
     <mesh ref={meshRef} geometry={geometry}>
       <meshStandardMaterial
-        color={orange}
-        emissive={orange}
-        emissiveIntensity={0.8}
+        vertexColors
+        emissiveIntensity={0.6}
         roughness={0.15}
         metalness={0.1}
         side={THREE.DoubleSide}
