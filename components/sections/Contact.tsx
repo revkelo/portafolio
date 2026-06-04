@@ -149,7 +149,7 @@ export default function Contact() {
     : [{ value: "2+", label: "yrs exp." },  { value: "35+", label: "repositories" }, { value: "6+", label: "projects" }];
 
   return (
-    <section id="contacto" className="section-glass relative overflow-hidden py-16 md:py-24 lg:py-32">
+    <section id="contacto" className="section-glass relative overflow-hidden py-10 md:py-14 lg:py-20">
 
       {/* Watermark 05 */}
       <span aria-hidden className="pointer-events-none absolute -top-8 -left-4 select-none font-display text-[200px] font-bold leading-none text-orange-primary opacity-5">

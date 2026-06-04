@@ -15,7 +15,7 @@ export default function Projects() {
   const rest = projects.filter((p) => !p.featured);
 
   return (
-    <section id="proyectos" className="section-glass relative py-16 md:py-24 lg:py-32">
+    <section id="proyectos" className="section-glass relative py-10 md:py-14 lg:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionTitle
           number={t.projects.number}

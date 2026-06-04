@@ -14,7 +14,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="section-glass relative overflow-hidden py-16 md:py-24 lg:py-32"
+      className="section-glass relative overflow-hidden py-10 md:py-14 lg:py-20"
     >
       {/* Watermark */}
       <span

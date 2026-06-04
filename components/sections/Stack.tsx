@@ -1,68 +1,80 @@
 "use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
-// Stack: grid responsive de categorias tecnologicas con tilt 3D en hover.
-
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useLang } from "@/lib/i18n/LangContext";
 
-const icons: Record<string, React.ReactNode> = {
-  cloud:    <path d="M17.5 19a4.5 4.5 0 0 0 .5-8.97A6 6 0 0 0 6.34 9.5 4 4 0 0 0 7 17.5" />,
-  backend:  <path d="M4 6h16M4 12h16M4 18h10" />,
-  frontend: <path d="m8 6-6 6 6 6M16 6l6 6-6 6" />,
-  data:     <path d="M3 6c0 1.66 4 3 9 3s9-1.34 9-3-4-3-9-3-9 1.34-9 3Zm0 0v12c0 1.66 4 3 9 3s9-1.34 9-3V6" />,
-  db:       <path d="M12 8c4.97 0 9-1.34 9-3s-4.03-3-9-3-9 1.34-9 3 4.03 3 9 3Zm9 4c0 1.66-4 3-9 3s-9-1.34-9-3m18-5v10c0 1.66-4 3-9 3s-9-1.34-9-3V7" />,
+const ICON_PATHS: Record<string, React.ReactNode> = {
+  cloud:    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />,
+  backend:  <>
+              <path d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2" />
+              <circle cx="9" cy="9" r="1" /><circle cx="9" cy="15" r="1" />
+            </>,
+  frontend: <><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></>,
+  data:     <path d="M18 20V10M12 20V4M6 20v-6" />,
+  db:       <>
+              <ellipse cx="12" cy="5" rx="9" ry="3" />
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+            </>,
 };
 
 const categories = [
   {
-    icon: "cloud" as const,
+    icon: "cloud",
     title: "Cloud & DevOps",
-    techs: ["AWS", "Docker", "Kubernetes", "Terraform", "Azure", "GitHub Actions", "CI/CD"],
-    wide: true,
+    span: 2,
+    techs: ["AWS", "Docker", "Kubernetes", "Terraform", "Azure", "Azure DevOps", "GitHub Actions", "CI/CD", "AWS Lambda", "EC2", "S3"],
   },
   {
-    icon: "backend" as const,
+    icon: "backend",
     title: "Backend",
-    techs: ["Python", "FastAPI", "Java", "Spring Boot", "Node.js"],
-    wide: false,
+    span: 1,
+    techs: ["Python", "FastAPI", "Java", "Spring Boot", "Node.js", "Dart", "REST APIs"],
   },
   {
-    icon: "frontend" as const,
+    icon: "frontend",
     title: "Frontend",
-    techs: ["TypeScript", "React", "Flutter", "Three.js", "Next.js"],
-    wide: false,
+    span: 1,
+    techs: ["TypeScript", "React", "Flutter", "Three.js", "Next.js", "HTML/CSS", "GSAP", "Tailwind"],
   },
   {
-    icon: "data" as const,
+    icon: "data",
     title: "Data & IA",
-    techs: ["DAMA-DMBOK", "Great Expectations", "Databricks", "LangChain", "PySpark"],
-    wide: false,
+    span: 1,
+    techs: ["DAMA-DMBOK", "Great Expectations", "Databricks", "LangChain", "PySpark", "Power BI", "LlamaIndex", "RAG", "OpenAI", "Anthropic"],
   },
   {
-    icon: "db" as const,
+    icon: "db",
     title: "Databases",
-    techs: ["MySQL", "PostgreSQL", "Supabase", "DynamoDB", "Redis"],
-    wide: true,
+    span: 1,
+    techs: ["MySQL", "PostgreSQL", "Supabase", "DynamoDB", "Redis", "Oracle", "MariaDB"],
   },
-];
+] as const;
+
+// Colores de acento por categoría
+const ACCENT: Record<string, string> = {
+  cloud:    "#f56f0d",
+  backend:  "#e05a0c",
+  frontend: "#ff8c00",
+  data:     "#ff6a00",
+  db:       "#f56f0d",
+};
 
 export default function Stack() {
   const { t } = useLang();
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    e.currentTarget.style.transform = `perspective(600px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) scale(1.02)`;
-  };
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.transform = "perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)";
-  };
-
   return (
-    <section id="stack" className="section-glass relative overflow-hidden py-16 md:py-24 lg:py-32">
+    <section id="stack" className="section-glass relative overflow-hidden py-10 md:py-14 lg:py-20">
+      {/* Watermark fondo */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -bottom-8 -right-6 select-none font-display text-[220px] font-bold leading-none text-orange-primary"
+        style={{ opacity: 0.03 }}
+      >
+        {t.stack.number}
+      </span>
+
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionTitle
           number={t.stack.number}
@@ -71,84 +83,119 @@ export default function Stack() {
           subtitle={t.stack.subtitle}
         />
 
-        {/* Grid: 1 col mobile → 2 cols tablet → 3 cols desktop */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(1, 1fr)", gap: "1.25rem" }}
-          className="sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((cat, i) => (
-            <motion.div
-              key={cat.title}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              style={{
-                transition: "transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease",
-                background: "var(--surface)",
-                border: "1px solid var(--border)",
-                borderRadius: "1rem",
-                padding: "1.5rem",
-                position: "relative",
-                overflow: "hidden",
-                // Cards "wide" ocupan 2 columnas en desktop
-                gridColumn: cat.wide ? "span 1" : undefined,
-              }}
-              className={cat.wide ? "lg:col-span-1 sm:col-span-2 lg:col-span-1" : ""}
-              data-cursor-hover
-            >
-              {/* Número categoría */}
-              <span
-                aria-hidden
+        {/* Bento grid */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {categories.map((cat, i) => {
+            const accent = ACCENT[cat.icon];
+            return (
+              <motion.div
+                key={cat.title}
+                initial={{ opacity: 0, y: 36 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.55, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ scale: 1.015 }}
+                className={cat.span === 2 ? "sm:col-span-2 lg:col-span-2" : ""}
                 style={{
-                  position: "absolute", top: "0.75rem", right: "1rem",
-                  fontFamily: "var(--font-display)", fontSize: "2rem", fontWeight: 700,
-                  color: "#f56f0d", opacity: 0.12, userSelect: "none", pointerEvents: "none",
+                  position: "relative",
+                  borderRadius: "1.25rem",
+                  overflow: "hidden",
+                  background: "var(--surface)",
+                  border: "1px solid rgba(245,111,13,0.10)",
+                  transition: "box-shadow 0.3s ease, border-color 0.3s ease",
+                  cursor: "default",
                 }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 1px ${accent}40, 0 8px 40px ${accent}18`;
+                  (e.currentTarget as HTMLElement).style.borderColor = `${accent}35`;
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(245,111,13,0.10)";
+                }}
+                data-cursor-hover
               >
-                {String(i + 1).padStart(2, "0")}
-              </span>
+                {/* Línea superior naranja */}
+                <div style={{
+                  position: "absolute", top: 0, left: 0, right: 0, height: "2px",
+                  background: `linear-gradient(to right, ${accent}, transparent)`,
+                }} />
 
-              {/* Ícono + título */}
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-                <span style={{
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  width: 40, height: 40, borderRadius: "0.5rem",
-                  background: "rgba(245,111,13,0.1)", color: "#f56f0d",
+                {/* Gradiente sutil de fondo */}
+                <div style={{
+                  position: "absolute", inset: 0, pointerEvents: "none",
+                  background: `radial-gradient(ellipse at top left, ${accent}0a 0%, transparent 65%)`,
+                }} />
+
+                {/* Número watermark */}
+                <span aria-hidden style={{
+                  position: "absolute", bottom: "0.75rem", right: "1.1rem",
+                  fontFamily: "var(--font-display)", fontSize: "3.5rem", fontWeight: 800,
+                  color: accent, opacity: 0.07, userSelect: "none", lineHeight: 1,
                 }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    {icons[cat.icon]}
-                  </svg>
+                  {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 style={{
-                  fontFamily: "var(--font-display)", fontSize: "1.05rem", fontWeight: 700,
-                  color: "var(--text-primary)",
-                }}>
-                  {cat.title}
-                </h3>
-              </div>
 
-              {/* Pills de tecnologías */}
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-                {cat.techs.map((tech) => (
-                  <span
-                    key={tech}
-                    style={{
-                      borderRadius: "999px",
-                      border: "1px solid var(--border)",
-                      background: "var(--surface-alt)",
-                      padding: "0.2rem 0.75rem",
-                      fontSize: "0.78rem",
-                      color: "var(--text-secondary)",
-                    }}
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          ))}
+                <div style={{ padding: "1.5rem", position: "relative" }}>
+                  {/* Header: icono + título */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.875rem", marginBottom: "1.25rem" }}>
+                    <div style={{
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      width: 44, height: 44, borderRadius: "0.75rem", flexShrink: 0,
+                      background: `linear-gradient(135deg, ${accent}22, ${accent}0e)`,
+                      border: `1px solid ${accent}30`,
+                      color: accent,
+                    }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        {ICON_PATHS[cat.icon]}
+                      </svg>
+                    </div>
+                    <h3 style={{
+                      fontFamily: "var(--font-display)", fontSize: "1.1rem", fontWeight: 700,
+                      color: "var(--text-primary)", letterSpacing: "-0.01em",
+                    }}>
+                      {cat.title}
+                    </h3>
+                  </div>
+
+                  {/* Separador */}
+                  <div style={{
+                    height: "1px", marginBottom: "1.1rem",
+                    background: `linear-gradient(to right, ${accent}25, transparent)`,
+                  }} />
+
+                  {/* Pills */}
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
+                    {cat.techs.map((tech) => (
+                      <span key={tech} style={{
+                        borderRadius: "0.5rem",
+                        border: "1px solid rgba(245,111,13,0.12)",
+                        background: "rgba(245,111,13,0.05)",
+                        padding: "0.22rem 0.65rem",
+                        fontSize: "0.75rem",
+                        fontWeight: 500,
+                        color: "var(--text-secondary)",
+                        letterSpacing: "0.01em",
+                        transition: "background 0.2s, color 0.2s",
+                      }}
+                        onMouseEnter={e => {
+                          (e.currentTarget as HTMLElement).style.background = `${accent}18`;
+                          (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
+                        }}
+                        onMouseLeave={e => {
+                          (e.currentTarget as HTMLElement).style.background = "rgba(245,111,13,0.05)";
+                          (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
+                        }}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
