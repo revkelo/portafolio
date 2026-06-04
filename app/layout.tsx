@@ -71,6 +71,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
     >
+      {/* Script inline para aplicar data-theme ANTES del primer render y evitar flash */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
+        }}
+      />
       <body className="min-h-full bg-background text-text-primary">
         {/* Canvas 3D fijo detras de todo el contenido (el viaje persistente) */}
         <GlobalSceneWrapper />

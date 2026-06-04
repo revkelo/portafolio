@@ -74,15 +74,26 @@ export default function Navbar() {
     <button
       onClick={toggleTheme}
       data-cursor-hover
-      aria-label="Toggle theme"
-      className={`flex h-8 w-8 items-center justify-center rounded-full border border-orange-primary/30 text-text-secondary transition-colors hover:border-orange-primary hover:text-orange-primary ${className}`}
+      aria-label={theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+      style={{
+        display: "flex", alignItems: "center", justifyContent: "center",
+        width: 32, height: 32, borderRadius: "50%",
+        border: "1px solid rgba(245,111,13,0.35)",
+        background: "transparent", cursor: "pointer",
+        color: "var(--text-secondary)", transition: "border-color 0.2s, color 0.2s",
+      }}
+      className={className}
+      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "#f56f0d"; (e.currentTarget as HTMLElement).style.color = "#f56f0d"; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(245,111,13,0.35)"; (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)"; }}
     >
       {theme === "dark" ? (
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        /* Sol — pasar a claro */
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <circle cx="12" cy="12" r="4"/>
           <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M22 12h-2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
         </svg>
       ) : (
+        /* Luna — pasar a oscuro */
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
