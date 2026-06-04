@@ -778,9 +778,7 @@ function SceneContents({
       <group ref={groupRef}>
         <MouseProjector shared={shared} mouse={mouse} />
         <WaveGrid shared={shared} progress={progress} />
-        {!isMobile && <WaveMesh shared={shared} />}
         <WaveParticles shared={shared} count={particleCount} />
-        <CentralHalo />
         {!isMobile && <CursorOrb shared={shared} />}
       </group>
     </>
