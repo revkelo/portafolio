@@ -24,6 +24,9 @@ function icon(slug: string) {
   return `https://skillicons.dev/icons?i=${slug}`;
 }
 
+// Layout desktop (3 cols):
+//  Fila 1: [Cloud & DevOps — 2 cols] [Backend — 1 col]
+//  Fila 2: [Frontend — 1 col] [Data & IA — 1 col] [Databases — 1 col]
 const categories = [
   {
     key: "cloud",
@@ -61,7 +64,7 @@ const categories = [
     badge: "Advanced",
     badgeColor: "#38bdf8",
     accent: "#38bdf8",
-    span: 2,
+    span: 1,
     emoji: "◈",
     techs: ["PySpark","LangChain","Databricks","OpenAI","Great Expectations","Power BI","RAG","DAMA-DMBOK"],
   },
