@@ -56,13 +56,14 @@ export default function CustomCursor() {
 
   return (
     <div aria-hidden className="pointer-events-none fixed left-0 top-0 z-[9999]">
-      {/* Punto central — se oculta cuando aparece el crosshair */}
+      {/* Punto central */}
       <div
         ref={dotRef}
-        className="fixed left-0 top-0 rounded-full bg-orange-primary transition-opacity duration-150"
+        className="fixed left-0 top-0 rounded-full transition-opacity duration-150"
         style={{
           width: 12,
           height: 12,
+          background: '#f06400',
           opacity: hovering ? 0 : 1,
         }}
       />
@@ -89,7 +90,7 @@ export default function CustomCursor() {
             <path d="M18 4v8M18 24v8M4 18h8M24 18h8" />
           </svg>
         ) : (
-          <span className="block h-9 w-9 rounded-full border border-orange-primary/60" />
+          <span className="block h-9 w-9 rounded-full" style={{ border: '1px solid rgba(240,100,0,0.6)' }} />
         )}
       </div>
     </div>

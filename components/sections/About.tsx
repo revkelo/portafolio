@@ -29,20 +29,21 @@ export default function About() {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="mx-auto w-full max-w-[260px]"
           >
-            <div
-              className="relative flex aspect-[4/5] items-center justify-center overflow-hidden rounded-2xl border border-orange-primary/30 bg-surface"
-              style={{
-                backgroundImage:
-                  "radial-gradient(circle at 50% 30%, rgba(240,100,0,0.18), transparent 60%)",
-              }}
-            >
-              <span className="font-display text-7xl font-bold text-orange-primary">
-                KG
-              </span>
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10">
+              <img
+                src="/photo.jpg"
+                alt="Kevin Gonzalez"
+                className="h-full w-full object-cover object-top"
+              />
+              {/* Glow naranja sutil en la esquina inferior */}
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(240,100,0,0.25) 0%, transparent 50%)",
+                }}
+              />
             </div>
-            <p className="mt-3 text-center text-xs text-text-secondary/60">
-              {t.about.photoHint}
-            </p>
           </motion.div>
 
           <div>
