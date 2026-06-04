@@ -106,7 +106,66 @@ function sectionWeights(p: number) {
 }
 
 // ----------------------------------------------------------------------------
-// WAVE GRID â€” los N*N puntos de la ola. La superficie principal.
+// WAVE SOLID — malla solida naranja semi-transparente que sigue exactamente
+// los mismos vertices que WaveGrid. Da sensacion de ola de fuego/lava.
+// ----------------------------------------------------------------------------
+function WaveSolid({ shared }: { shared: WaveShared }) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const n = shared.n;
+
+  const indices = useMemo(() => {
+    const idx = new Uint32Array((n - 1) * (n - 1) * 6);
+    let ptr = 0;
+    for (let i = 0; i < n - 1; i++) {
+      for (let j = 0; j < n - 1; j++) {
+        const a = i * n + j;
+        const b = i * n + j + 1;
+        const c = (i + 1) * n + j;
+        const d = (i + 1) * n + j + 1;
+        idx[ptr++] = a; idx[ptr++] = b; idx[ptr++] = c;
+        idx[ptr++] = b; idx[ptr++] = d; idx[ptr++] = c;
+      }
+    }
+    return idx;
+  }, [n]);
+
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    geo.setIndex(new THREE.BufferAttribute(indices, 1));
+    const posCopy = new Float32Array(shared.positions.length);
+    posCopy.set(shared.positions);
+    geo.setAttribute('position', new THREE.BufferAttribute(posCopy, 3));
+    return geo;
+  }, [shared.positions, indices]);
+
+  useFrame(() => {
+    if (!meshRef.current) return;
+    const attr = meshRef.current.geometry.attributes.position as THREE.BufferAttribute;
+    (attr.array as Float32Array).set(shared.positions);
+    attr.needsUpdate = true;
+    meshRef.current.geometry.computeVertexNormals();
+  });
+
+  const orange = ORANGE;
+  return (
+    <mesh ref={meshRef} geometry={geometry}>
+      <meshStandardMaterial
+        color={orange}
+        emissive={orange}
+        emissiveIntensity={0.5}
+        roughness={0.2}
+        metalness={0.0}
+        transparent
+        opacity={0.28}
+        side={THREE.DoubleSide}
+        toneMapped={false}
+      />
+    </mesh>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// WAVE GRID — los N*N puntos de la ola. La superficie principal.
 // Comparte el array de posiciones con WaveMesh y WaveParticles via refs para
 // que todos lean la misma altura de ola sin recalcular. El mouseWorld tambien se
 // comparte para que el ripple del cursor se aplique a la ola entera.
@@ -801,6 +860,8 @@ function SceneContents({
           inclinacion aplicada por el mouse. */}
       <group ref={groupRef}>
         <MouseProjector shared={shared} mouse={mouse} />
+        {/* Superficie sólida naranja — debajo de los puntos para dar profundidad */}
+        <WaveSolid shared={shared} />
         <WaveGrid shared={shared} progress={progress} />
         {!isMobile && <WaveMesh shared={shared} />}
         <WaveParticles shared={shared} count={particleCount} />
