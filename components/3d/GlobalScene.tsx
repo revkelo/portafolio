@@ -5,10 +5,11 @@
 //
 // CONCEPTO: "Wave Field" — una superficie viva de puntos que ondea como un
 // campo de datos o una funcion matematica. Elegante, organico, tecnico.
-// Un grid NxN de puntos cuya altura (Y) oscila con ondas senoidales que parten
-// del centro; una malla de lineas une los puntos (solo desktop) creando una red
-// deformable; particulas mas brillantes flotan sobre la ola; una esfera emissive
-// pulsa en el origen como fuente de la onda; todo sobre un cielo estrellado sutil.
+// Un grid NxN de puntos cuya altura (Y) oscila con ondas senoidales superpuestas
+// que parten del centro; una malla de lineas une los puntos (solo desktop) creando
+// una red deformable; particulas mas brillantes flotan sobre la ola; un sistema de
+// anillos concentricos pulsa en el origen como fuente de la onda; todo sobre un
+// cielo estrellado sutil. El cursor proyecta un ripple local sobre la ola.
 //
 // Objetos por seccion:
 //   - WaveGrid      (siempre)        - WaveParticles (siempre)
@@ -20,14 +21,21 @@
 //   - hero:    amplitud normal, ola estandar
 //   - about:   amplitud sube, ola mas dramatica
 //   - stack:   frecuencia aumenta — ola mas rapida y compacta
-//   - contact: los puntos convergen y se aplanan (amplitud -> 0)
+//   - contact: los puntos convergen en espiral hacia dentro y se aplanan
+//
+// Interaccion del cursor:
+//   - El mouse 2D se proyecta al plano Y=0 del mundo (raycaster) -> mouseWorld.
+//   - Cada punto de la ola recibe un ripple local: una onda que decae con la
+//     distancia al cursor, creando una distorsion viva donde pasa el mouse.
+//   - Un CursorOrb (anillo + nucleo) se posa sobre la ola siguiendo mouseWorld.
 //
 // Reglas tecnicas:
 //   - NO <Text> de drei (CDN de fuente crashea).
 //   - NO <EffectComposer> (WebGL Context Lost con alpha:true).
 //   - El glow naranja se logra via emissive en materiales + CSS.
-//   - useMemo para posiciones/geometrias estaticas. Nunca crear objetos
-//     Three.js dentro de useFrame; solo se reescriben BufferAttributes.
+//   - useMemo para posiciones/geometrias/Vector3/Plane/Raycaster estaticos.
+//     Nunca crear objetos Three.js dentro de useFrame; solo se reescriben
+//     BufferAttributes y se mutan vectores ya instanciados.
 // IMPORTANTE: importar SIEMPRE via dynamic(ssr:false) (ver GlobalSceneWrapper).
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -38,6 +46,11 @@ import * as THREE from "three";
 // Paleta del Wave Field.
 const ORANGE = "#f06400";
 const ORANGE_DARK = "#c44a00";
+
+// Gradiente de color por altura de la ola.
+const COLOR_PEAK = new THREE.Color("#ff8c00"); // pico (y alto)
+const COLOR_BASE = new THREE.Color("#f06400"); // medio
+const COLOR_VALLEY = new THREE.Color("#7a3000"); // valle (y bajo)
 
 // Parametros del grid.
 const GRID_DESKTOP = 30; // 30x30 = 900 puntos
@@ -77,7 +90,8 @@ function sectionWeights(p: number) {
 // ----------------------------------------------------------------------------
 // WAVE GRID — los N*N puntos de la ola. La superficie principal.
 // Comparte el array de posiciones con WaveMesh y WaveParticles via refs para
-// que todos lean la misma altura de ola sin recalcular.
+// que todos lean la misma altura de ola sin recalcular. El mouseWorld tambien se
+// comparte para que el ripple del cursor se aplique a la ola entera.
 // ----------------------------------------------------------------------------
 interface WaveShared {
   positions: Float32Array;
@@ -87,24 +101,51 @@ interface WaveShared {
   amp: React.RefObject<number>;
   freq: React.RefObject<number>;
   flat: React.RefObject<number>; // 0..1 convergencia/aplanado (contact)
+  // Proyeccion del cursor al plano Y=0 del mundo (origen del ripple).
+  mouseWorld: THREE.Vector3;
+  // Intensidad del ripple (sube cuando el cursor esta sobre la ola).
+  rippleStrength: React.RefObject<number>;
 }
 
-// Calcula la altura de la ola en un punto (x,z) dado el tiempo y estados.
-function waveHeight(
+// Altura base de la ola en (x,z): tres ondas senoidales superpuestas para un
+// movimiento mas organico y menos repetitivo. Sin ripple ni convergencia (eso se
+// aplica fuera para poder reutilizarla en particulas).
+function waveBase(
   x: number,
   z: number,
   t: number,
   amp: number,
   freq: number,
-  flat: number,
 ) {
   const dist = Math.sqrt(x * x + z * z);
+  const xf = x * freq;
+  const zf = z * freq;
   const y =
     amp *
-    Math.sin(x * 1.2 * freq + t) *
-    Math.cos(z * 0.8 * freq + t * 0.7) *
-    Math.sin(dist * 0.5 - t * 1.2);
-  return y * (1 - flat);
+    (Math.sin(xf * 1.2 + t) *
+      Math.cos(zf * 0.8 + t * 0.7) *
+      Math.sin(dist * 0.5 - t * 1.2) *
+      0.5 +
+      Math.sin(xf * 0.7 - t * 1.3) * Math.cos(zf * 1.1 + t * 0.4) * 0.3 +
+      Math.sin(xf * 2.1 + t * 0.8) * Math.cos(zf * 0.5 - t * 1.8) * 0.2);
+  return y;
+}
+
+// Ripple local del cursor: una onda concentrica que decae exponencialmente con la
+// distancia al mouseWorld. strength escala el efecto (0 = sin cursor sobre la ola).
+function cursorRipple(
+  x: number,
+  z: number,
+  t: number,
+  mw: THREE.Vector3,
+  strength: number,
+) {
+  if (strength <= 0.001) return 0;
+  const dx = x - mw.x;
+  const dz = z - mw.z;
+  const mouseDist = Math.sqrt(dx * dx + dz * dz);
+  const influence = Math.exp(-mouseDist * 1.5) * 0.6;
+  return Math.sin(mouseDist * 3 - t * 4) * influence * strength;
 }
 
 function WaveGrid({
@@ -119,6 +160,25 @@ function WaveGrid({
   // Posiciones iniciales del grid (x,z fijos; y se recalcula cada frame).
   const positions = shared.positions;
 
+  // x,z "de reposo" para poder converger en espiral en contact sin perder el
+  // layout original cuando flat vuelve a 0.
+  const restXZ = useMemo(() => {
+    const arr = new Float32Array(positions.length);
+    arr.set(positions);
+    return arr;
+  }, [positions]);
+
+  // Colores por vertice (gradiente por altura). Se actualizan cada frame.
+  const colors = useMemo(() => {
+    const arr = new Float32Array((positions.length / 3) * 3);
+    for (let i = 0; i < arr.length; i += 3) {
+      arr[i] = COLOR_BASE.r;
+      arr[i + 1] = COLOR_BASE.g;
+      arr[i + 2] = COLOR_BASE.b;
+    }
+    return arr;
+  }, [positions.length]);
+
   useFrame(({ clock }, delta) => {
     const t = clock.elapsedTime;
     const w = sectionWeights(progress.current ?? 0);
@@ -126,7 +186,7 @@ function WaveGrid({
     // Targets por seccion.
     const targetAmp = 0.8 + w.about * 0.4; // about: amplitud sube a 1.2
     const targetFreq = 1 + w.stack * 0.9; // stack: frecuencia aumenta
-    const targetFlat = w.contact; // contact: aplanar hacia 0
+    const targetFlat = w.contact; // contact: aplanar + espiral hacia 0
 
     // Interpolar estados de forma suave.
     const k = Math.min(1, delta * 2.2);
@@ -137,24 +197,69 @@ function WaveGrid({
     const amp = shared.amp.current;
     const freq = shared.freq.current;
     const flat = shared.flat.current;
+    const strength = shared.rippleStrength.current ?? 0;
+    const mw = shared.mouseWorld;
     const n = shared.n;
-    const half = shared.half;
 
-    // Recalcular Y de cada vertice.
+    // Rango de altura para normalizar el gradiente de color (aprox).
+    const ampSpan = Math.max(0.0001, amp);
+
+    const geo = pointsRef.current?.geometry;
+    const colorAttr = geo?.getAttribute("color") as
+      | THREE.BufferAttribute
+      | undefined;
+
+    // Espiral hacia dentro en contact: a medida que flat sube, x,z se acercan al
+    // centro con un giro proporcional a flat (sensacion de remolino).
+    const spiralAngle = flat * 1.6;
+    const cosA = Math.cos(spiralAngle);
+    const sinA = Math.sin(spiralAngle);
+    const pull = 1 - flat * 0.85; // 1 = sin convergencia, ->0.15 al aplanar
+
+    // Recalcular X/Z (convergencia) e Y (ola + ripple) de cada vertice.
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) {
         const idx = (i * n + j) * 3;
-        const x = positions[idx] + 0; // x ya esta en el array
-        const z = positions[idx + 2];
-        positions[idx + 1] = waveHeight(x, z, t, amp, freq, flat);
+        const rx = restXZ[idx];
+        const rz = restXZ[idx + 2];
+
+        // Convergencia en espiral hacia el centro (solo activa en contact).
+        const x = (rx * cosA - rz * sinA) * pull;
+        const z = (rx * sinA + rz * cosA) * pull;
+        positions[idx] = x;
+        positions[idx + 2] = z;
+
+        // Altura: ola base aplanada por flat + ripple del cursor.
+        let y = waveBase(x, z, t, amp, freq) * (1 - flat);
+        y += cursorRipple(x, z, t, mw, strength) * (1 - flat * 0.5);
+        positions[idx + 1] = y;
+
+        // Gradiente de color por altura: valle -> base -> pico.
+        if (colorAttr) {
+          const ci = (i * n + j) * 3;
+          // norm en ~[-1,1] segun la altura relativa a la amplitud.
+          const norm = THREE.MathUtils.clamp(y / ampSpan, -1, 1);
+          let r: number, g: number, b: number;
+          if (norm >= 0) {
+            r = THREE.MathUtils.lerp(COLOR_BASE.r, COLOR_PEAK.r, norm);
+            g = THREE.MathUtils.lerp(COLOR_BASE.g, COLOR_PEAK.g, norm);
+            b = THREE.MathUtils.lerp(COLOR_BASE.b, COLOR_PEAK.b, norm);
+          } else {
+            const tt = -norm;
+            r = THREE.MathUtils.lerp(COLOR_BASE.r, COLOR_VALLEY.r, tt);
+            g = THREE.MathUtils.lerp(COLOR_BASE.g, COLOR_VALLEY.g, tt);
+            b = THREE.MathUtils.lerp(COLOR_BASE.b, COLOR_VALLEY.b, tt);
+          }
+          colors[ci] = r;
+          colors[ci + 1] = g;
+          colors[ci + 2] = b;
+        }
       }
     }
-    void half;
 
-    const geo = pointsRef.current?.geometry;
     if (geo) {
-      const attr = geo.getAttribute("position") as THREE.BufferAttribute;
-      attr.needsUpdate = true;
+      (geo.getAttribute("position") as THREE.BufferAttribute).needsUpdate = true;
+      if (colorAttr) colorAttr.needsUpdate = true;
     }
   });
 
@@ -162,12 +267,13 @@ function WaveGrid({
     <points ref={pointsRef}>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.04}
-        color={ORANGE}
+        size={0.045}
+        vertexColors
         transparent
-        opacity={0.7}
+        opacity={0.78}
         sizeAttenuation
         toneMapped={false}
       />
@@ -246,8 +352,8 @@ function WaveMesh({ shared }: { shared: WaveShared }) {
 
 // ----------------------------------------------------------------------------
 // WAVE PARTICLES — particulas flotantes sobre la ola. Mas grandes y brillantes
-// que los puntos del grid. Cada una sigue la altura de la ola en su (x,z) mas un
-// offset propio que oscila suavemente.
+// que los puntos del grid. Cada una tiene velocidad propia, rebota en los limites
+// del grid y deja una "estela" sutil via opacidad ligada a su velocidad.
 // ----------------------------------------------------------------------------
 function WaveParticles({
   shared,
@@ -258,42 +364,106 @@ function WaveParticles({
 }) {
   const pointsRef = useRef<THREE.Points>(null);
 
-  // Datos estaticos por particula: x, z y offset/fase de flotacion.
+  // Datos estaticos por particula: offset/fase de flotacion.
   const data = useMemo(() => {
-    const xs = new Float32Array(count);
-    const zs = new Float32Array(count);
     const offs = new Float32Array(count);
     const phases = new Float32Array(count);
-    const span = shared.half * 2;
     for (let i = 0; i < count; i++) {
-      xs[i] = (Math.random() - 0.5) * span;
-      zs[i] = (Math.random() - 0.5) * span;
       offs[i] = 0.2 + Math.random() * 0.6; // offset sobre la ola
       phases[i] = Math.random() * Math.PI * 2;
     }
-    return { xs, zs, offs, phases };
+    return { offs, phases };
+  }, [count]);
+
+  // Posicion x,z viva (se integra con velocidad y rebota). Mutable.
+  const xz = useMemo(() => {
+    const arr = new Float32Array(count * 2);
+    const span = shared.half * 2;
+    for (let i = 0; i < count; i++) {
+      arr[i * 2] = (Math.random() - 0.5) * span;
+      arr[i * 2 + 1] = (Math.random() - 0.5) * span;
+    }
+    return arr;
   }, [count, shared.half]);
 
-  const positions = useMemo(() => new Float32Array(count * 3), [count]);
+  // Velocidad individual por particula (x,z).
+  const velocityRef = useMemo(() => {
+    const arr = new Float32Array(count * 2);
+    for (let i = 0; i < count; i++) {
+      arr[i * 2] = (Math.random() - 0.5) * 0.6;
+      arr[i * 2 + 1] = (Math.random() - 0.5) * 0.6;
+    }
+    return arr;
+  }, [count]);
 
-  useFrame(({ clock }) => {
+  const positions = useMemo(() => new Float32Array(count * 3), [count]);
+  // Estela: color por particula (mas brillante = mas rapida).
+  const colors = useMemo(() => new Float32Array(count * 3), [count]);
+
+  const trailColor = useMemo(() => new THREE.Color("#ff8c2a"), []);
+
+  useFrame(({ clock }, delta) => {
     const t = clock.elapsedTime;
     const amp = shared.amp.current;
     const freq = shared.freq.current;
     const flat = shared.flat.current;
-    for (let i = 0; i < count; i++) {
-      const x = data.xs[i];
-      const z = data.zs[i];
-      const baseY = waveHeight(x, z, t, amp, freq, flat);
-      const floatY = data.offs[i] * (1 - flat) + Math.sin(t + data.phases[i]) * 0.08;
-      positions[i * 3] = x;
-      positions[i * 3 + 1] = baseY + floatY;
-      positions[i * 3 + 2] = z;
-    }
+    const strength = shared.rippleStrength.current ?? 0;
+    const mw = shared.mouseWorld;
+    const limit = shared.half;
+    const dt = Math.min(delta, 0.05);
+
     const geo = pointsRef.current?.geometry;
+    const colorAttr = geo?.getAttribute("color") as
+      | THREE.BufferAttribute
+      | undefined;
+
+    for (let i = 0; i < count; i++) {
+      // Integrar posicion con velocidad y rebotar en los limites del grid.
+      let x = xz[i * 2] + velocityRef[i * 2] * dt;
+      let z = xz[i * 2 + 1] + velocityRef[i * 2 + 1] * dt;
+      if (x > limit) {
+        x = limit;
+        velocityRef[i * 2] *= -1;
+      } else if (x < -limit) {
+        x = -limit;
+        velocityRef[i * 2] *= -1;
+      }
+      if (z > limit) {
+        z = limit;
+        velocityRef[i * 2 + 1] *= -1;
+      } else if (z < -limit) {
+        z = -limit;
+        velocityRef[i * 2 + 1] *= -1;
+      }
+      xz[i * 2] = x;
+      xz[i * 2 + 1] = z;
+
+      // En contact, las particulas tambien convergen hacia el centro.
+      const px = x * (1 - flat * 0.85);
+      const pz = z * (1 - flat * 0.85);
+
+      let baseY = waveBase(px, pz, t, amp, freq) * (1 - flat);
+      baseY += cursorRipple(px, pz, t, mw, strength) * (1 - flat * 0.5);
+      const floatY =
+        data.offs[i] * (1 - flat) + Math.sin(t + data.phases[i]) * 0.08;
+      positions[i * 3] = px;
+      positions[i * 3 + 1] = baseY + floatY;
+      positions[i * 3 + 2] = pz;
+
+      // Estela: brillo proporcional a la velocidad de la particula.
+      if (colorAttr) {
+        const vx = velocityRef[i * 2];
+        const vz = velocityRef[i * 2 + 1];
+        const speed = Math.sqrt(vx * vx + vz * vz);
+        const glow = 0.55 + THREE.MathUtils.clamp(speed * 1.2, 0, 0.45);
+        colors[i * 3] = trailColor.r * glow;
+        colors[i * 3 + 1] = trailColor.g * glow;
+        colors[i * 3 + 2] = trailColor.b * glow;
+      }
+    }
     if (geo) {
-      const attr = geo.getAttribute("position") as THREE.BufferAttribute;
-      attr.needsUpdate = true;
+      (geo.getAttribute("position") as THREE.BufferAttribute).needsUpdate = true;
+      if (colorAttr) colorAttr.needsUpdate = true;
     }
   });
 
@@ -301,10 +471,11 @@ function WaveParticles({
     <points ref={pointsRef}>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
       <pointsMaterial
         size={0.1}
-        color="#ff8c2a"
+        vertexColors
         transparent
         opacity={0.9}
         sizeAttenuation
@@ -315,65 +486,122 @@ function WaveParticles({
 }
 
 // ----------------------------------------------------------------------------
-// CENTRAL HALO — esfera emissive en el origen. Pulsa con el reloj: es el
-// "origen" de la ola de donde parten las ondas concentricas.
+// CENTRAL HALO — sistema de anillos concentricos emissive en el origen. Es el
+// "origen" de la ola de donde parten las ondas concentricas. Tres torus de
+// distinto tamano rotan en ejes/velocidades distintas + una esfera que pulsa.
 // ----------------------------------------------------------------------------
 function CentralHalo() {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const coreRef = useRef<THREE.Mesh>(null);
+  const ring1Ref = useRef<THREE.Mesh>(null);
+  const ring2Ref = useRef<THREE.Mesh>(null);
+  const ring3Ref = useRef<THREE.Mesh>(null);
 
   useFrame(({ clock }) => {
-    if (!meshRef.current) return;
-    const s = 1 + Math.sin(clock.elapsedTime * 1.6) * 0.18;
-    meshRef.current.scale.setScalar(s);
+    const t = clock.elapsedTime;
+    if (coreRef.current) {
+      const s = 1 + Math.sin(t * 1.6) * 0.18;
+      coreRef.current.scale.setScalar(s);
+    }
+    if (ring1Ref.current) {
+      ring1Ref.current.rotation.x = t * 0.6;
+      ring1Ref.current.rotation.y = t * 0.4;
+    }
+    if (ring2Ref.current) {
+      ring2Ref.current.rotation.y = -t * 0.5;
+      ring2Ref.current.rotation.z = t * 0.7;
+    }
+    if (ring3Ref.current) {
+      ring3Ref.current.rotation.x = -t * 0.35;
+      ring3Ref.current.rotation.z = -t * 0.5;
+    }
   });
 
   return (
-    <mesh ref={meshRef}>
-      <sphereGeometry args={[0.15, 24, 24]} />
-      <meshStandardMaterial
-        color={ORANGE}
-        emissive={ORANGE}
-        emissiveIntensity={3}
-        roughness={0.2}
-        metalness={0.2}
-        toneMapped={false}
-      />
-    </mesh>
+    <group>
+      {/* Nucleo pulsante. */}
+      <mesh ref={coreRef}>
+        <sphereGeometry args={[0.13, 24, 24]} />
+        <meshStandardMaterial
+          color={ORANGE}
+          emissive={ORANGE}
+          emissiveIntensity={3.2}
+          roughness={0.2}
+          metalness={0.2}
+          toneMapped={false}
+        />
+      </mesh>
+
+      {/* Anillos concentricos, distintos tamanos y ejes de giro. */}
+      <mesh ref={ring1Ref}>
+        <torusGeometry args={[0.1, 0.012, 10, 40]} />
+        <meshBasicMaterial color="#ff8c00" toneMapped={false} />
+      </mesh>
+      <mesh ref={ring2Ref}>
+        <torusGeometry args={[0.2, 0.01, 10, 48]} />
+        <meshBasicMaterial color={ORANGE} toneMapped={false} />
+      </mesh>
+      <mesh ref={ring3Ref}>
+        <torusGeometry args={[0.35, 0.008, 10, 56]} />
+        <meshBasicMaterial color="#ffae4d" toneMapped={false} />
+      </mesh>
+    </group>
   );
 }
 
 // ----------------------------------------------------------------------------
-// Cursor 3D que sigue al mouse con lerp suave (sensacion de trail). Brilla fuerte.
+// Cursor 3D — anillo (torus) + nucleo brillante que se posan sobre la ola donde
+// esta el cursor (mouseWorld). El anillo rota y pulsa; el nucleo brilla fuerte.
+// La altura sigue mouseWorld.y (la proyeccion al plano) + offset, asi que flota
+// justo sobre la superficie de la ola.
 // ----------------------------------------------------------------------------
-function CursorOrb({
-  mouse,
-}: {
-  mouse: React.RefObject<{ x: number; y: number }>;
-}) {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const { viewport } = useThree();
+function CursorOrb({ shared }: { shared: WaveShared }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const ringRef = useRef<THREE.Mesh>(null);
   const target = useMemo(() => new THREE.Vector3(), []);
 
-  useFrame(() => {
-    if (!meshRef.current || !mouse.current) return;
-    target.set(
-      (mouse.current.x * viewport.width) / 2,
-      (mouse.current.y * viewport.height) / 2,
-      2,
-    );
-    meshRef.current.position.lerp(target, 0.1);
+  useFrame(({ clock }) => {
+    const g = groupRef.current;
+    if (!g) return;
+    const mw = shared.mouseWorld;
+    // Posa el orb sobre la ola: altura de la ola en mouseWorld + offset.
+    const amp = shared.amp.current;
+    const freq = shared.freq.current;
+    const flat = shared.flat.current;
+    const surfaceY =
+      waveBase(mw.x, mw.z, clock.elapsedTime, amp, freq) * (1 - flat);
+    target.set(mw.x, surfaceY + 0.18, mw.z);
+    g.position.lerp(target, 0.18);
+
+    if (ringRef.current) {
+      ringRef.current.rotation.z = clock.elapsedTime * 1.5;
+      const pulse = 1 + Math.sin(clock.elapsedTime * 4) * 0.25;
+      ringRef.current.scale.setScalar(pulse);
+    }
   });
 
   return (
-    <mesh ref={meshRef}>
-      <sphereGeometry args={[0.05, 16, 16]} />
-      <meshStandardMaterial
-        color={ORANGE}
-        emissive={ORANGE}
-        emissiveIntensity={3}
-        toneMapped={false}
-      />
-    </mesh>
+    <group ref={groupRef}>
+      {/* Anillo naranja que pulsa y gira sobre la ola. */}
+      <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.25, 0.02, 8, 32]} />
+        <meshStandardMaterial
+          color={ORANGE}
+          emissive={ORANGE}
+          emissiveIntensity={3}
+          toneMapped={false}
+        />
+      </mesh>
+      {/* Punto central brillante. */}
+      <mesh>
+        <sphereGeometry args={[0.05, 16, 16]} />
+        <meshStandardMaterial
+          color={ORANGE}
+          emissive={ORANGE}
+          emissiveIntensity={4}
+          toneMapped={false}
+        />
+      </mesh>
+    </group>
   );
 }
 
@@ -420,6 +648,49 @@ function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
 }
 
 // ----------------------------------------------------------------------------
+// MOUSE PROJECTOR — proyecta el mouse 2D al plano Y=0 del mundo via raycaster y
+// escribe el resultado en shared.mouseWorld. Tambien gestiona rippleStrength:
+// sube cuando el rayo intersecta el plano (cursor sobre la ola), baja si no.
+// Vive dentro del <group> para que la proyeccion respete la inclinacion aplicada.
+// ----------------------------------------------------------------------------
+function MouseProjector({
+  shared,
+  mouse,
+}: {
+  shared: WaveShared;
+  mouse: React.RefObject<{ x: number; y: number }>;
+}) {
+  // Plano Y=0 y raycaster instanciados una sola vez (NO en useFrame).
+  const plane = useMemo(
+    () => new THREE.Plane(new THREE.Vector3(0, 1, 0), 0),
+    [],
+  );
+  const raycaster = useMemo(() => new THREE.Raycaster(), []);
+  const hit = useMemo(() => new THREE.Vector3(), []);
+  const ndc = useMemo(() => new THREE.Vector2(), []);
+
+  useFrame(({ camera }, delta) => {
+    if (!mouse.current) return;
+    ndc.set(mouse.current.x, mouse.current.y);
+    raycaster.setFromCamera(ndc, camera);
+    const intersected = raycaster.ray.intersectPlane(plane, hit);
+
+    const k = Math.min(1, delta * 6);
+    if (intersected) {
+      // Suaviza el seguimiento del punto de la ola.
+      shared.mouseWorld.lerp(hit, 0.25);
+      shared.rippleStrength.current +=
+        (1 - shared.rippleStrength.current) * k;
+    } else {
+      shared.rippleStrength.current +=
+        (0 - shared.rippleStrength.current) * k;
+    }
+  });
+
+  return null;
+}
+
+// ----------------------------------------------------------------------------
 // Contenido de la escena (dentro del Canvas). Construye el buffer compartido del
 // grid y reacciona al mouse inclinando el plano de la ola.
 // ----------------------------------------------------------------------------
@@ -440,6 +711,10 @@ function SceneContents({
   const amp = useRef(0.8);
   const freq = useRef(1);
   const flat = useRef(0);
+  const rippleStrength = useRef(0);
+
+  // Vector compartido del cursor proyectado al mundo. Instanciado una vez.
+  const mouseWorld = useMemo(() => new THREE.Vector3(), []);
 
   // Buffer del grid + posiciones x,z fijas. Una sola vez.
   const shared = useMemo<WaveShared>(() => {
@@ -454,8 +729,17 @@ function SceneContents({
         positions[idx + 2] = -half + i * SPACING; // z
       }
     }
-    return { positions, n, half, amp, freq, flat };
-  }, [isMobile]);
+    return {
+      positions,
+      n,
+      half,
+      amp,
+      freq,
+      flat,
+      mouseWorld,
+      rippleStrength,
+    };
+  }, [isMobile, mouseWorld]);
 
   const particleCount = isMobile ? 30 : 70;
 
@@ -487,14 +771,17 @@ function SceneContents({
       />
 
       <ScrollCamera progress={progress} />
-      {!isMobile && <CursorOrb mouse={mouse} />}
 
-      {/* Campo de ola: grid de puntos + malla de lineas + particulas + halo. */}
+      {/* Campo de ola: grid de puntos + malla de lineas + particulas + halo.
+          El proyector y el cursor viven dentro del group para compartir la
+          inclinacion aplicada por el mouse. */}
       <group ref={groupRef}>
+        <MouseProjector shared={shared} mouse={mouse} />
         <WaveGrid shared={shared} progress={progress} />
         {!isMobile && <WaveMesh shared={shared} />}
         <WaveParticles shared={shared} count={particleCount} />
         <CentralHalo />
+        {!isMobile && <CursorOrb shared={shared} />}
       </group>
     </>
   );
