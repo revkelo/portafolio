@@ -11344,3 +11344,41 @@ This will cause a hydration error.
 [browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
 ✓ Compiled in 109ms
  GET / 200 in 478ms (next.js: 228ms, application-code: 250ms)
+ GET / 200 in 458ms (next.js: 10ms, application-code: 449ms)
+[browser] Cannot render a sync or defer <script> outside the main document without knowing its order. Try adding async="" or moving it into the root <head> tag. 
+[browser] In HTML, <script> cannot be a child of <html>.
+This will cause a hydration error.
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <script>
+                      <script>
+                      <RootLayout>
+>                       <html
+>                         lang="es"
+>                         suppressHydrationWarning={true}
+>                         className="space_grotesk_4f9f433b-module__fJfFLG__variable inter_7b064e0d-module__MOT0tq__va..."
+>                       >
+>                         <script dangerouslySetInnerHTML={{__html:"(function(..."}}>
+                          ...
+                  ...
+ 
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 123ms
+ GET / 200 in 827ms (next.js: 366ms, application-code: 461ms)
+ GET / 200 in 159ms (next.js: 10ms, application-code: 148ms)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
