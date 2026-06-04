@@ -73,7 +73,7 @@ const COLOR_VALLEY = new THREE.Color("#7a3000"); // valle (y bajo)
 // Parametros del grid.
 const GRID_DESKTOP = 30; // 30x30 = 900 puntos
 const GRID_MOBILE = 20; // 20x20 = 400 puntos
-const SPACING = 0.35;
+const SPACING = 0.42; // mas grande
 
 // Rangos de scroll por seccion (progress 0..1). Orden real de la pagina:
 // hero, about, experience, stack, projects, contact.
@@ -146,7 +146,7 @@ function WaveSolid({ shared }: { shared: WaveShared }) {
     meshRef.current.geometry.computeVertexNormals();
   });
 
-  const orange = ORANGE;
+  const orange = '#ff8c35'; // naranja mas claro/brillante
   return (
     <mesh ref={meshRef} geometry={geometry}>
       <meshStandardMaterial
@@ -260,7 +260,7 @@ function WaveGrid({
     const w = sectionWeights(progress.current ?? 0);
 
     // Targets por seccion.
-    const targetAmp = 1.1 + w.about * 0.5; // about: amplitud sube a 1.2
+    const targetAmp = 1.4 + w.about * 0.5; // about: amplitud sube
     const targetFreq = 1 + w.stack * 0.9; // stack: frecuencia aumenta
     const targetFlat = 0; // convergencia en contact desactivada — ola sigue normal
 
