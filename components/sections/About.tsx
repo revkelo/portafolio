@@ -43,11 +43,12 @@ export default function About() {
             className="mx-auto w-full max-w-[260px] md:max-w-none md:sticky md:top-24"
           >
             <div className="relative aspect-[4/5] rounded-2xl">
-              <div className="absolute inset-0 overflow-hidden rounded-2xl border border-white/10">
+              <div className="absolute inset-0 overflow-hidden rounded-2xl">
                 <img
                   src="/photo.jpg"
                   alt="Kevin Gonzalez"
-                  className="h-full w-full object-cover object-top"
+                  className="h-full w-full object-cover"
+                  style={{ objectPosition: "center 15%" }}
                 />
                 <div
                   className="pointer-events-none absolute inset-0"
