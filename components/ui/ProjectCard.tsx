@@ -39,8 +39,8 @@ export default function ProjectCard({
     >
       <div className="mb-4 flex items-start justify-between gap-4">
         <h3
-          className={`font-display font-bold text-text-primary transition-colors group-hover:text-orange-primary ${
-            featured ? "text-2xl" : "text-xl"
+          className={`min-w-0 break-words font-display font-bold text-text-primary transition-colors group-hover:text-orange-primary ${
+            featured ? "text-xl sm:text-2xl" : "text-lg sm:text-xl"
           }`}
         >
           {project.title}

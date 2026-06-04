@@ -57,8 +57,8 @@ export default function Stack() {
   const { t } = useLang();
 
   return (
-    <section id="stack" className="bg-surface-alt py-28">
-      <div className="mx-auto max-w-6xl px-6">
+    <section id="stack" className="bg-surface-alt py-16 md:py-24 lg:py-32">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionTitle
           number={t.stack.number}
           label={t.stack.label}

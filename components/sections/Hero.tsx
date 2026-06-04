@@ -61,7 +61,7 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-28">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 sm:py-28 lg:px-8">
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -115,7 +115,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.28 }}
-          className="mt-12 flex flex-wrap gap-x-12 gap-y-6"
+          className="mt-12 grid grid-cols-1 gap-x-12 gap-y-6 sm:grid-cols-3"
         >
           {metrics.map((m) => (
             <div key={m.label}>
@@ -134,11 +134,11 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.36 }}
-          className="mt-12 flex flex-wrap gap-4"
+          className="mt-12 flex flex-col gap-4 sm:flex-row sm:flex-wrap"
         >
           <a
             href="#proyectos"
-            className="rounded-full bg-orange-primary px-7 py-3 font-medium text-background transition-colors hover:bg-orange-dark"
+            className="rounded-full bg-orange-primary px-7 py-3 text-center font-medium text-background transition-colors hover:bg-orange-dark"
             data-cursor-hover
           >
             {t.hero.cta1}
@@ -147,7 +147,7 @@ export default function Hero() {
             href="/cv-kevin-gonzalez.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-orange-primary px-7 py-3 font-medium text-orange-primary transition-colors hover:bg-orange-primary hover:text-background"
+            className="rounded-full border border-orange-primary px-7 py-3 text-center font-medium text-orange-primary transition-colors hover:bg-orange-primary hover:text-background"
             data-cursor-hover
           >
             {t.hero.cta2}

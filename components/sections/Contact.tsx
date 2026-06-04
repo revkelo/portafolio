@@ -73,7 +73,7 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contacto" className="relative overflow-hidden bg-[#0a0a0a] py-28">
+    <section id="contacto" className="relative overflow-hidden bg-[#0a0a0a] py-16 md:py-24 lg:py-32">
       {/* Glow naranja sutil en el centro */}
       <div
         aria-hidden
@@ -84,7 +84,7 @@ export default function Contact() {
         }}
       />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-6">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionTitle
           number={t.contact.number}
           label={t.contact.label}
@@ -99,14 +99,14 @@ export default function Contact() {
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
           {/* CTA grande */}
-          <h3 className="font-display text-4xl font-bold text-text-primary sm:text-6xl">
+          <h3 className="font-display text-3xl font-bold text-text-primary sm:text-4xl md:text-6xl">
             {t.contact.cta}
           </h3>
 
           {/* Email copiable */}
           <button
             onClick={copyEmail}
-            className="group relative mt-8 inline-flex items-center gap-3 font-display text-2xl font-bold text-orange-primary transition-colors hover:text-orange-dark sm:text-4xl"
+            className="group relative mt-8 inline-flex flex-wrap items-center gap-x-3 gap-y-1 break-all text-left font-display text-xl font-bold text-orange-primary transition-colors hover:text-orange-dark sm:text-2xl md:text-4xl"
             data-cursor-hover
           >
             {EMAIL}
@@ -116,14 +116,14 @@ export default function Contact() {
           </button>
 
           {/* Botones con icono */}
-          <div className="mt-10 flex flex-wrap gap-4">
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
             {channels.map((c) => (
               <a
                 key={c.label}
                 href={c.href}
                 target={c.href.startsWith("http") ? "_blank" : undefined}
                 rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="flex items-center gap-2 rounded-full border border-orange-primary/40 px-6 py-3 text-orange-primary transition-colors hover:bg-orange-primary hover:text-background"
+                className="flex items-center justify-center gap-2 rounded-full border border-orange-primary/40 px-6 py-3 text-orange-primary transition-colors hover:bg-orange-primary hover:text-background"
                 data-cursor-hover
               >
                 <Icon name={c.icon} />
@@ -139,7 +139,7 @@ export default function Contact() {
         </motion.div>
       </div>
 
-      <footer className="relative z-10 mx-auto mt-20 max-w-6xl px-6">
+      <footer className="relative z-10 mx-auto mt-20 max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="border-t border-white/5 pt-8 text-sm text-text-secondary">
           © {new Date().getFullYear()} Kevin Gonzalez — {t.footer.rights}
         </div>

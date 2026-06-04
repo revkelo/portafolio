@@ -16,8 +16,8 @@ export default function Projects() {
   const rest = projects.filter((p) => !p.featured);
 
   return (
-    <section id="proyectos" className="bg-background py-28">
-      <div className="mx-auto max-w-6xl px-6">
+    <section id="proyectos" className="bg-background py-16 md:py-24 lg:py-32">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionTitle
           number={t.projects.number}
           label={t.projects.label}
@@ -26,7 +26,7 @@ export default function Projects() {
         />
 
         {/* Destacados */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {featured.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} featured />
           ))}

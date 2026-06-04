@@ -3,7 +3,7 @@
 // Stack: Next.js 16 + TypeScript + Tailwind v4 + Framer Motion + Lenis
 // Para agregar secciones: crear en components/sections/ e importar en app/page.tsx
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/ui/SmoothScroll";
@@ -21,6 +21,12 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0d0d0d",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://github.com/revkelo/portafolio"),
