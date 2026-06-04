@@ -33,9 +33,9 @@ export default function ScrollProgress() {
       className="fixed left-0 top-0 z-[9998] h-0.5"
       style={{
         width: `${progress}%`,
-        background: "#f06400",
+        background: "#f56f0d",
         transition: "width 0.1s linear",
-        boxShadow: "0 0 10px rgba(240,100,0,0.6)",
+        boxShadow: "0 0 10px rgba(245,111,13,0.6)",
       }}
     />
   );

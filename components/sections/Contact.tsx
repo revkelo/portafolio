@@ -89,7 +89,7 @@ function EmailButton({ email, copy, copyLabel, onCopy }: { email: string; copy: 
         <rect
           x="1" y="1" width="98" height="98" rx="12"
           fill="none"
-          stroke="#f06400"
+          stroke="#f56f0d"
           strokeWidth="1.5"
           pathLength={1}
           style={{
@@ -105,7 +105,7 @@ function EmailButton({ email, copy, copyLabel, onCopy }: { email: string; copy: 
         onClick={onCopy}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="group relative w-full rounded-xl border border-white/5 bg-surface/40 px-6 py-5 text-left backdrop-blur-sm transition-colors hover:bg-surface/70"
+        className="group relative w-full rounded-xl border border-border bg-surface/40 px-6 py-5 text-left backdrop-blur-sm transition-colors hover:bg-surface/70"
       >
         <span className="block font-display text-xl font-bold text-orange-primary sm:text-2xl md:text-4xl break-all">
           {email}
@@ -158,7 +158,7 @@ export default function Contact() {
 
       {/* Glow central */}
       <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-15 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(240,100,0,0.5) 0%, transparent 65%)" }}
+        style={{ background: "radial-gradient(circle, rgba(245,111,13,0.5) 0%, transparent 65%)" }}
       />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -212,7 +212,7 @@ export default function Contact() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.2 + i * 0.07 }}
-                  className="flex items-center gap-2 rounded-full border border-orange-primary/40 px-5 py-2.5 text-sm text-orange-primary transition-all hover:bg-orange-primary hover:text-background hover:shadow-[0_0_18px_rgba(240,100,0,0.35)]"
+                  className="flex items-center gap-2 rounded-full border border-orange-primary/40 px-5 py-2.5 text-sm text-orange-primary transition-all hover:bg-orange-primary hover:text-background hover:shadow-[0_0_18px_rgba(245,111,13,0.35)]"
                   data-cursor-hover
                 >
                   <Icon name={c.icon} />
@@ -229,7 +229,7 @@ export default function Contact() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex flex-row justify-around lg:flex-col lg:justify-center lg:gap-8 rounded-2xl border border-white/5 bg-surface/30 p-6 backdrop-blur-sm"
+            className="flex flex-row justify-around lg:flex-col lg:justify-center lg:gap-8 rounded-2xl border border-border bg-surface/30 p-6 backdrop-blur-sm"
           >
             {stats.map((s, i) => (
               <motion.div
@@ -262,7 +262,7 @@ export default function Contact() {
 
       {/* Footer */}
       <div className="relative z-10 mx-auto mt-20 max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center gap-3 border-t border-white/5 pt-8 sm:flex-row sm:justify-between">
+        <div className="flex flex-col items-center gap-3 border-t border-border pt-8 sm:flex-row sm:justify-between">
           <p className="text-sm text-text-secondary/50">© {new Date().getFullYear()} Kevin Gonzalez — {t.footer.rights}</p>
           <div className="flex gap-6 text-sm text-text-secondary/50">
             <a href="https://github.com/revkelo" target="_blank" rel="noopener noreferrer" className="hover:text-orange-primary transition-colors">GitHub</a>

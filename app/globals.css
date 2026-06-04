@@ -1,37 +1,36 @@
-﻿/* PORTAFOLIO DE KEVIN GONZALEZ â€” revkelo
-   Paleta: #0D0D0D fondo | #F06400 naranja | #FFFFFF texto
+/* PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+   Paleta: #25211c fondo | #f56f0d naranja | #ffffff texto
    Stack: Next.js 16 + TypeScript + Tailwind v4 + Framer Motion + Lenis
    Para agregar secciones: crear en components/sections/ e importar en app/page.tsx */
 
-@import "tailwindcss";
+@import “tailwindcss”;
 
-/* Modo oscuro (default) */
+/* Modo oscuro (default) — extraido del banner de LinkedIn */
 :root {
-  --orange: #f06400;
-  --orange-dark: #c44a00;
-  --background: #0d0d0d;
-  --surface: #1a1a1a;
-  --surface-alt: #111111;
+  --orange: #f56f0d;
+  --orange-dark: #ae5400;
+  --background: #25211c;
+  --surface: #312c26;
+  --surface-alt: #1e1b16;
   --text-primary: #ffffff;
-  --text-secondary: #c0c0c0;
-  --border: rgba(255,255,255,0.06);
-  --glass-bg: rgba(13,13,13,0.50);
+  --text-secondary: #c0b8b0;
+  --border: rgba(255,255,255,0.07);
+  --glass-bg: rgba(37,33,28,0.55);
 }
 
-/* Modo claro */
-[data-theme="light"] {
-  --background: #f5f0eb;
-  --surface: #eae5e0;
-  --surface-alt: #e0dbd5;
-  --text-primary: #0d0d0d;
-  --text-secondary: #4a4a4a;
-  --border: rgba(0,0,0,0.08);
-  --glass-bg: rgba(245,240,235,0.88);
+/* Modo claro — extraido del banner de LinkedIn */
+[data-theme=”light”] {
+  --background: #f3decd;
+  --surface: #e7d2c1;
+  --surface-alt: #dfcab9;
+  --text-primary: #25211c;
+  --text-secondary: #5a4535;
+  --border: rgba(37,33,28,0.10);
+  --glass-bg: rgba(243,222,205,0.88);
 }
 
-/* Scrollbar en modo claro */
-[data-theme="light"] ::-webkit-scrollbar-track { background: #f5f0eb; }
-[data-theme="light"] .section-glass { background: var(--glass-bg); }
+[data-theme=”light”] ::-webkit-scrollbar-track { background: #f3decd; }
+[data-theme=”light”] .section-glass { background: var(--glass-bg); }
 
 /* Tailwind v4: definimos la paleta personalizada como tokens del tema.
    Esto habilita utilidades como bg-background, text-orange-primary, etc. */
@@ -43,9 +42,12 @@
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
 
-  /* Naranja: fijo en ambos modos */
-  --color-orange-primary: #f06400;
-  --color-orange-dark: #c44a00;
+  /* Acento: valores estaticos requeridos por Tailwind para generar utilidades */
+  --color-orange-primary: #f56f0d;
+  --color-orange-dark: #ae5400;
+
+  /* Border dinamico */
+  --color-border: var(--border);
 
   --font-display: var(--font-space-grotesk);
   --font-sans: var(--font-inter);
@@ -73,19 +75,19 @@ body {
   width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: #0d0d0d;
+  background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: #f06400;
+  background: #f56f0d;
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c44a00;
+  background: #ae5400;
 }
 
 /* Seleccion de texto */
 ::selection {
-  background: #f06400;
+  background: #f56f0d;
   color: #ffffff;
 }
 
@@ -115,7 +117,7 @@ body {
 /* Grid de puntos animado del hero (radial-gradient repetido) */
 .dot-grid {
   background-image: radial-gradient(
-    rgba(240, 100, 0, 0.18) 1px,
+    rgba(245, 111, 13, 0.18) 1px,
     transparent 1px
   );
   background-size: 28px 28px;
@@ -146,8 +148,8 @@ body {
 .diagonal-lines {
   background-image: repeating-linear-gradient(
     -45deg,
-    rgba(240, 100, 0, 0.07) 0px,
-    rgba(240, 100, 0, 0.07) 1px,
+    rgba(245, 111, 13, 0.07) 0px,
+    rgba(245, 111, 13, 0.07) 1px,
     transparent 1px,
     transparent 22px
   );
@@ -189,15 +191,15 @@ body {
 /* Flash naranja suave al terminar de contar una metrica */
 @keyframes metric-flash {
   0% {
-    text-shadow: 0 0 0 rgba(240, 100, 0, 0);
+    text-shadow: 0 0 0 rgba(245, 111, 13, 0);
     transform: scale(1);
   }
   35% {
-    text-shadow: 0 0 24px rgba(240, 100, 0, 0.8);
+    text-shadow: 0 0 24px rgba(245, 111, 13, 0.8);
     transform: scale(1.06);
   }
   100% {
-    text-shadow: 0 0 0 rgba(240, 100, 0, 0);
+    text-shadow: 0 0 0 rgba(245, 111, 13, 0);
     transform: scale(1);
   }
 }
@@ -218,7 +220,7 @@ body {
   width: 100%;
   transform: scaleX(0);
   transform-origin: left;
-  background: #f06400;
+  background: #f56f0d;
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .grow-underline:hover::after {
@@ -231,7 +233,7 @@ body {
   width: 0.6ch;
   height: 1.1em;
   margin-left: 2px;
-  background: #f06400;
+  background: #f56f0d;
   transform: translateY(0.15em);
   animation: blink 1s step-end infinite;
 }
@@ -261,7 +263,7 @@ body {
 }
 .glitch:hover::before {
   opacity: 0.9;
-  color: #f06400;
+  color: #f56f0d;
   animation: glitch-x 0.5s steps(2, end) infinite;
   clip-path: inset(0 0 55% 0);
 }
@@ -310,10 +312,10 @@ body {
 @keyframes pulse-orange {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(240, 100, 0, 0.5);
+    box-shadow: 0 0 0 0 rgba(245, 111, 13, 0.5);
   }
   50% {
-    box-shadow: 0 0 0 4px rgba(240, 100, 0, 0);
+    box-shadow: 0 0 0 4px rgba(245, 111, 13, 0);
   }
 }
 .pulse-dot {
@@ -351,10 +353,10 @@ body {
 @keyframes glow-pulse {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(240, 100, 0, 0.3);
+    box-shadow: 0 0 20px rgba(245, 111, 13, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(240, 100, 0, 0.7), 0 0 80px rgba(240, 100, 0, 0.2);
+    box-shadow: 0 0 40px rgba(245, 111, 13, 0.7), 0 0 80px rgba(245, 111, 13, 0.2);
   }
 }
 .glow-pulse {

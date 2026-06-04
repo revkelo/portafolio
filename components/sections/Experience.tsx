@@ -57,8 +57,8 @@ export default function Experience() {
                 <div
                   className={`rounded-2xl bg-surface p-5 transition-colors hover:border-orange-primary/50 sm:p-6 ${
                     i === 0
-                      ? "border-l-4 border-orange-primary border-t border-r border-b border-t-white/5 border-r-white/5 border-b-white/5"
-                      : "border border-white/5"
+                      ? "border border-border border-l-4 border-l-orange-primary"
+                      : "border border-border"
                   }`}
                   data-cursor-hover
                 >
@@ -74,7 +74,7 @@ export default function Experience() {
                             {item.company}
                           </h3>
                           {i === 0 && (
-                            <span className="rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-green-400">
+                            <span className="rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-green-600">
                               {t.experience.current}
                             </span>
                           )}

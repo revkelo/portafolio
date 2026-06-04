@@ -8,20 +8,19 @@ import { motion } from "framer-motion";
 import type { Project } from "@/lib/data/projects";
 import { useLang } from "@/lib/i18n/LangContext";
 
-// Colores de marca por tecnologia para las tech tags.
 function tagClass(tag: string): string {
   const t = tag.toLowerCase();
   if (t.includes("python"))
-    return "bg-blue-900/30 text-blue-300 border-blue-700/40";
+    return "bg-blue-500/15 text-blue-500 border-blue-500/25";
   if (t.includes("typescript") || t.includes("react"))
-    return "bg-cyan-900/30 text-cyan-300 border-cyan-700/40";
+    return "bg-cyan-500/15 text-cyan-600 border-cyan-500/25";
   if (t.includes("flutter") || t.includes("dart"))
-    return "bg-sky-900/30 text-sky-300 border-sky-700/40";
+    return "bg-sky-500/15 text-sky-500 border-sky-500/25";
   if (t.includes("aws") || t.includes("docker"))
-    return "bg-orange-900/30 text-orange-300 border-orange-700/40";
+    return "bg-orange-500/15 text-orange-500 border-orange-500/25";
   if (t.includes("fastapi"))
-    return "bg-green-900/30 text-green-300 border-green-700/40";
-  return "bg-white/5 text-text-secondary border-white/10";
+    return "bg-green-500/15 text-green-600 border-green-500/25";
+  return "bg-surface-alt border-border text-text-secondary";
 }
 
 export default function ProjectCard({
@@ -50,7 +49,7 @@ export default function ProjectCard({
       whileInView={horizontal ? { opacity: 1, x: 0 } : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.08 }}
-      className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/5 bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] hover:border-orange-primary hover:shadow-[0_0_40px_-12px_rgba(240,100,0,0.6)] ${
+      className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] hover:border-orange-primary hover:shadow-[0_0_40px_-12px_rgba(245,111,13,0.6)] ${
         featured ? "md:p-8" : ""
       } ${
         horizontal

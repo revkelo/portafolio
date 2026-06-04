@@ -20,6 +20,7 @@ export const translations = {
       greeting: "Hola, soy",
       roles: [
         "Cloud & DevOps Engineer",
+        "Ingeniero de Sistemas",
         "Full-Stack Developer",
         "Data Governance",
       ],
@@ -148,6 +149,7 @@ export const translations = {
       greeting: "Hi, I'm",
       roles: [
         "Cloud & DevOps Engineer",
+        "Systems Engineer",
         "Full-Stack Developer",
         "Data Governance",
       ],

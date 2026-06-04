@@ -119,7 +119,7 @@ export default function Stack() {
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               style={{ transition: "transform 0.15s ease" }}
-              className={`group relative flex flex-col overflow-hidden rounded-2xl border border-white/5 bg-surface p-6 hover:border-orange-primary hover:shadow-[0_0_30px_-10px_rgba(240,100,0,0.5)] ${cat.span}`}
+              className={`group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface p-6 hover:border-orange-primary hover:shadow-[0_0_30px_-10px_rgba(245,111,13,0.5)] ${cat.span}`}
               data-cursor-hover
             >
               {/* Numero de categoria (01-05) en naranja semi-transparente */}
@@ -154,7 +154,7 @@ export default function Stack() {
                 {cat.techs.map((tech) => (
                   <li
                     key={tech}
-                    className="rounded-full border border-white/10 bg-white/[0.02] px-3 py-1 text-sm text-text-secondary transition-colors group-hover:border-orange-primary/30"
+                    className="rounded-full border border-border bg-surface-alt/50 px-3 py-1 text-sm text-text-secondary transition-colors group-hover:border-orange-primary/30"
                   >
                     {tech}
                   </li>

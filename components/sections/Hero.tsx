@@ -93,7 +93,7 @@ export default function Hero() {
         className="pointer-events-none absolute -bottom-40 -right-40 z-0 h-[36rem] w-[36rem] rounded-full opacity-30 blur-3xl"
         style={{
           background:
-            "radial-gradient(circle, rgba(240,100,0,0.55) 0%, rgba(196,74,0,0.15) 45%, transparent 70%)",
+            "radial-gradient(circle, rgba(245,111,13,0.55) 0%, rgba(174,84,0,0.15) 45%, transparent 70%)",
         }}
       />
 
@@ -143,7 +143,7 @@ export default function Hero() {
           <span
             className="inline-block text-orange-primary"
             aria-label="Gonzalez"
-            style={{ WebkitTextStroke: "1px rgba(240,100,0,0.3)" }}
+            style={{ WebkitTextStroke: "1px rgba(245,111,13,0.3)" }}
           >
             {"Gonzalez".split("").map((letter, i) => (
               <motion.span

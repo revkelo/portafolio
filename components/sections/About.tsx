@@ -52,7 +52,7 @@ export default function About() {
             className="mx-auto w-full max-w-[260px] md:max-w-none md:sticky md:top-24"
           >
             <div className="relative aspect-[4/5] rounded-2xl">
-              <div className="absolute inset-0 overflow-hidden rounded-2xl border border-white/10">
+              <div className="absolute inset-0 overflow-hidden rounded-2xl border border-border">
                 <img
                   src="/photo.jpg"
                   alt="Kevin Gonzalez"
@@ -63,7 +63,7 @@ export default function About() {
                   className="pointer-events-none absolute inset-0"
                   style={{
                     background:
-                      "linear-gradient(to top, rgba(240,100,0,0.25) 0%, transparent 50%)",
+                      "linear-gradient(to top, rgba(245,111,13,0.25) 0%, transparent 50%)",
                   }}
                 />
               </div>
@@ -75,15 +75,15 @@ export default function About() {
                 viewBox="0 0 100 125"
                 preserveAspectRatio="none"
               >
-                <motion.rect
-                  x="1.5"
-                  y="1.5"
-                  width="97"
-                  height="122"
-                  rx="6"
+                {/* path equivale al rect rx=6 pero como trayecto cerrado
+                    para que pathLength animate sin el gap del rect */}
+                <motion.path
+                  d="M 7.5,1.5 L 92.5,1.5 Q 98.5,1.5 98.5,7.5 L 98.5,117.5 Q 98.5,123.5 92.5,123.5 L 7.5,123.5 Q 1.5,123.5 1.5,117.5 L 1.5,7.5 Q 1.5,1.5 7.5,1.5 Z"
                   fill="none"
-                  stroke="#f06400"
+                  stroke="#f56f0d"
                   strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   pathLength={1}
                   initial={{ pathLength: 0, opacity: 0 }}
                   whileInView={{ pathLength: 1, opacity: 1 }}
@@ -123,7 +123,7 @@ export default function About() {
                     ease: "easeOut",
                     delay: i * 0.1,
                   }}
-                  className="relative overflow-hidden rounded-2xl border border-white/5 bg-surface p-5 transition-colors hover:border-orange-primary/50"
+                  className="relative overflow-hidden rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-orange-primary/50"
                   data-cursor-hover
                 >
                   {/* Numero de item semi-transparente arriba a la derecha */}

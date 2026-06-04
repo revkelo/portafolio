@@ -45,19 +45,19 @@ function TechItem({ name, icon }: { name: string; icon: string }) {
     <motion.div
       whileHover={{ scale: 1.08, y: -2 }}
       transition={{ type: "spring", stiffness: 400, damping: 20 }}
-      className="group relative flex shrink-0 cursor-default items-center gap-2.5 rounded-full border border-white/5 bg-surface/60 px-4 py-2.5 backdrop-blur-sm"
+      className="group relative flex shrink-0 cursor-default items-center gap-2.5 rounded-full border border-border bg-surface/60 px-4 py-2.5 backdrop-blur-sm"
       data-cursor-hover
     >
       {/* Glow naranja al hover */}
       <span className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{ boxShadow: "0 0 18px rgba(240,100,0,0.3)", border: "1px solid rgba(240,100,0,0.4)" }}
+        style={{ boxShadow: "0 0 18px rgba(245,111,13,0.3)", border: "1px solid rgba(245,111,13,0.4)" }}
       />
       <img
         src={icon}
         alt={name}
         width={22}
         height={22}
-        className="relative z-10 opacity-70 transition-all duration-300 group-hover:opacity-100 group-hover:drop-shadow-[0_0_6px_rgba(240,100,0,0.7)]"
+        className="relative z-10 opacity-70 transition-all duration-300 group-hover:opacity-100 group-hover:drop-shadow-[0_0_6px_rgba(245,111,13,0.7)]"
         loading="lazy"
       />
       <span className="relative z-10 whitespace-nowrap font-display text-sm font-medium text-text-secondary transition-colors duration-300 group-hover:text-text-primary">

@@ -63,7 +63,7 @@ export default function CustomCursor() {
         style={{
           width: 12,
           height: 12,
-          background: '#f06400',
+          background: '#f56f0d',
           opacity: hovering ? 0 : 1,
         }}
       />
@@ -83,14 +83,14 @@ export default function CustomCursor() {
             height="36"
             viewBox="0 0 36 36"
             fill="none"
-            stroke="#f06400"
+            stroke="#f56f0d"
             strokeWidth="1.5"
           >
             <circle cx="18" cy="18" r="11" opacity="0.5" />
             <path d="M18 4v8M18 24v8M4 18h8M24 18h8" />
           </svg>
         ) : (
-          <span className="block h-9 w-9 rounded-full" style={{ border: '1px solid rgba(240,100,0,0.6)' }} />
+          <span className="block h-9 w-9 rounded-full" style={{ border: '1px solid rgba(245,111,13,0.6)' }} />
         )}
       </div>
     </div>

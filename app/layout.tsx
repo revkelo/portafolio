@@ -9,6 +9,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
+import PageLoader from "@/components/ui/PageLoader";
 import GlobalSceneWrapper from "@/components/3d/GlobalSceneWrapper";
 import { LangProvider } from "@/lib/i18n/LangContext";
 import { ThemeProvider } from "@/lib/theme/ThemeContext";
@@ -28,7 +29,10 @@ const inter = Inter({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0d0d0d",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0d0d0d" },
+    { media: "(prefers-color-scheme: light)", color: "#f5f0eb" },
+  ],
 };
 
 export const metadata: Metadata = {
@@ -72,6 +76,7 @@ export default function RootLayout({
         <GlobalSceneWrapper />
         <ThemeProvider>
           <LangProvider>
+            <PageLoader />
             <div aria-hidden className="grain-overlay" />
             <ScrollProgress />
             <CustomCursor />

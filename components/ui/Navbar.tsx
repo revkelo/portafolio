@@ -78,14 +78,11 @@ export default function Navbar() {
       className={`flex h-8 w-8 items-center justify-center rounded-full border border-orange-primary/30 text-text-secondary transition-colors hover:border-orange-primary hover:text-orange-primary ${className}`}
     >
       {theme === "dark" ? (
-        /* Sol — cambiar a claro */
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-14a6 6 0 1 0 0 12A6 6 0 0 0 12 6z" opacity="0"/>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="4"/>
-          <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M22 12h-2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
         </svg>
       ) : (
-        /* Luna — cambiar a oscuro */
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
@@ -195,7 +192,7 @@ export default function Navbar() {
                   key={s.id}
                   href={`#${s.id}`}
                   onClick={() => setOpen(false)}
-                  className={`border-b border-white/5 py-3 font-display text-lg transition-colors ${
+                  className={`border-b border-border py-3 font-display text-lg transition-colors ${
                     active === s.id
                       ? "text-orange-primary"
                       : "text-text-primary hover:text-orange-primary"
