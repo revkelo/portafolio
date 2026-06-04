@@ -1,9 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* PORTAFOLIO DE KEVIN GONZALEZ — revkelo
    Paleta: #25211c fondo | #f56f0d naranja | #ffffff texto
    Stack: Next.js 16 + TypeScript + Tailwind v4 + Framer Motion + Lenis
    Para agregar secciones: crear en components/sections/ e importar en app/page.tsx */
-
-@import “tailwindcss”;
 
 /* Modo oscuro (default) — extraido del banner de LinkedIn */
 :root {
