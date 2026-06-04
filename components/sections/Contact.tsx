@@ -184,8 +184,6 @@ export default function Contact() {
           ))}
         </h3>
 
-        {/* Ticker horizontal */}
-        <Ticker lang={lang} />
 
         {/* Stats */}
         <motion.div
