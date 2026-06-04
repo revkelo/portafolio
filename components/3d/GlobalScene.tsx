@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ â€” revkelo
 // GlobalScene: UN SOLO Canvas WebGL fijo que persiste en TODA la pagina.
 //
-// CONCEPTO: "Wave Field" — una superficie viva de puntos que ondea como un
+// CONCEPTO: "Wave Field" â€” una superficie viva de puntos que ondea como un
 // campo de datos o una funcion matematica. Elegante, organico, tecnico.
 // Un grid NxN de puntos cuya altura (Y) oscila con ondas senoidales superpuestas
 // que parten del centro; una malla de lineas une los puntos (solo desktop) creando
@@ -20,7 +20,7 @@
 // Variacion por seccion (progress 0..1):
 //   - hero:    amplitud normal, ola estandar
 //   - about:   amplitud sube, ola mas dramatica
-//   - stack:   frecuencia aumenta — ola mas rapida y compacta
+//   - stack:   frecuencia aumenta â€” ola mas rapida y compacta
 //   - contact: los puntos convergen en espiral hacia dentro y se aplanan
 //
 // Interaccion del cursor:
@@ -88,7 +88,7 @@ function sectionWeights(p: number) {
 }
 
 // ----------------------------------------------------------------------------
-// WAVE GRID — los N*N puntos de la ola. La superficie principal.
+// WAVE GRID â€” los N*N puntos de la ola. La superficie principal.
 // Comparte el array de posiciones con WaveMesh y WaveParticles via refs para
 // que todos lean la misma altura de ola sin recalcular. El mouseWorld tambien se
 // comparte para que el ripple del cursor se aplique a la ola entera.
@@ -184,7 +184,7 @@ function WaveGrid({
     const w = sectionWeights(progress.current ?? 0);
 
     // Targets por seccion.
-    const targetAmp = 0.8 + w.about * 0.4; // about: amplitud sube a 1.2
+    const targetAmp = 1.1 + w.about * 0.5; // about: amplitud sube a 1.2
     const targetFreq = 1 + w.stack * 0.9; // stack: frecuencia aumenta
     const targetFlat = w.contact; // contact: aplanar + espiral hacia 0
 
@@ -282,7 +282,7 @@ function WaveGrid({
 }
 
 // ----------------------------------------------------------------------------
-// WAVE MESH — la red de lineas entre puntos adyacentes del grid (solo desktop).
+// WAVE MESH â€” la red de lineas entre puntos adyacentes del grid (solo desktop).
 // Lee el MISMO array de posiciones que WaveGrid (ya actualizado este frame) y
 // vuelca cada par adyacente en su propio buffer de lineas.
 // ----------------------------------------------------------------------------
@@ -351,7 +351,7 @@ function WaveMesh({ shared }: { shared: WaveShared }) {
 }
 
 // ----------------------------------------------------------------------------
-// WAVE PARTICLES — particulas flotantes sobre la ola. Mas grandes y brillantes
+// WAVE PARTICLES â€” particulas flotantes sobre la ola. Mas grandes y brillantes
 // que los puntos del grid. Cada una tiene velocidad propia, rebota en los limites
 // del grid y deja una "estela" sutil via opacidad ligada a su velocidad.
 // ----------------------------------------------------------------------------
@@ -486,7 +486,7 @@ function WaveParticles({
 }
 
 // ----------------------------------------------------------------------------
-// CENTRAL HALO — sistema de anillos concentricos emissive en el origen. Es el
+// CENTRAL HALO â€” sistema de anillos concentricos emissive en el origen. Es el
 // "origen" de la ola de donde parten las ondas concentricas. Tres torus de
 // distinto tamano rotan en ejes/velocidades distintas + una esfera que pulsa.
 // ----------------------------------------------------------------------------
@@ -549,7 +549,7 @@ function CentralHalo() {
 }
 
 // ----------------------------------------------------------------------------
-// Cursor 3D — anillo (torus) + nucleo brillante que se posan sobre la ola donde
+// Cursor 3D â€” anillo (torus) + nucleo brillante que se posan sobre la ola donde
 // esta el cursor (mouseWorld). El anillo rota y pulsa; el nucleo brilla fuerte.
 // La altura sigue mouseWorld.y (la proyeccion al plano) + offset, asi que flota
 // justo sobre la superficie de la ola.
@@ -648,7 +648,7 @@ function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
 }
 
 // ----------------------------------------------------------------------------
-// MOUSE PROJECTOR — proyecta el mouse 2D al plano Y=0 del mundo via raycaster y
+// MOUSE PROJECTOR â€” proyecta el mouse 2D al plano Y=0 del mundo via raycaster y
 // escribe el resultado en shared.mouseWorld. Tambien gestiona rippleStrength:
 // sube cuando el rayo intersecta el plano (cursor sobre la ola), baja si no.
 // Vive dentro del <group> para que la proyeccion respete la inclinacion aplicada.
@@ -759,7 +759,7 @@ function SceneContents({
       <pointLight position={[-5, 2, -3]} color={ORANGE_DARK} intensity={1} />
       <pointLight position={[5, 1, 4]} color="#ff8c42" intensity={0.8} />
 
-      {/* Cielo estrellado muy sutil — la ola es la protagonista. */}
+      {/* Cielo estrellado muy sutil â€” la ola es la protagonista. */}
       <Stars
         radius={120}
         depth={60}
@@ -862,3 +862,4 @@ export default function GlobalScene() {
     </Canvas>
   );
 }
+

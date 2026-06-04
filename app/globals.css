@@ -389,3 +389,13 @@ body {
 }
 
 
+
+/* Carrusel infinito de tecnologias */
+@keyframes marquee-forward {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(calc(-100% / 3)); }
+}
+@keyframes marquee-reverse {
+  0%   { transform: translateX(calc(-100% / 3)); }
+  100% { transform: translateX(0); }
+}

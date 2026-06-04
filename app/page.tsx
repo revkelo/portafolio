@@ -5,6 +5,7 @@
 
 import Navbar from "@/components/ui/Navbar";
 import Hero from "@/components/sections/Hero";
+import TechCarousel from "@/components/ui/TechCarousel";
 import About from "@/components/sections/About";
 import Experience from "@/components/sections/Experience";
 import Stack from "@/components/sections/Stack";
@@ -31,6 +32,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <TechCarousel />
         <SectionDivider />
         <About />
         <SectionDivider />
