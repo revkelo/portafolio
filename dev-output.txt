@@ -11652,3 +11652,50 @@ This will cause a hydration error.
 ✓ Compiled in 94ms
  GET / 200 in 313ms (next.js: 198ms, application-code: 115ms)
  GET / 200 in 50ms (next.js: 6ms, application-code: 44ms)
+✓ Compiled in 598ms
+ GET / 200 in 374ms (next.js: 297ms, application-code: 77ms)
+ GET / 200 in 377ms (next.js: 37ms, application-code: 340ms)
+ GET / 200 in 380ms (next.js: 335ms, application-code: 46ms)
+ GET / 200 in 1165ms (next.js: 289ms, application-code: 876ms)
+ GET / 200 in 1950ms (next.js: 571ms, application-code: 1379ms)
+ GET / 200 in 1176ms (next.js: 416ms, application-code: 760ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+ GET / 200 in 242ms (next.js: 8ms, application-code: 235ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+ GET / 200 in 305ms (next.js: 8ms, application-code: 297ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[browser] Each child in a list should have a unique "key" prop.
+
+Check the render method of `KeyboardShortcuts`. See https://react.dev/link/warning-keys for more information. 
+[browser] Uncaught Error: Invalid easing type 'steps(1)'. For more information and steps for solving, visit https://motion.dev/troubleshooting/invalid-easing-type
+    at Set.forEach (<anonymous>)
+✓ Compiled in 380ms
+ GET / 200 in 226ms (next.js: 153ms, application-code: 73ms)
+✓ Compiled in 86ms
+ GET / 200 in 219ms (next.js: 149ms, application-code: 71ms)
+✓ Compiled in 94ms
+ GET / 200 in 304ms (next.js: 239ms, application-code: 64ms)
+✓ Compiled in 67ms
+ GET / 200 in 262ms (next.js: 178ms, application-code: 84ms)
+ GET / 200 in 847ms (next.js: 9ms, application-code: 838ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 328ms
+ GET / 200 in 772ms (next.js: 550ms, application-code: 221ms)
+✓ Compiled in 475ms
+ GET / 200 in 465ms (next.js: 339ms, application-code: 125ms)
+ GET / 200 in 380ms (next.js: 9ms, application-code: 371ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 188ms
+ GET / 200 in 254ms (next.js: 177ms, application-code: 77ms)
+ GET / 200 in 704ms (next.js: 9ms, application-code: 695ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 103ms
+ GET / 200 in 210ms (next.js: 153ms, application-code: 58ms)
+✓ Compiled in 107ms
+ GET / 200 in 264ms (next.js: 172ms, application-code: 92ms)
+✓ Compiled in 160ms
+ GET / 200 in 294ms (next.js: 162ms, application-code: 133ms)
+✓ Compiled in 90ms
+ GET / 200 in 290ms (next.js: 204ms, application-code: 86ms)
+✓ Compiled in 125ms
+ GET / 200 in 548ms (next.js: 435ms, application-code: 113ms)
