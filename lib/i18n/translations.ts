@@ -146,7 +146,7 @@ export const translations = {
       metrics: {
         years: "yrs exp.",
         repos: "repositories",
-        countries: "companies",
+        countries: "projects",
       },
     },
     about: {
