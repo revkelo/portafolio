@@ -6,9 +6,18 @@
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useLang } from "@/lib/i18n/LangContext";
+import { useTheme } from "@/lib/theme/ThemeContext";
 
 export default function About() {
   const { t } = useLang();
+  const { theme } = useTheme();
+  const light = theme === "light";
+
+  // Colores del bloque de codigo segun el tema (contraste en modo claro).
+  const codeKey = light ? "text-[#5a5a5a]" : "text-[#c0c0c0]";
+  const codeEq = light ? "text-[#0d0d0d]" : "text-white";
+  const codeBool = light ? "text-green-700" : "text-green-400";
+  const codeStr = light ? "text-orange-700" : "text-orange-300";
 
   return (
     <section
@@ -33,14 +42,14 @@ export default function About() {
           subtitle={t.about.subtitle}
         />
 
-        <div className="grid gap-12 md:grid-cols-[260px_1fr] md:gap-16">
-          {/* Foto placeholder con iniciales KG (hasta agregar public/photo.jpg) */}
+        <div className="grid gap-12 md:grid-cols-[300px_1fr] md:items-start md:gap-16">
+          {/* Foto: sticky en desktop para que quede fija mientras se lee la bio */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="mx-auto w-full max-w-[260px]"
+            className="mx-auto w-full max-w-[260px] md:max-w-none md:sticky md:top-24"
           >
             <div className="relative aspect-[4/5] rounded-2xl">
               <div className="absolute inset-0 overflow-hidden rounded-2xl border border-white/10">
@@ -92,8 +101,8 @@ export default function About() {
                 <motion.span
                   key={`${word}-${i}`}
                   className="inline-block"
-                  initial={{ color: "rgba(192,192,192,0.25)" }}
-                  whileInView={{ color: "#FFFFFF" }}
+                  initial={{ color: light ? "rgba(74,74,74,0.3)" : "rgba(192,192,192,0.25)" }}
+                  whileInView={{ color: light ? "#0d0d0d" : "#FFFFFF" }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.3, delay: i * 0.025 }}
                 >
@@ -147,26 +156,28 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
-              className="mt-6 rounded-lg bg-[#111] p-4 font-mono text-xs"
+              className={`mt-6 rounded-lg p-4 font-mono text-xs ${
+                light ? "border border-orange-primary/20 bg-[#e8e3de]" : "bg-[#111]"
+              }`}
             >
-              <span className="text-[#c0c0c0]">const </span>
+              <span className={codeKey}>const </span>
               <span className="text-[#f06400]">kevin</span>
-              <span className="text-white"> = </span>
-              <span className="text-[#c0c0c0]">&#123;</span>
+              <span className={codeEq}> = </span>
+              <span className={codeKey}>&#123;</span>
               <br />
-              <span className="block pl-4 text-[#c0c0c0]">
-                available: <span className="text-green-400">true</span>,
+              <span className={`block pl-4 ${codeKey}`}>
+                available: <span className={codeBool}>true</span>,
               </span>
-              <span className="block pl-4 text-[#c0c0c0]">
-                location: <span className="text-orange-300">&#39;Bogotá 🇨🇴&#39;</span>,
+              <span className={`block pl-4 ${codeKey}`}>
+                location: <span className={codeStr}>&#39;Bogotá 🇨🇴&#39;</span>,
               </span>
-              <span className="block pl-4 text-[#c0c0c0]">
-                focus: <span className="text-orange-300">&#39;Cloud &amp; DevOps&#39;</span>,
+              <span className={`block pl-4 ${codeKey}`}>
+                focus: <span className={codeStr}>&#39;Cloud &amp; DevOps&#39;</span>,
               </span>
-              <span className="block pl-4 text-[#c0c0c0]">
-                english: <span className="text-orange-300">&#39;B1 (iTEP)&#39;</span>
+              <span className={`block pl-4 ${codeKey}`}>
+                english: <span className={codeStr}>&#39;B1 (iTEP)&#39;</span>
               </span>
-              <span className="text-[#c0c0c0]">&#125;</span>
+              <span className={codeKey}>&#125;</span>
             </motion.div>
           </div>
         </div>

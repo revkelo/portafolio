@@ -18,6 +18,11 @@ export const translations = {
     hero: {
       location: "Bogotá, Colombia",
       greeting: "Hola, soy",
+      roles: [
+        "Cloud & DevOps Engineer",
+        "Full-Stack Developer",
+        "Data Governance",
+      ],
       terminal: "Building things with Python, FastAPI & AWS",
       cta1: "Ver proyectos",
       cta2: "Descargar CV",
@@ -141,6 +146,11 @@ export const translations = {
     hero: {
       location: "Bogotá, Colombia",
       greeting: "Hi, I'm",
+      roles: [
+        "Cloud & DevOps Engineer",
+        "Full-Stack Developer",
+        "Data Governance",
+      ],
       terminal: "Building things with Python, FastAPI & AWS",
       cta1: "View projects",
       cta2: "Download CV",

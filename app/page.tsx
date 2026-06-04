@@ -11,17 +11,17 @@ import Stack from "@/components/sections/Stack";
 import Projects from "@/components/sections/Projects";
 import Contact from "@/components/sections/Contact";
 
-// Separador futurista: linea fina con gradiente naranja -> transparente -> naranja
+// Separador futurista: linea con gradiente naranja a ambos lados + rombo central.
 function SectionDivider() {
   return (
     <div
       aria-hidden
-      className="h-px w-full"
-      style={{
-        background:
-          "linear-gradient(90deg, transparent, #f06400, transparent)",
-      }}
-    />
+      className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-2 sm:px-6 lg:px-8"
+    >
+      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-orange-primary/20 to-transparent" />
+      <span className="text-xs text-orange-primary/40">◆</span>
+      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-orange-primary/20 to-transparent" />
+    </div>
   );
 }
 

@@ -23,6 +23,8 @@ interface Category {
   icon: keyof typeof icons;
   title: string;
   techs: string[];
+  // Clases de span para el bento grid (grid-cols-4 en desktop).
+  span: string;
 }
 
 const categories: Category[] = [
@@ -38,26 +40,33 @@ const categories: Category[] = [
       "GitHub Actions",
       "CI/CD",
     ],
+    // La mas importante: ancha en desktop, ancha en tablet.
+    span: "sm:col-span-2 lg:col-span-2",
   },
   {
     icon: "backend",
     title: "Backend",
     techs: ["Python", "FastAPI", "Java", "Spring Boot"],
+    span: "lg:col-span-1",
   },
   {
     icon: "frontend",
     title: "Frontend",
     techs: ["TypeScript", "React", "Flutter", "Three.js"],
+    // Columna alta a la derecha: ocupa dos filas en desktop.
+    span: "lg:col-span-1 lg:row-span-2",
   },
   {
     icon: "data",
     title: "Data & IA",
     techs: ["DAMA-DMBOK", "Great Expectations", "Databricks", "LangChain"],
+    span: "lg:col-span-1",
   },
   {
     icon: "db",
     title: "Databases",
     techs: ["MySQL", "PostgreSQL", "Supabase", "DynamoDB"],
+    span: "sm:col-span-2 lg:col-span-2",
   },
 ];
 
@@ -94,7 +103,8 @@ export default function Stack() {
 
         {/* Las tecnologias orbitando en 3D ahora viven en el GlobalScene. */}
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Bento grid: cards de distintos tamanos. 1 col movil, 2 tablet, 4 desktop. */}
+        <div className="grid auto-rows-[minmax(0,1fr)] grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {categories.map((cat, i) => (
             <motion.div
               key={cat.title}
@@ -109,9 +119,17 @@ export default function Stack() {
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               style={{ transition: "transform 0.15s ease" }}
-              className="group rounded-2xl border border-white/5 bg-surface p-6 hover:border-orange-primary hover:shadow-[0_0_30px_-10px_rgba(240,100,0,0.5)]"
+              className={`group relative flex flex-col overflow-hidden rounded-2xl border border-white/5 bg-surface p-6 hover:border-orange-primary hover:shadow-[0_0_30px_-10px_rgba(240,100,0,0.5)] ${cat.span}`}
               data-cursor-hover
             >
+              {/* Numero de categoria (01-05) en naranja semi-transparente */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute right-4 top-3 select-none font-display text-3xl font-bold text-orange-primary opacity-15"
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+
               <div className="mb-4 flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-primary/10 text-orange-primary transition-colors group-hover:bg-orange-primary/20">
                   <svg
@@ -136,7 +154,7 @@ export default function Stack() {
                 {cat.techs.map((tech) => (
                   <li
                     key={tech}
-                    className="rounded-full border border-white/10 px-3 py-1 text-sm text-text-secondary transition-colors group-hover:border-orange-primary/30"
+                    className="rounded-full border border-white/10 bg-white/[0.02] px-3 py-1 text-sm text-text-secondary transition-colors group-hover:border-orange-primary/30"
                   >
                     {tech}
                   </li>

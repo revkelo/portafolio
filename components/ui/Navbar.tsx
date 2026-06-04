@@ -95,29 +95,31 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "border-b border-orange-primary/20 bg-background/70 backdrop-blur-md"
+          ? "border-b border-orange-primary/20 bg-background/80 backdrop-blur-md"
           : "border-b border-transparent bg-transparent"
       }`}
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a
+        <motion.a
           href="#hero"
+          whileHover={{ scale: 1.05 }}
           className="group flex items-center font-display text-2xl font-bold tracking-tight text-orange-primary"
           data-cursor-hover
         >
           KG
           <span className="ml-0.5 mt-2 h-1.5 w-1.5 rounded-full bg-orange-primary pulse-dot" />
-        </a>
+        </motion.a>
 
         {/* Links desktop */}
         <ul className="hidden items-center gap-8 md:flex">
           {sections.map((s) => (
             <li key={s.id}>
-              <a
+              <motion.a
                 href={`#${s.id}`}
-                className="relative text-sm text-text-secondary transition-colors hover:text-orange-primary"
+                whileHover={{ y: -2 }}
+                className="relative inline-block text-sm text-text-secondary transition-colors hover:text-orange-primary"
                 data-cursor-hover
               >
                 {t.nav[s.key]}
@@ -127,7 +129,7 @@ export default function Navbar() {
                     className="absolute -bottom-1.5 left-0 h-0.5 w-full bg-orange-primary"
                   />
                 )}
-              </a>
+              </motion.a>
             </li>
           ))}
         </ul>

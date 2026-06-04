@@ -5,7 +5,7 @@
 // contadores animados, barra de terminal con cursor parpadeante y scroll indicator.
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import { useLang } from "@/lib/i18n/LangContext";
 
 // Hook simple para contar de 0 a `target` cuando el elemento entra en viewport.
@@ -35,6 +35,17 @@ export default function Hero() {
   const { t } = useLang();
   const metricsRef = useRef<HTMLDivElement>(null);
   const inView = useInView(metricsRef, { once: true, margin: "-40px" });
+
+  // Roles rotativos: aparece uno, se va, aparece el siguiente (AnimatePresence).
+  const roles = t.hero.roles;
+  const [roleIndex, setRoleIndex] = useState(0);
+  useEffect(() => {
+    setRoleIndex(0);
+    const id = setInterval(() => {
+      setRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 2600);
+    return () => clearInterval(id);
+  }, [roles]);
 
   const years = useCountUp(2, inView);
   const repos = useCountUp(35, inView);
@@ -88,8 +99,8 @@ export default function Hero() {
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 sm:py-28 lg:px-8">
         <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="mb-4 font-display text-sm uppercase tracking-[0.3em] text-orange-primary"
         >
@@ -97,10 +108,10 @@ export default function Hero() {
         </motion.p>
 
         <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ x: -30, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.04 }}
-          className="mb-2 text-lg text-text-secondary"
+          className="mb-2 font-display text-base italic text-orange-primary sm:text-lg"
         >
           {t.hero.greeting}
         </motion.p>
@@ -153,6 +164,26 @@ export default function Hero() {
           </span>
         </h1>
 
+        {/* Roles rotativos: uno aparece, se va y entra el siguiente */}
+        <div className="mt-5 flex h-8 items-center sm:h-9">
+          <span
+            aria-hidden
+            className="mr-3 h-5 w-1 rounded-full bg-orange-primary sm:h-6"
+          />
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={`${roleIndex}-${roles[roleIndex]}`}
+              initial={{ y: 18, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -18, opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="font-display text-xl font-semibold text-text-secondary sm:text-2xl"
+            >
+              {roles[roleIndex]}
+            </motion.span>
+          </AnimatePresence>
+        </div>
+
         {/* Linea horizontal naranja que se traza de 0 a 100% al cargar */}
         <motion.div
           aria-hidden
@@ -167,7 +198,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          className="mt-8 inline-flex max-w-full items-center rounded-lg border border-orange-primary/20 bg-surface/70 px-5 py-3 font-mono text-base text-text-secondary backdrop-blur-sm sm:text-lg"
+          className="mt-8 inline-flex max-w-full items-center rounded-lg border border-orange-primary/30 bg-surface/80 px-5 py-3 font-mono text-base text-text-secondary backdrop-blur-sm sm:text-lg"
         >
           <span className="mr-2.5 font-bold text-orange-primary">{">"}</span>
           <span className="truncate tracking-tight">{t.hero.terminal}</span>
@@ -208,9 +239,9 @@ export default function Hero() {
 
         {/* CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.36 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.36 }}
           className="mt-12 flex flex-col gap-4 sm:flex-row sm:flex-wrap"
         >
           <a
@@ -232,16 +263,13 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator: flecha + linea vertical naranja que pulsa */}
       <a
         href="#about"
         aria-label={t.hero.scroll}
-        className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-text-secondary"
+        className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3 text-orange-primary"
         data-cursor-hover
       >
-        <span className="text-xs uppercase tracking-[0.3em]">
-          {t.hero.scroll}
-        </span>
         <svg
           className="scroll-arrow"
           width="20"
@@ -255,6 +283,10 @@ export default function Hero() {
         >
           <path d="M12 5v14M5 12l7 7 7-7" />
         </svg>
+        <span
+          aria-hidden
+          className="pulse-dot h-10 w-px rounded-full bg-gradient-to-b from-orange-primary to-transparent"
+        />
       </a>
     </section>
   );

@@ -76,6 +76,14 @@ export default function Contact() {
     <section id="contacto" className="section-glass relative overflow-hidden py-16 md:py-24 lg:py-32">
       {/* La convergencia de particulas 3D ahora vive en el GlobalScene. */}
 
+      {/* Watermark gigante del numero de seccion (05) */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -top-8 -left-4 select-none font-display text-[200px] font-bold leading-none text-orange-primary opacity-5"
+      >
+        {t.contact.number}
+      </span>
+
       {/* Glow naranja sutil en el centro */}
       <div
         aria-hidden
