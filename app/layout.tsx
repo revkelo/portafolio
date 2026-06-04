@@ -74,6 +74,10 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
     >
       <head>
+        {/* Preconnect para recursos externos — mejora LCP */}
+        <link rel="preconnect" href="https://skillicons.dev" />
+        <link rel="preconnect" href="https://flagcdn.com" />
+        <link rel="dns-prefetch" href="https://skillicons.dev" />
         {/* Script inline anti-FOUC: aplica data-theme antes del primer render */}
         <script
           dangerouslySetInnerHTML={{
