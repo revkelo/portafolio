@@ -254,7 +254,7 @@ export default function Hero() {
             href="/cv-kevin-gonzalez.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="cta-shine rounded-full bg-black border border-orange-primary/60 px-7 py-3 text-center font-medium text-white transition-colors hover:bg-orange-primary hover:text-black hover:border-orange-primary"
+            className="cta-shine rounded-full bg-surface border border-orange-primary/60 px-7 py-3 text-center font-medium text-text-primary transition-colors hover:bg-orange-primary hover:text-background hover:border-orange-primary"
             data-cursor-hover
           >
             {t.hero.cta2}

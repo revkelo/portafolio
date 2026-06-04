@@ -74,10 +74,11 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
     >
       <head>
-        {/* Script inline anti-FOUC: aplica data-theme antes del primer render */}
+        {/* Anti-FOUC: aplica variables CSS inline antes del primer render.
+            Usa style.setProperty (maxima prioridad) para que Tailwind @theme no interfiera. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){var e=document.documentElement;e.setAttribute('data-theme','light');var v={'--color-background':'#f3decd','--color-surface':'#e7d2c1','--color-surface-alt':'#dfcab9','--color-text-primary':'#25211c','--color-text-secondary':'#5a4535','--color-border':'rgba(37,33,28,0.10)','--background':'#f3decd','--surface':'#e7d2c1','--surface-alt':'#dfcab9','--text-primary':'#25211c','--text-secondary':'#5a4535','--border':'rgba(37,33,28,0.10)','--glass-bg':'rgba(243,222,205,0.88)','--nav-bg-scrolled':'rgba(243,222,205,0.95)','--nav-bg-default':'rgba(243,222,205,0.65)','--code-bg':'rgba(37,33,28,0.07)','--code-keyword':'#6b4f3a','--code-brace':'#25211c','--code-bool':'#16a34a','--code-str':'#c04800','--code-border':'rgba(37,33,28,0.18)'};for(var k in v)e.style.setProperty(k,v[k]);}}catch(e){}})();`,
           }}
         />
       </head>

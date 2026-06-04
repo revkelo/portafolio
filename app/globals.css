@@ -5,53 +5,65 @@
    Stack: Next.js 16 + TypeScript + Tailwind v4 + Framer Motion + Lenis
    Para agregar secciones: crear en components/sections/ e importar en app/page.tsx */
 
-/* Modo oscuro (default) — extraido del banner de LinkedIn */
-:root {
-  --orange: #f56f0d;
-  --orange-dark: #ae5400;
-  --background: #0d0d0d;
-  --surface: #161616;
-  --surface-alt: #0a0a0a;
-  --text-primary: #ffffff;
-  --text-secondary: #c0b8b0;
-  --border: rgba(255,255,255,0.10);
-  --glass-bg: rgba(13,13,13,0.80);
+/* Tailwind v4: tokens estaticos en @theme (dark mode = default).
+   Las utilidades bg-background, text-text-primary, etc. se generan desde aqui.
+   IMPORTANTE: @theme usa valores estaticos; el override de tema se hace en
+   [data-theme=”light”] sobreescribiendo las mismas variables --color-*. */
+@theme {
+  --color-background:    #0d0d0d;
+  --color-surface:       #161616;
+  --color-surface-alt:   #0a0a0a;
+  --color-text-primary:  #ffffff;
+  --color-text-secondary:#c0b8b0;
+  --color-orange-primary:#f56f0d;
+  --color-orange-dark:   #ae5400;
+  --color-border:        rgba(255,255,255,0.10);
+
+  --font-display: var(--font-space-grotesk);
+  --font-sans:    var(--font-inter);
 }
 
-/* Modo claro — extraido del banner de LinkedIn */
+/* Variables CSS para uso en plain CSS e inline styles (modo oscuro = default) */
+:root {
+  --orange:          #f56f0d;
+  --orange-dark:     #ae5400;
+  --background:      #0d0d0d;
+  --surface:         #161616;
+  --surface-alt:     #0a0a0a;
+  --text-primary:    #ffffff;
+  --text-secondary:  #c0b8b0;
+  --border:          rgba(255,255,255,0.10);
+  --glass-bg:        rgba(13,13,13,0.80);
+  --nav-bg-scrolled: rgba(13,13,13,0.88);
+  --nav-bg-default:  rgba(13,13,13,0.55);
+  --code-bg:         rgba(0,0,0,0.45);
+}
+
+/* Modo claro: sobreescribe TANTO las variables --color-* de Tailwind
+   COMO las variables --* de plain CSS / inline styles. */
 [data-theme=”light”] {
-  --background: #f3decd;
-  --surface: #e7d2c1;
-  --surface-alt: #dfcab9;
-  --text-primary: #25211c;
-  --text-secondary: #5a4535;
-  --border: rgba(37,33,28,0.10);
-  --glass-bg: rgba(243,222,205,0.88);
+  /* Tailwind utility classes (bg-background, text-text-primary, etc.) */
+  --color-background:    #f3decd;
+  --color-surface:       #e7d2c1;
+  --color-surface-alt:   #dfcab9;
+  --color-text-primary:  #25211c;
+  --color-text-secondary:#5a4535;
+  --color-border:        rgba(37,33,28,0.10);
+
+  /* Plain CSS / inline styles */
+  --background:      #f3decd;
+  --surface:         #e7d2c1;
+  --surface-alt:     #dfcab9;
+  --text-primary:    #25211c;
+  --text-secondary:  #5a4535;
+  --border:          rgba(37,33,28,0.10);
+  --glass-bg:        rgba(243,222,205,0.88);
+  --nav-bg-scrolled: rgba(243,222,205,0.95);
+  --nav-bg-default:  rgba(243,222,205,0.65);
+  --code-bg:         #1a1410;
 }
 
 [data-theme=”light”] ::-webkit-scrollbar-track { background: #f3decd; }
-[data-theme=”light”] .section-glass { background: var(--glass-bg); }
-
-/* Tailwind v4: definimos la paleta personalizada como tokens del tema.
-   Esto habilita utilidades como bg-background, text-orange-primary, etc. */
-@theme {
-  /* Colores dinamicos: apuntan a variables CSS para que dark/light mode funcione */
-  --color-background: var(--background);
-  --color-surface: var(--surface);
-  --color-surface-alt: var(--surface-alt);
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-
-  /* Acento: valores estaticos requeridos por Tailwind para generar utilidades */
-  --color-orange-primary: #f56f0d;
-  --color-orange-dark: #ae5400;
-
-  /* Border dinamico */
-  --color-border: var(--border);
-
-  --font-display: var(--font-space-grotesk);
-  --font-sans: var(--font-inter);
-}
 
 * {
   box-sizing: border-box;

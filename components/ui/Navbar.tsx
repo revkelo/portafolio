@@ -108,8 +108,8 @@ export default function Navbar() {
         style={{
           border: "1px solid rgba(245,111,13,0.22)",
           background: scrolled
-            ? "rgba(13,13,13,0.88)"
-            : "rgba(13,13,13,0.55)",
+            ? "var(--nav-bg-scrolled)"
+            : "var(--nav-bg-default)",
           backdropFilter: "blur(14px)",
           WebkitBackdropFilter: "blur(14px)",
           boxShadow: scrolled
