@@ -54,43 +54,60 @@ export default function CustomCursor() {
 
   if (!enabled) return null;
 
+  const ORANGE = '#f56f0d';
+
   return (
-    <div aria-hidden className="pointer-events-none fixed left-0 top-0 z-[9999]">
+    <div
+      aria-hidden
+      style={{
+        position: 'fixed',
+        inset: 0,
+        top: 0,
+        left: 0,
+        zIndex: 9999,
+        pointerEvents: 'none',
+      }}
+    >
       {/* Punto central */}
       <div
         ref={dotRef}
-        className="fixed left-0 top-0 rounded-full transition-opacity duration-150"
         style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
           width: 12,
           height: 12,
-          background: '#f56f0d',
+          borderRadius: '50%',
+          background: ORANGE,
           opacity: hovering ? 0 : 1,
+          transition: 'opacity 0.15s',
+          pointerEvents: 'none',
         }}
       />
 
-      {/* Anillo exterior — en hover se transforma en crosshair */}
+      {/* Anillo exterior */}
       <div
         ref={ringRef}
-        className="fixed left-0 top-0 flex items-center justify-center transition-all duration-200 ease-out"
         style={{
-          width: hovering ? 36 : 36,
-          height: hovering ? 36 : 36,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: 36,
+          height: 36,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'all 0.2s ease-out',
+          pointerEvents: 'none',
         }}
       >
         {hovering ? (
-          <svg
-            width="36"
-            height="36"
-            viewBox="0 0 36 36"
-            fill="none"
-            stroke="#f56f0d"
-            strokeWidth="1.5"
-          >
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke={ORANGE} strokeWidth="1.5">
             <circle cx="18" cy="18" r="11" opacity="0.5" />
             <path d="M18 4v8M18 24v8M4 18h8M24 18h8" />
           </svg>
         ) : (
-          <span className="block h-9 w-9 rounded-full" style={{ border: '1px solid rgba(245,111,13,0.6)' }} />
+          <span style={{ display: 'block', width: 36, height: 36, borderRadius: '50%', border: `1px solid rgba(245,111,13,0.6)` }} />
         )}
       </div>
     </div>
