@@ -47,18 +47,16 @@ export default function Hero() {
     return () => clearInterval(id);
   }, [roles]);
 
-  const years = useCountUp(2, inView);
-  const repos = useCountUp(35, inView);
-  const projects = useCountUp(6, inView);
+  const years    = useCountUp(2,  inView);
+  const repos    = useCountUp(35, inView);
+  const projects = useCountUp(6,  inView);
+  const uptime   = useCountUp(98, inView);
 
   const metrics = [
-    { value: `${years.value}+`, done: years.done, label: t.hero.metrics.years },
-    { value: `${repos.value}+`, done: repos.done, label: t.hero.metrics.repos },
-    {
-      value: `${projects.value}+`,
-      done: projects.done,
-      label: t.hero.metrics.countries,
-    },
+    { value: `${years.value}+`,   done: years.done,    label: t.hero.metrics.years   },
+    { value: `${repos.value}+`,   done: repos.done,    label: t.hero.metrics.repos   },
+    { value: `${projects.value}+`,done: projects.done, label: t.hero.metrics.countries},
+    { value: `${uptime.value}%`,  done: uptime.done,   label: "uptime achieved"       },
   ];
 
   return (
@@ -89,14 +87,25 @@ export default function Hero() {
 
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 sm:py-28 lg:px-8">
-        <motion.p
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+        {/* Open to work badge */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="mb-4 font-display text-sm uppercase tracking-[0.3em] text-orange-primary"
+          className="mb-5 inline-flex items-center gap-2"
         >
-          {t.hero.location}
-        </motion.p>
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-60" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
+          </span>
+          <span className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-green-400">
+            Open to work
+          </span>
+          <span className="h-3 w-px bg-orange-primary/30" />
+          <span className="font-display text-xs uppercase tracking-[0.2em] text-orange-primary/70">
+            {t.hero.location}
+          </span>
+        </motion.div>
 
         <motion.p
           initial={{ x: -30, opacity: 0 }}

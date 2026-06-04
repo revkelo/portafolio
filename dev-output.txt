@@ -11394,3 +11394,261 @@ This will cause a hydration error.
  GET / 200 in 1082ms (next.js: 304ms, application-code: 777ms)
  GET / 200 in 580ms (next.js: 21ms, application-code: 559ms)
 ✓ Compiled in 588ms
+ GET / 200 in 291ms (next.js: 24ms, application-code: 267ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 99ms
+✓ Compiled in 73ms
+✓ Compiled in 102ms
+✓ Compiled in 385ms
+✓ Compiled in 125ms
+ GET / 200 in 347ms (next.js: 159ms, application-code: 188ms)
+✓ Compiled in 414ms
+ GET / 200 in 278ms (next.js: 181ms, application-code: 97ms)
+✓ Compiled in 103ms
+ GET / 200 in 232ms (next.js: 138ms, application-code: 94ms)
+ GET / 200 in 503ms (next.js: 11ms, application-code: 492ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 137ms
+✓ Compiled in 85ms
+✓ Compiled in 97ms
+✓ Compiled in 95ms
+✓ Compiled in 164ms
+ GET / 200 in 646ms (next.js: 10ms, application-code: 636ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 209ms
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+ GET / 200 in 846ms (next.js: 653ms, application-code: 193ms)
+✓ Compiled in 1718ms
+✓ Compiled in 302ms
+✓ Compiled in 193ms
+ GET / 200 in 358ms (next.js: 160ms, application-code: 198ms)
+✓ Compiled in 174ms
+ GET / 200 in 273ms (next.js: 153ms, application-code: 120ms)
+✓ Compiled in 112ms
+✓ Compiled in 88ms
+✓ Compiled in 105ms
+✓ Compiled in 122ms
+✓ Compiled in 98ms
+✓ Compiled in 77ms
+✓ Compiled in 72ms
+✓ Compiled in 78ms
+✓ Compiled in 86ms
+✓ Compiled in 141ms
+✓ Compiled in 114ms
+✓ Compiled in 116ms
+✓ Compiled in 136ms
+✓ Compiled in 94ms
+✓ Compiled in 101ms
+✓ Compiled in 117ms
+✓ Compiled in 251ms
+✓ Compiled in 124ms
+✓ Compiled in 177ms
+ GET / 200 in 481ms (next.js: 308ms, application-code: 172ms)
+✓ Compiled in 212ms
+✓ Compiled in 101ms
+✓ Compiled in 121ms
+✓ Compiled in 94ms
+✓ Compiled in 102ms
+✓ Compiled in 187ms
+✓ Compiled in 197ms
+✓ Compiled in 86ms
+✓ Compiled in 97ms
+✓ Compiled in 119ms
+✓ Compiled in 191ms
+✓ Compiled in 91ms
+✓ Compiled in 297ms
+ GET / 200 in 601ms (next.js: 9ms, application-code: 592ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 94ms
+✓ Compiled in 97ms
+✓ Compiled in 88ms
+✓ Compiled in 107ms
+✓ Compiled in 100ms
+✓ Compiled in 104ms
+✓ Compiled in 390ms
+ GET / 200 in 293ms (next.js: 215ms, application-code: 77ms)
+ GET / 200 in 494ms (next.js: 7ms, application-code: 486ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 101ms
+ GET / 200 in 259ms (next.js: 167ms, application-code: 92ms)
+✓ Compiled in 86ms
+ GET / 200 in 409ms (next.js: 287ms, application-code: 122ms)
+ GET / 200 in 312ms (next.js: 8ms, application-code: 304ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 230ms
+ GET / 200 in 518ms (next.js: 173ms, application-code: 345ms)
+ GET / 200 in 291ms (next.js: 9ms, application-code: 282ms)
+ GET / 200 in 233ms (next.js: 12ms, application-code: 221ms)
+ GET / 200 in 235ms (next.js: 74ms, application-code: 161ms)
+ GET / 200 in 241ms (next.js: 134ms, application-code: 108ms)
+⨯ ReferenceError: ScrollProgress is not defined
+    at RootLayout (app\layout.tsx:87:14)
+  85 |             <PageLoader />
+  86 |             <div aria-hidden className="grain-overlay" />
+> 87 |             <ScrollProgress />
+     |              ^
+  88 |             <CustomCursor />
+  89 |             <SmoothScroll>
+  90 |               <div className="relative z-10">{children}</div> {
+  digest: '106438064'
+}
+✓ Compiled in 646ms
+⨯ ReferenceError: ScrollProgress is not defined
+    at RootLayout (app\layout.tsx:87:14)
+  85 |             <PageLoader />
+  86 |             <div aria-hidden className="grain-overlay" />
+> 87 |             <ScrollProgress />
+     |              ^
+  88 |             <CustomCursor />
+  89 |             <SmoothScroll>
+  90 |               <div className="relative z-10">{children}</div> {
+  digest: '106438064'
+}
+⨯ ReferenceError: ScrollProgress is not defined
+    at RootLayout (app\layout.tsx:87:14)
+  85 |             <PageLoader />
+  86 |             <div aria-hidden className="grain-overlay" />
+> 87 |             <ScrollProgress />
+     |              ^
+  88 |             <CustomCursor />
+  89 |             <SmoothScroll>
+  90 |               <div className="relative z-10">{children}</div> {
+  digest: '106438064'
+}
+⨯ ReferenceError: ScrollProgress is not defined
+    at RootLayout (app\layout.tsx:87:14)
+  85 |             <PageLoader />
+  86 |             <div aria-hidden className="grain-overlay" />
+> 87 |             <ScrollProgress />
+     |              ^
+  88 |             <CustomCursor />
+  89 |             <SmoothScroll>
+  90 |               <div className="relative z-10">{children}</div> {
+  digest: '106438064'
+}
+⨯ ReferenceError: ScrollProgress is not defined
+    at RootLayout (app\layout.tsx:87:14)
+  85 |             <PageLoader />
+  86 |             <div aria-hidden className="grain-overlay" />
+> 87 |             <ScrollProgress />
+     |              ^
+  88 |             <CustomCursor />
+  89 |             <SmoothScroll>
+  90 |               <div className="relative z-10">{children}</div> {
+  digest: '106438064'
+}
+⨯ ReferenceError: ScrollProgress is not defined
+    at RootLayout (app\layout.tsx:87:14)
+  85 |             <PageLoader />
+  86 |             <div aria-hidden className="grain-overlay" />
+> 87 |             <ScrollProgress />
+     |              ^
+  88 |             <CustomCursor />
+  89 |             <SmoothScroll>
+  90 |               <div className="relative z-10">{children}</div> {
+  digest: '106438064'
+}
+ GET / 200 in 1166ms (next.js: 827ms, application-code: 339ms)
+ GET / 200 in 259ms (next.js: 108ms, application-code: 151ms)
+ GET / 200 in 262ms (next.js: 14ms, application-code: 248ms)
+ GET / 200 in 259ms (next.js: 185ms, application-code: 74ms)
+ GET / 200 in 1993ms (next.js: 494ms, application-code: 1499ms)
+ GET / 500 in 1669ms (next.js: 509ms, application-code: 1160ms)
+[browser] Uncaught ReferenceError: ScrollProgress is not defined
+    at RootLayout (app\layout.tsx:87:14)
+  85 |             <PageLoader />
+  86 |             <div aria-hidden className="grain-overlay" />
+> 87 |             <ScrollProgress />
+     |              ^
+  88 |             <CustomCursor />
+  89 |             <SmoothScroll>
+  90 |               <div className="relative z-10">{children}</div>
+✓ Compiled in 99ms
+ GET / 200 in 867ms (next.js: 311ms, application-code: 556ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 378ms
+✓ Compiled in 118ms
+ GET / 200 in 230ms (next.js: 7ms, application-code: 223ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 71ms
+⚠ Fast Refresh had to perform a full reload when ./components/ui/FullPageScroll.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET / 200 in 271ms (next.js: 191ms, application-code: 80ms)
+ GET / 200 in 500ms (next.js: 57ms, application-code: 442ms)
+ GET / 200 in 134ms (next.js: 18ms, application-code: 117ms)
+ GET / 200 in 514ms (next.js: 97ms, application-code: 417ms)
+✓ Compiled in 177ms
+ GET / 200 in 580ms (next.js: 291ms, application-code: 289ms)
+ GET / 200 in 211ms (next.js: 8ms, application-code: 203ms)
+ GET / 200 in 156ms (next.js: 46ms, application-code: 110ms)
+ GET / 200 in 158ms (next.js: 8ms, application-code: 151ms)
+ GET / 200 in 158ms (next.js: 85ms, application-code: 73ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+ GET / 200 in 272ms (next.js: 10ms, application-code: 263ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 126ms
+ GET / 200 in 1068ms (next.js: 278ms, application-code: 790ms)
+ GET / 200 in 140ms (next.js: 17ms, application-code: 123ms)
+✓ Compiled in 104ms
+ GET / 200 in 397ms (next.js: 235ms, application-code: 162ms)
+ GET / 200 in 142ms (next.js: 51ms, application-code: 91ms)
+✓ Compiled in 113ms
+ GET / 200 in 452ms (next.js: 274ms, application-code: 178ms)
+ GET / 200 in 95ms (next.js: 11ms, application-code: 83ms)
+✓ Compiled in 174ms
+ GET / 200 in 624ms (next.js: 269ms, application-code: 356ms)
+ GET / 200 in 208ms (next.js: 10ms, application-code: 198ms)
+✓ Compiled in 91ms
+ GET / 200 in 245ms (next.js: 178ms, application-code: 68ms)
+✓ Compiled in 110ms
+ GET / 200 in 329ms (next.js: 259ms, application-code: 70ms)
+✓ Compiled in 345ms
+ GET / 200 in 339ms (next.js: 198ms, application-code: 141ms)
+ GET / 200 in 283ms (next.js: 63ms, application-code: 220ms)
+ GET / 200 in 161ms (next.js: 8ms, application-code: 152ms)
+ GET / 200 in 311ms (next.js: 53ms, application-code: 257ms)
+ GET / 200 in 307ms (next.js: 182ms, application-code: 126ms)
+✓ Compiled in 116ms
+ GET / 200 in 418ms (next.js: 259ms, application-code: 159ms)
+ GET / 200 in 68ms (next.js: 6ms, application-code: 62ms)
+✓ Compiled in 141ms
+ GET / 200 in 495ms (next.js: 191ms, application-code: 304ms)
+✓ Compiled in 211ms
+ GET / 200 in 200ms (next.js: 137ms, application-code: 62ms)
+✓ Compiled in 120ms
+ GET / 200 in 917ms (next.js: 130ms, application-code: 787ms)
+ GET / 200 in 744ms (next.js: 17ms, application-code: 728ms)
+ GET / 200 in 540ms (next.js: 23ms, application-code: 517ms)
+ GET / 200 in 541ms (next.js: 84ms, application-code: 457ms)
+ GET / 200 in 541ms (next.js: 232ms, application-code: 309ms)
+✓ Compiled in 374ms
+✓ Compiled in 84ms
+ GET / 200 in 242ms (next.js: 168ms, application-code: 74ms)
+ GET / 200 in 418ms (next.js: 8ms, application-code: 409ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 123ms
+ GET / 200 in 456ms (next.js: 342ms, application-code: 113ms)
+ GET / 200 in 829ms (next.js: 11ms, application-code: 818ms)
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+✓ Compiled in 245ms
+ GET / 200 in 715ms (next.js: 299ms, application-code: 416ms)
+✓ Compiled in 334ms
+ GET / 200 in 419ms (next.js: 335ms, application-code: 84ms)
+✓ Compiled in 551ms
+ GET / 200 in 349ms (next.js: 224ms, application-code: 125ms)
+✓ Compiled in 267ms
+ GET / 200 in 323ms (next.js: 235ms, application-code: 87ms)
+✓ Compiled in 123ms
+ GET / 200 in 250ms (next.js: 183ms, application-code: 67ms)
+✓ Compiled in 108ms
+ GET / 200 in 254ms (next.js: 178ms, application-code: 75ms)
+✓ Compiled in 150ms
+ GET / 200 in 240ms (next.js: 159ms, application-code: 81ms)
+✓ Compiled in 224ms
+ GET / 200 in 214ms (next.js: 150ms, application-code: 64ms)
+✓ Compiled in 158ms
+ GET / 200 in 364ms (next.js: 249ms, application-code: 115ms)
+✓ Compiled in 90ms
+ GET / 200 in 286ms (next.js: 201ms, application-code: 84ms)
+✓ Compiled in 94ms
+ GET / 200 in 313ms (next.js: 198ms, application-code: 115ms)
+ GET / 200 in 50ms (next.js: 6ms, application-code: 44ms)

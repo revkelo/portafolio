@@ -100,4 +100,43 @@ export const projects: Project[] = [
     status: "completed",
     featured: false,
   },
+  {
+    id: "sap-data-quality",
+    title: "SAP Data Quality",
+    description:
+      "Pipeline de calidad de datos con Great Expectations sobre exportaciones SAP Excel — validaciones programáticas, reporte HTML automático.",
+    description_en:
+      "Data quality pipeline with Great Expectations on SAP Excel exports — programmatic validations and automatic HTML reports.",
+    tags: ["Python", "Great Expectations", "PySpark", "Databricks"],
+    github: "https://github.com/revkelo/sap-data-quality-greatexpectations",
+    demo: null,
+    status: "completed",
+    featured: false,
+  },
+  {
+    id: "nginx-load-balancer",
+    title: "NGINX Load Balancer",
+    description:
+      "Balanceador de carga NGINX con múltiples instancias Spring Boot — configuración upstream, sticky sessions y health checks.",
+    description_en:
+      "NGINX load balancer with multiple Spring Boot instances — upstream config, sticky sessions and health checks.",
+    tags: ["NGINX", "Spring Boot", "Docker", "Java"],
+    github: "https://github.com/revkelo/nginx-load-balancer-springboot",
+    demo: null,
+    status: "completed",
+    featured: false,
+  },
+  {
+    id: "itep-simulator",
+    title: "iTEP B1 Simulator",
+    description:
+      "Simulador del examen iTEP para práctica offline — motor de quiz con temporizador, puntuación y retroalimentación por sección.",
+    description_en:
+      "iTEP B1 exam simulator for offline practice — quiz engine with timer, scoring, and section-by-section feedback.",
+    tags: ["JavaScript", "HTML", "CSS"],
+    github: "https://github.com/revkelo/itep-b1-simulator",
+    demo: null,
+    status: "completed",
+    featured: false,
+  },
 ];

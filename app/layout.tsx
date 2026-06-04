@@ -7,6 +7,10 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import CustomCursor from "@/components/ui/CustomCursor";
+import BackToTop from "@/components/ui/BackToTop";
+import KeyboardShortcuts from "@/components/ui/KeyboardShortcuts";
+import EasterEgg from "@/components/ui/EasterEgg";
+import MusicPlayer from "@/components/ui/MusicPlayer";
 import PageLoader from "@/components/ui/PageLoader";
 import GlobalSceneWrapper from "@/components/3d/GlobalSceneWrapper";
 import { LangProvider } from "@/lib/i18n/LangContext";
@@ -85,6 +89,10 @@ export default function RootLayout({
             <PageLoader />
             <div aria-hidden className="grain-overlay" />
             <CustomCursor />
+            <BackToTop />
+            <KeyboardShortcuts />
+            <EasterEgg />
+            <MusicPlayer />
             <div className="relative z-10">{children}</div>
           </LangProvider>
         </ThemeProvider>
