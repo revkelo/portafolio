@@ -97,6 +97,13 @@ h1, h2, h3, h4, h5, h6, p, span, a, li, label, button {
   color: #ffffff;
 }
 
+/* Focus visible accesible — naranja para teclado */
+:focus-visible {
+  outline: 2px solid #f56f0d;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 /* Cursor personalizado: solo ocultar cuando el custom cursor JS ya está activo */
 .custom-cursor-active,
 .custom-cursor-active a,
