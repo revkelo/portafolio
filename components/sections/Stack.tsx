@@ -89,8 +89,8 @@ function TechChip({ name }: { name: string }) {
       style={{
         display: "flex", alignItems: "center", gap: 6,
         borderRadius: "0.55rem",
-        border: "1px solid rgba(255,255,255,0.07)",
-        background: "rgba(255,255,255,0.04)",
+        border: "1px solid var(--border)",
+        background: "var(--surface)",
         padding: "5px 10px",
         backdropFilter: "blur(6px)",
         cursor: "default",
@@ -103,8 +103,8 @@ function TechChip({ name }: { name: string }) {
       }}
       onMouseLeave={e => {
         const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = "rgba(255,255,255,0.07)";
-        el.style.background = "rgba(255,255,255,0.04)";
+        el.style.borderColor = "var(--border)";
+        el.style.background = "var(--surface)";
       }}
     >
       {slug && (

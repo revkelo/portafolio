@@ -26,7 +26,7 @@ export default function BackToTop() {
           style={{
             position: "fixed", bottom: "1.5rem", right: "1.5rem", zIndex: 200,
             width: 40, height: 40, borderRadius: "50%",
-            background: "rgba(13,13,13,0.92)",
+            background: "var(--nav-bg-scrolled)",
             border: "1px solid rgba(245,111,13,0.4)",
             color: "#f56f0d", cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",

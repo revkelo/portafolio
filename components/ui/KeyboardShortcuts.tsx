@@ -86,7 +86,7 @@ export default function KeyboardShortcuts() {
         style={{
           position: "fixed", bottom: "1.5rem", left: "1.5rem", zIndex: 200,
           width: 36, height: 36, borderRadius: "0.5rem",
-          background: "rgba(13,13,13,0.88)",
+          background: "var(--nav-bg-scrolled)",
           border: "1px solid rgba(245,111,13,0.22)",
           color: "rgba(245,111,13,0.65)", cursor: "pointer",
           display: "flex", alignItems: "center", justifyContent: "center",

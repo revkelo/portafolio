@@ -98,7 +98,7 @@ export default function ProjectCard({ project, index, featured = false }: {
             style={{
               position: "absolute", top: "0.75rem", right: "0.75rem",
               display: "flex", gap: "0.3rem",
-              background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)",
+              background: "var(--glass-bg)", backdropFilter: "blur(8px)",
               border: "1px solid rgba(245,111,13,0.2)",
               borderRadius: "0.6rem", padding: "0.35rem 0.5rem",
             }}
