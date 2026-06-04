@@ -416,3 +416,11 @@ h1, h2, h3, h4, h5, h6, p, span, a, li, label, button {
   100% { transform: translateX(0); }
 }
 
+/* Print styles — oculta elementos interactivos al imprimir */
+@media print {
+  .grain-overlay, canvas, nav, [aria-label="Page sections"],
+  [aria-label="Keyboard shortcuts"], [aria-label="Volver arriba"],
+  [aria-label="Reproducir música"] { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  a { color: #000 !important; }
+}
