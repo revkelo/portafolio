@@ -5,7 +5,7 @@
 // contadores animados, barra de terminal con cursor parpadeante y scroll indicator.
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView } from "framer-motion";
+import { AnimatePresence, motion, useInView, useScroll, useTransform, useSpring } from "framer-motion";
 import { useLang } from "@/lib/i18n/LangContext";
 
 // Hook simple para contar de 0 a `target` cuando el elemento entra en viewport.
@@ -59,8 +59,16 @@ export default function Hero() {
     { value: `${uptime.value}%`,  done: uptime.done,   label: "uptime achieved"       },
   ];
 
+  // Parallax con useScroll — el contenido sube más lento que el scroll
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const yText    = useSpring(useTransform(scrollYProgress, [0, 1], [0, -80]),  { stiffness: 80, damping: 20 });
+  const yDecor   = useSpring(useTransform(scrollYProgress, [0, 1], [0, -140]), { stiffness: 60, damping: 20 });
+  const opacity  = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
   return (
     <section
+      ref={heroRef}
       id="hero"
       className="relative flex min-h-screen items-center overflow-hidden"
     >
@@ -69,11 +77,9 @@ export default function Hero() {
       {/* Lineas diagonales naranjas sutiles (banner original de Kevin) */}
       <div aria-hidden className="diagonal-lines pointer-events-none absolute inset-0 z-0" />
 
-      {/* Puntos de esquina — esquina superior izquierda */}
-      <div aria-hidden className="corner-dots pointer-events-none absolute left-7 top-7 z-0 opacity-50" />
-
-      {/* Puntos de esquina — esquina inferior derecha */}
-      <div aria-hidden className="corner-dots pointer-events-none absolute bottom-14 right-7 z-0 opacity-50" />
+      {/* Puntos de esquina con parallax más rápido */}
+      <motion.div aria-hidden style={{ y: yDecor }} className="corner-dots pointer-events-none absolute left-7 top-7 z-0 opacity-50" />
+      <motion.div aria-hidden style={{ y: yDecor }} className="corner-dots pointer-events-none absolute bottom-14 right-7 z-0 opacity-50" />
 
       {/* Línea vertical separadora — estilo banner */}
       <div
@@ -86,7 +92,7 @@ export default function Hero() {
       />
 
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 sm:py-28 lg:px-8">
+      <motion.div style={{ y: yText, opacity }} className="relative z-10 mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 sm:py-28 lg:px-8">
         {/* Open to work badge */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -260,7 +266,7 @@ export default function Hero() {
             {t.hero.cta2}
           </a>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Scroll indicator: flecha + linea vertical naranja que pulsa */}
       <a
