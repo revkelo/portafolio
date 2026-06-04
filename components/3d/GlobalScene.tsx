@@ -38,7 +38,7 @@
 //     BufferAttributes y se mutan vectores ya instanciados.
 // IMPORTANTE: importar SIEMPRE via dynamic(ssr:false) (ver GlobalSceneWrapper).
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 import * as THREE from "three";
@@ -46,6 +46,24 @@ import * as THREE from "three";
 // Paleta del Wave Field.
 const ORANGE = "#f06400";
 const ORANGE_DARK = "#c44a00";
+
+// Hook: textura circular para que Points se vean como bolitas, no cuadrados.
+function useCircleTexture() {
+  return useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 64; canvas.height = 64;
+    const ctx = canvas.getContext("2d")!;
+    const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0,   "rgba(255,255,255,1)");
+    g.addColorStop(0.55,"rgba(255,255,255,0.85)");
+    g.addColorStop(1,   "rgba(255,255,255,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(32, 32, 32, 0, Math.PI * 2);
+    ctx.fill();
+    return new THREE.CanvasTexture(canvas);
+  }, []);
+}
 
 // Gradiente de color por altura de la ola.
 const COLOR_PEAK = new THREE.Color("#ff8c00"); // pico (y alto)
@@ -155,6 +173,7 @@ function WaveGrid({
   shared: WaveShared;
   progress: React.RefObject<number>;
 }) {
+  const circleTex = useCircleTexture();
   const pointsRef = useRef<THREE.Points>(null);
 
   // Posiciones iniciales del grid (x,z fijos; y se recalcula cada frame).
@@ -270,10 +289,12 @@ function WaveGrid({
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.045}
+        map={circleTex}
+        alphaTest={0.2}
+        size={0.055}
         vertexColors
         transparent
-        opacity={0.78}
+        opacity={0.85}
         sizeAttenuation
         toneMapped={false}
       />
@@ -362,6 +383,7 @@ function WaveParticles({
   shared: WaveShared;
   count: number;
 }) {
+  const circleTex = useCircleTexture();
   const pointsRef = useRef<THREE.Points>(null);
 
   // Datos estaticos por particula: offset/fase de flotacion.
@@ -474,10 +496,12 @@ function WaveParticles({
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.1}
+        map={circleTex}
+        alphaTest={0.2}
+        size={0.12}
         vertexColors
         transparent
-        opacity={0.9}
+        opacity={0.95}
         sizeAttenuation
         toneMapped={false}
       />
@@ -778,6 +802,7 @@ function SceneContents({
       <group ref={groupRef}>
         <MouseProjector shared={shared} mouse={mouse} />
         <WaveGrid shared={shared} progress={progress} />
+        {!isMobile && <WaveMesh shared={shared} />}
         <WaveParticles shared={shared} count={particleCount} />
         {!isMobile && <CursorOrb shared={shared} />}
       </group>
