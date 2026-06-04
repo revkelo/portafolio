@@ -56,6 +56,7 @@ export const translations = {
       label: "EXPERIENCE",
       title: "Experiencia",
       subtitle: "Donde he construido, automatizado y gobernado datos.",
+      current: "Actual",
       items: [
         {
           company: "Corona",
@@ -121,6 +122,7 @@ export const translations = {
       copy: "Click para copiar",
       copied: "¡Copiado!",
       closing: "Construyamos algo genial juntos.",
+      availability: "Disponible para proyectos freelance y oportunidades full-time.",
     },
     footer: {
       rights: "Bogotá, Colombia.",
@@ -176,6 +178,7 @@ export const translations = {
       label: "EXPERIENCE",
       title: "Experience",
       subtitle: "Where I've built, automated, and governed data.",
+      current: "Current",
       items: [
         {
           company: "Corona",
@@ -241,6 +244,7 @@ export const translations = {
       copy: "Click to copy",
       copied: "Copied!",
       closing: "Let's build something great together.",
+      availability: "Available for freelance projects and full-time opportunities.",
     },
     footer: {
       rights: "Bogotá, Colombia.",

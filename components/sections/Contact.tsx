@@ -100,8 +100,8 @@ export default function Contact() {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          {/* CTA grande: split por palabras con stagger */}
-          <h3 className="font-display text-5xl font-bold leading-[1.05] text-text-primary sm:text-7xl">
+          {/* CTA grande: full-width, escala con viewport */}
+          <h3 className="font-display font-bold leading-[1.05] text-text-primary" style={{ fontSize: 'clamp(2.5rem, 8vw, 7rem)' }}>
             {t.contact.cta.split(" ").map((word, i) => (
               <motion.span
                 key={`${word}-${i}`}
@@ -161,14 +161,29 @@ export default function Contact() {
           <p className="mt-16 text-center font-display text-2xl font-bold italic text-orange-primary sm:text-3xl">
             {t.contact.closing}
           </p>
+
+          {/* Disponibilidad */}
+          <p className="mt-4 text-center text-sm text-text-secondary/60">
+            {t.contact.availability}
+          </p>
         </motion.div>
       </div>
 
-      <footer className="relative z-10 mx-auto mt-20 max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="border-t border-white/5 pt-8 text-sm text-text-secondary">
-          © {new Date().getFullYear()} Kevin Gonzalez — {t.footer.rights}
+      {/* Footer */}
+      <div className="relative z-10 mx-auto mt-24 max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center gap-4 border-t border-white/5 pt-8 sm:flex-row sm:justify-between">
+          <p className="text-sm text-text-secondary/60">
+            © {new Date().getFullYear()} Kevin Gonzalez — {t.footer.rights}
+          </p>
+          <div className="flex items-center gap-6 text-sm text-text-secondary/60">
+            <a href="https://github.com/revkelo" target="_blank" rel="noopener noreferrer" className="hover:text-orange-primary transition-colors">GitHub</a>
+            <a href="https://linkedin.com/in/kagonzalezdev" target="_blank" rel="noopener noreferrer" className="hover:text-orange-primary transition-colors">LinkedIn</a>
+          </div>
+          <p className="text-sm text-text-secondary/40">
+            Hecho con ❤️ en Bogotá 🇨🇴
+          </p>
         </div>
-      </footer>
+      </div>
 
       {/* Toast "Copiado" */}
       <AnimatePresence>

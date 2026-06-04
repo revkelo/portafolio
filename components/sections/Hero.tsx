@@ -9,8 +9,10 @@ import { motion, useInView } from "framer-motion";
 import { useLang } from "@/lib/i18n/LangContext";
 
 // Hook simple para contar de 0 a `target` cuando el elemento entra en viewport.
+// Devuelve tambien `done` para disparar un flash naranja al terminar.
 function useCountUp(target: number, active: boolean, duration = 1400) {
   const [value, setValue] = useState(0);
+  const [done, setDone] = useState(false);
   useEffect(() => {
     if (!active) return;
     let raf = 0;
@@ -21,11 +23,12 @@ function useCountUp(target: number, active: boolean, duration = 1400) {
       const eased = 1 - Math.pow(1 - p, 3);
       setValue(Math.round(eased * target));
       if (p < 1) raf = requestAnimationFrame(tick);
+      else setDone(true);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [target, active, duration]);
-  return value;
+  return { value, done };
 }
 
 export default function Hero() {
@@ -38,9 +41,13 @@ export default function Hero() {
   const projects = useCountUp(6, inView);
 
   const metrics = [
-    { value: `${years}+`, label: t.hero.metrics.years },
-    { value: `${repos}+`, label: t.hero.metrics.repos },
-    { value: `${projects}+`, label: t.hero.metrics.countries },
+    { value: `${years.value}+`, done: years.done, label: t.hero.metrics.years },
+    { value: `${repos.value}+`, done: repos.done, label: t.hero.metrics.repos },
+    {
+      value: `${projects.value}+`,
+      done: projects.done,
+      label: t.hero.metrics.countries,
+    },
   ];
 
   return (
@@ -50,8 +57,8 @@ export default function Hero() {
     >
       {/* El planeta 3D del hero ahora vive en el GlobalScene (un solo Canvas). */}
 
-      {/* Grid de puntos animado */}
-      <div aria-hidden className="dot-grid pointer-events-none absolute inset-0 z-0" />
+      {/* Lineas diagonales naranjas sutiles (banner original de Kevin) */}
+      <div aria-hidden className="diagonal-lines pointer-events-none absolute inset-0 z-0" />
 
       {/* Orbes flotantes decorativos (borrosos, animados desfasados) */}
       <div
@@ -122,7 +129,11 @@ export default function Hero() {
             ))}
           </span>
           <br />
-          <span className="inline-block text-orange-primary" aria-label="Gonzalez">
+          <span
+            className="inline-block text-orange-primary"
+            aria-label="Gonzalez"
+            style={{ WebkitTextStroke: "1px rgba(240,100,0,0.3)" }}
+          >
             {"Gonzalez".split("").map((letter, i) => (
               <motion.span
                 key={`g-${i}`}
@@ -142,34 +153,55 @@ export default function Hero() {
           </span>
         </h1>
 
+        {/* Linea horizontal naranja que se traza de 0 a 100% al cargar */}
+        <motion.div
+          aria-hidden
+          initial={{ width: 0 }}
+          animate={{ width: "100%" }}
+          transition={{ delay: 0.8, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-6 h-0.5 max-w-md bg-gradient-to-r from-orange-primary to-orange-primary/0"
+        />
+
         {/* Barra de terminal con cursor parpadeante */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          className="mt-8 inline-flex max-w-full items-center rounded-lg border border-white/10 bg-surface/70 px-4 py-2.5 font-mono text-sm text-text-secondary backdrop-blur-sm sm:text-base"
+          className="mt-8 inline-flex max-w-full items-center rounded-lg border border-orange-primary/20 bg-surface/70 px-5 py-3 font-mono text-base text-text-secondary backdrop-blur-sm sm:text-lg"
         >
-          <span className="mr-2 text-orange-primary">{">"}</span>
-          <span className="truncate">{t.hero.terminal}</span>
+          <span className="mr-2.5 font-bold text-orange-primary">{">"}</span>
+          <span className="truncate tracking-tight">{t.hero.terminal}</span>
           <span className="terminal-cursor" aria-hidden />
         </motion.div>
 
-        {/* Contadores animados */}
+        {/* Contadores animados — fila con separadores verticales naranjas */}
         <motion.div
           ref={metricsRef}
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.28 }}
-          className="mt-12 grid grid-cols-1 gap-x-12 gap-y-6 sm:grid-cols-3"
+          className="mt-12 flex flex-wrap items-stretch gap-y-6"
         >
-          {metrics.map((m) => (
-            <div key={m.label}>
-              <p className="font-display text-4xl font-bold text-orange-primary sm:text-5xl">
-                {m.value}
-              </p>
-              <p className="mt-1 max-w-[8rem] text-sm text-text-secondary">
-                {m.label}
-              </p>
+          {metrics.map((m, i) => (
+            <div key={m.label} className="flex items-stretch">
+              {i > 0 && (
+                <span
+                  aria-hidden
+                  className="mr-6 w-px self-stretch bg-orange-primary/40 sm:mr-8 sm:ml-2"
+                />
+              )}
+              <div>
+                <p
+                  className={`font-display text-4xl font-bold text-orange-primary sm:text-5xl ${
+                    m.done ? "metric-flash" : ""
+                  }`}
+                >
+                  {m.value}
+                </p>
+                <p className="mt-1 max-w-[8rem] text-sm text-text-secondary">
+                  {m.label}
+                </p>
+              </div>
             </div>
           ))}
         </motion.div>
@@ -183,7 +215,7 @@ export default function Hero() {
         >
           <a
             href="#proyectos"
-            className="rounded-full bg-orange-primary px-7 py-3 text-center font-medium text-background transition-colors hover:bg-orange-dark"
+            className="cta-shine rounded-full bg-orange-primary px-7 py-3 text-center font-medium text-background transition-colors hover:bg-orange-dark"
             data-cursor-hover
           >
             {t.hero.cta1}
@@ -192,7 +224,7 @@ export default function Hero() {
             href="/cv-kevin-gonzalez.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-orange-primary px-7 py-3 text-center font-medium text-orange-primary transition-colors hover:bg-orange-primary hover:text-background"
+            className="cta-shine rounded-full border border-orange-primary px-7 py-3 text-center font-medium text-orange-primary transition-colors hover:bg-orange-primary hover:text-background"
             data-cursor-hover
           >
             {t.hero.cta2}

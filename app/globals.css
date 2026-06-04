@@ -141,6 +141,89 @@ body {
   }
 }
 
+/* Lineas diagonales naranjas sutiles del hero (banner original de Kevin) */
+.diagonal-lines {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(240, 100, 0, 0.07) 0px,
+    rgba(240, 100, 0, 0.07) 1px,
+    transparent 1px,
+    transparent 22px
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 80% 70% at 50% 40%,
+    #000 0%,
+    transparent 78%
+  );
+  mask-image: radial-gradient(
+    ellipse 80% 70% at 50% 40%,
+    #000 0%,
+    transparent 78%
+  );
+}
+
+/* Efecto "shine" horizontal para botones CTA */
+.cta-shine {
+  position: relative;
+  overflow: hidden;
+}
+.cta-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-120%);
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 70%
+  );
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+.cta-shine:hover::after {
+  transform: translateX(120%);
+}
+
+/* Flash naranja suave al terminar de contar una metrica */
+@keyframes metric-flash {
+  0% {
+    text-shadow: 0 0 0 rgba(240, 100, 0, 0);
+    transform: scale(1);
+  }
+  35% {
+    text-shadow: 0 0 24px rgba(240, 100, 0, 0.8);
+    transform: scale(1.06);
+  }
+  100% {
+    text-shadow: 0 0 0 rgba(240, 100, 0, 0);
+    transform: scale(1);
+  }
+}
+.metric-flash {
+  animation: metric-flash 0.7s ease-out;
+}
+
+/* Subrayado naranja que crece al hover (email del contacto) */
+.grow-underline {
+  position: relative;
+}
+.grow-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.1em;
+  height: 3px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: #f06400;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.grow-underline:hover::after {
+  transform: scaleX(1);
+}
+
 /* Cursor parpadeante naranja del terminal */
 .terminal-cursor {
   display: inline-block;
@@ -293,8 +376,13 @@ body {
   .pulse-dot,
   .orb-float,
   .glow-pulse,
+  .metric-flash,
   .glitch:hover::before,
   .glitch:hover::after {
     animation: none;
+  }
+  .cta-shine::after,
+  .grow-underline::after {
+    transition: none;
   }
 }

@@ -17,6 +17,14 @@ export default function About() {
     >
       {/* Las geometrias 3D del about ahora viven en el GlobalScene. */}
 
+      {/* Watermark gigante del numero de seccion */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -top-8 -left-4 select-none font-display text-[200px] font-bold leading-none text-orange-primary opacity-5"
+      >
+        {t.about.number}
+      </span>
+
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionTitle
           number={t.about.number}
@@ -34,20 +42,46 @@ export default function About() {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="mx-auto w-full max-w-[260px]"
           >
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10">
-              <img
-                src="/photo.jpg"
-                alt="Kevin Gonzalez"
-                className="h-full w-full object-cover object-top"
-              />
-              {/* Glow naranja sutil en la esquina inferior */}
-              <div
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(to top, rgba(240,100,0,0.25) 0%, transparent 50%)",
-                }}
-              />
+            <div className="relative aspect-[4/5] rounded-2xl">
+              <div className="absolute inset-0 overflow-hidden rounded-2xl border border-white/10">
+                <img
+                  src="/photo.jpg"
+                  alt="Kevin Gonzalez"
+                  className="h-full w-full object-cover object-top"
+                />
+                {/* Glow naranja sutil en la esquina inferior */}
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(to top, rgba(240,100,0,0.25) 0%, transparent 50%)",
+                  }}
+                />
+              </div>
+
+              {/* Marco naranja que se traza al entrar en viewport */}
+              <svg
+                aria-hidden
+                className="pointer-events-none absolute -inset-2 h-[calc(100%+1rem)] w-[calc(100%+1rem)]"
+                viewBox="0 0 100 125"
+                preserveAspectRatio="none"
+              >
+                <motion.rect
+                  x="1.5"
+                  y="1.5"
+                  width="97"
+                  height="122"
+                  rx="6"
+                  fill="none"
+                  stroke="#f06400"
+                  strokeWidth="1.5"
+                  pathLength={1}
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 1 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 1.4, ease: "easeInOut", delay: 0.2 }}
+                />
+              </svg>
             </div>
           </motion.div>
 
@@ -80,9 +114,16 @@ export default function About() {
                     ease: "easeOut",
                     delay: i * 0.1,
                   }}
-                  className="rounded-2xl border border-white/5 bg-surface p-5 transition-colors hover:border-orange-primary/50"
+                  className="relative overflow-hidden rounded-2xl border border-white/5 bg-surface p-5 transition-colors hover:border-orange-primary/50"
                   data-cursor-hover
                 >
+                  {/* Numero de item semi-transparente arriba a la derecha */}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute -top-1 right-2 select-none font-display text-4xl font-bold text-orange-primary opacity-15"
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                   <span
                     aria-hidden
                     className="mb-3 block h-1 w-6 bg-orange-primary"
@@ -90,7 +131,7 @@ export default function About() {
                       clipPath: "polygon(30% 0, 100% 0, 70% 100%, 0 100%)",
                     }}
                   />
-                  <h3 className="font-display text-base font-bold text-orange-primary">
+                  <h3 className="relative font-display text-base font-bold text-orange-primary">
                     {item.title}
                   </h3>
                   <p className="mt-2 text-sm text-text-secondary">

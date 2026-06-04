@@ -55,17 +55,34 @@ export default function Experience() {
                 </span>
 
                 <div
-                  className="rounded-2xl border border-white/5 bg-surface p-5 transition-colors hover:border-orange-primary/50 sm:p-6"
+                  className={`rounded-2xl bg-surface p-5 transition-colors hover:border-orange-primary/50 sm:p-6 ${
+                    i === 0
+                      ? "border-l-4 border-orange-primary border-t border-r border-b border-t-white/5 border-r-white/5 border-b-white/5"
+                      : "border border-white/5"
+                  }`}
                   data-cursor-hover
                 >
                   <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
-                    <div>
-                      <h3 className="font-display text-lg font-bold text-text-primary sm:text-xl">
-                        {item.company}
-                      </h3>
-                      <p className="mt-0.5 font-medium text-orange-primary">
-                        {item.role}
-                      </p>
+                    <div className="flex items-center gap-3">
+                      {/* Badge con iniciales de empresa */}
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-orange-primary/40 bg-orange-primary/10 font-display text-xs font-bold text-orange-primary">
+                        {item.company.split(" ").map(w => w[0]).slice(0, 2).join("")}
+                      </span>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-display text-lg font-bold text-text-primary sm:text-xl">
+                            {item.company}
+                          </h3>
+                          {i === 0 && (
+                            <span className="rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-green-400">
+                              {t.experience.current}
+                            </span>
+                          )}
+                        </div>
+                        <p className="mt-0.5 font-medium text-orange-primary">
+                          {item.role}
+                        </p>
+                      </div>
                     </div>
                     <span className="shrink-0 rounded-full border border-orange-primary/30 px-3 py-1 text-xs font-medium uppercase tracking-wider text-orange-primary">
                       {item.type}
@@ -82,9 +99,7 @@ export default function Experience() {
                         key={bullet}
                         className="flex gap-2 text-sm leading-relaxed text-text-secondary"
                       >
-                        <span aria-hidden className="text-orange-primary">
-                          ·
-                        </span>
+                        <span aria-hidden className="shrink-0 text-orange-primary">▹</span>
                         <span>{bullet}</span>
                       </li>
                     ))}

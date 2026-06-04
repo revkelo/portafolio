@@ -28,7 +28,7 @@ export default function SectionTitle({
       className="mb-12"
     >
       {/* Numero de seccion: 01 / ABOUT */}
-      <p className="mb-3 font-display text-xs uppercase tracking-[0.35em] text-orange-primary">
+      <p className="mb-4 font-display text-xs uppercase tracking-[0.4em] text-orange-primary">
         {number} <span className="text-text-secondary/60">/</span> {label}
       </p>
 
@@ -36,10 +36,10 @@ export default function SectionTitle({
         {/* Linea diagonal naranja de 2px a la izquierda */}
         <span
           aria-hidden
-          className="h-8 w-3 shrink-0 bg-orange-primary"
+          className="h-10 w-3 shrink-0 bg-orange-primary sm:h-12"
           style={{ clipPath: "polygon(60% 0, 100% 0, 40% 100%, 0 100%)" }}
         />
-        <h2 className="font-display text-3xl font-bold text-text-primary sm:text-4xl">
+        <h2 className="font-display text-4xl font-bold tracking-tight text-text-primary md:text-5xl lg:text-6xl">
           {title}
         </h2>
       </div>
