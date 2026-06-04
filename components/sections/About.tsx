@@ -50,30 +50,20 @@ export default function About() {
                   className="h-full w-full object-cover"
                   style={{ objectPosition: "center 15%" }}
                 />
-                <div
-                  className="pointer-events-none absolute inset-0"
-                  style={{ background: "linear-gradient(to top, rgba(245,111,13,0.3) 0%, transparent 55%)" }}
-                />
               </div>
-              {/* Marco SVG animado */}
-              <svg
+              {/* Marco naranja completo */}
+              <motion.div
                 aria-hidden
-                className="pointer-events-none absolute -inset-2 h-[calc(100%+1rem)] w-[calc(100%+1rem)]"
-                viewBox="0 0 100 125"
-                preserveAspectRatio="none"
-              >
-                <motion.path
-                  d="M 7.5,1.5 L 92.5,1.5 Q 98.5,1.5 98.5,7.5 L 98.5,117.5 Q 98.5,123.5 92.5,123.5 L 7.5,123.5 Q 1.5,123.5 1.5,117.5 L 1.5,7.5 Q 1.5,1.5 7.5,1.5 Z"
-                  fill="none"
-                  stroke="#f56f0d"
-                  strokeWidth="1.5"
-                  pathLength={1}
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  whileInView={{ pathLength: 1, opacity: 0.7 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 1.4, ease: "easeInOut", delay: 0.3 }}
-                />
-              </svg>
+                className="pointer-events-none absolute rounded-[20px]"
+                style={{
+                  inset: "-3px",
+                  border: "1.5px solid #f56f0d",
+                }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 0.75 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
+              />
             </div>
           </motion.div>
 
@@ -144,7 +134,7 @@ export default function About() {
                 available: <span style={{ color: "#4ade80" }}>true</span>,
               </span>
               <span className="block pl-4" style={{ color: "var(--text-secondary)" }}>
-                location: <span style={{ color: "#f56f0d" }}>&#39;Bogotá 🇨🇴&#39;</span>,
+                location: <span style={{ color: "#f56f0d" }}>&#39;Bogotá <img src="https://flagcdn.com/16x12/co.png" alt="🇨🇴" width={16} height={12} style={{ display: "inline", verticalAlign: "middle", marginBottom: 2 }} />&#39;</span>,
               </span>
               <span className="block pl-4" style={{ color: "var(--text-secondary)" }}>
                 focus: <span style={{ color: "#f56f0d" }}>&#39;Cloud &amp; DevOps&#39;</span>,
