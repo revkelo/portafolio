@@ -600,10 +600,10 @@ function SceneContents({
       <pointLight position={[-3, 4, -3]} color="#0a0a1a" intensity={0.3} />
 
       <Stars
-        radius={100}
-        depth={50}
+        radius={80}
+        depth={40}
         count={starCount}
-        factor={4}
+        factor={6}
         saturation={0}
         fade
         speed={0.5}
@@ -613,12 +613,10 @@ function SceneContents({
       {!isMobile && <CursorOrb mouse={mouse} />}
       <ScrollCamera progress={progress} />
 
-      {/* Objetos por seccion: visibles solo en su rango de scroll. Usamos
-          <group visible> para no montar/desmontar y mantener fps estable. */}
-      <group visible={inHero}>
-        <HeroPlanetObjects mouse={mouse} isMobile={isMobile} />
-      </group>
+      {/* Planeta siempre visible (base de la escena) — se ve en todas las secciones */}
+      <HeroPlanetObjects mouse={mouse} isMobile={isMobile} />
 
+      {/* Objetos adicionales por sección */}
       <group visible={inAbout}>
         <AboutGeometryObjects mouse={mouse} isMobile={isMobile} />
       </group>

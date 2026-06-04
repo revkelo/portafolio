@@ -48,7 +48,6 @@ export default function GlobalSceneWrapper() {
     <div
       aria-hidden
       className="pointer-events-none fixed inset-0 z-0"
-      style={{ opacity: 0.9 }}
     >
       <GlobalScene />
     </div>
