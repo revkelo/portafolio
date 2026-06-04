@@ -1,70 +1,99 @@
-# Getting Started with Create React App
+# Portafolio — Kevin Gonzalez
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Portafolio web profesional de **Kevin Gonzalez** — Cloud & DevOps Engineer · Full-Stack Developer · Data Governance.
 
-## Available Scripts
+Concepto visual: **Dark Tech + Orange Fire** — minimalista oscuro con el naranja como energia.
 
-In the project directory, you can run:
+## Paleta
 
-### `npm start`
+| Color     | Uso                          |
+| --------- | ---------------------------- |
+| `#0D0D0D` | Fondo principal              |
+| `#F06400` | Naranja primario (acento)    |
+| `#C44A00` | Naranja oscuro (hover)       |
+| `#FFFFFF` | Texto principal              |
+| `#C0C0C0` | Texto secundario             |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Stack
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Next.js 16** (App Router) + **TypeScript**
+- **Tailwind CSS v4** (paleta personalizada vía `@theme` en `app/globals.css`)
+- **Framer Motion** — animaciones de entrada (fade + slide)
+- **Lenis** — smooth scroll
+- **GSAP** + `@gsap/react` — instalado para scroll animations futuras
+- **React Three Fiber** + `@react-three/drei` + `three` — instalado para un hero 3D futuro
 
-### `npm test`
+## Correr localmente
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # build de produccion (Turbopack por defecto en Next 16)
+npm run start    # servir el build
+```
 
-### `npm run build`
+Requisitos: Node.js 20.9+.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Estructura
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+app/
+├── layout.tsx          metadata, fuentes (Space Grotesk + Inter), SmoothScroll + CustomCursor
+├── page.tsx            ensambla todas las secciones en orden
+└── globals.css         tema Tailwind v4, scrollbar naranja, cursor custom
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+components/
+├── sections/
+│   ├── Hero.tsx        nombre, roles alternados, CTA, separador diagonal
+│   ├── About.tsx       bio + highlights del stack
+│   ├── Stack.tsx       grid de iconos (skillicons.dev)
+│   ├── Projects.tsx    grid de cards de proyectos
+│   └── Contact.tsx     email, GitHub, LinkedIn, footer
+└── ui/
+    ├── Navbar.tsx      navegacion sticky con blur
+    ├── CustomCursor.tsx  cursor naranja (solo desktop)
+    ├── SmoothScroll.tsx  wrapper de Lenis
+    ├── SectionTitle.tsx  titulo de seccion con linea naranja
+    └── ProjectCard.tsx   card individual con hover naranja
 
-### `npm run eject`
+lib/
+├── data/
+│   └── projects.ts     array de proyectos (fuente de datos unica)
+└── utils/
+    └── smooth-scroll.ts  configuracion de Lenis
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+public/
+└── cv-kevin-gonzalez.pdf  (agregar el CV aqui para el boton "Descargar CV")
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Como agregar un proyecto (guia para IA futuras)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Toda la data de proyectos vive en `lib/data/projects.ts`. Para agregar uno nuevo,
+añade un objeto al array `projects` con esta estructura:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```ts
+{
+  id: "mi-proyecto",            // unico, kebab-case
+  title: "Mi Proyecto",
+  description: "Descripcion corta de una o dos frases.",
+  tags: ["TypeScript", "AWS"], // tecnologias (se muestran como pills)
+  github: "https://github.com/revkelo/mi-proyecto", // o null si es privado
+  demo: null,                   // url del demo o null
+  status: "Completado",         // o "En desarrollo"
+  featured: true,
+}
+```
 
-## Learn More
+No hay que tocar ningun componente: `Projects.tsx` renderiza automaticamente todo el array.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Como agregar una seccion nueva
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Crear el componente en `components/sections/MiSeccion.tsx` (usar `"use client"` si usa hooks/animaciones).
+2. Importarlo en `app/page.tsx` y colocarlo en el orden deseado dentro de `<main>`.
+3. Si necesita un titulo, reutilizar `components/ui/SectionTitle.tsx`.
 
-### Code Splitting
+## Enlaces
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- GitHub: [github.com/revkelo](https://github.com/revkelo)
+- LinkedIn: [linkedin.com/in/kagonzalezdev](https://linkedin.com/in/kagonzalezdev)
+- Email: kgagudelo@gmail.com

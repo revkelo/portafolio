@@ -1,0 +1,79 @@
+/* PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+   Paleta: #0D0D0D fondo | #F06400 naranja | #FFFFFF texto
+   Stack: Next.js 16 + TypeScript + Tailwind v4 + Framer Motion + Lenis
+   Para agregar secciones: crear en components/sections/ e importar en app/page.tsx */
+
+@import "tailwindcss";
+
+:root {
+  --orange: #f06400;
+  --orange-dark: #c44a00;
+  --background: #0d0d0d;
+  --text-primary: #ffffff;
+  --text-secondary: #c0c0c0;
+}
+
+/* Tailwind v4: definimos la paleta personalizada como tokens del tema.
+   Esto habilita utilidades como bg-background, text-orange-primary, etc. */
+@theme inline {
+  --color-background: #0d0d0d;
+  --color-surface: #1a1a1a;
+  --color-surface-alt: #111111;
+
+  --color-orange-primary: #f06400;
+  --color-orange-dark: #c44a00;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #c0c0c0;
+
+  --font-display: var(--font-space-grotesk);
+  --font-sans: var(--font-inter);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Scrollbar custom naranja */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0d0d;
+}
+::-webkit-scrollbar-thumb {
+  background: #f06400;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c44a00;
+}
+
+/* Seleccion de texto */
+::selection {
+  background: #f06400;
+  color: #ffffff;
+}
+
+/* Cursor personalizado: ocultamos el nativo solo en desktop con hover fino */
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  a,
+  button {
+    cursor: none;
+  }
+}
