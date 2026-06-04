@@ -804,7 +804,6 @@ function SceneContents({
         <WaveGrid shared={shared} progress={progress} />
         {!isMobile && <WaveMesh shared={shared} />}
         <WaveParticles shared={shared} count={particleCount} />
-        {!isMobile && <CursorOrb shared={shared} />}
       </group>
     </>
   );
