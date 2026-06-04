@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
 import TechCarousel from "@/components/ui/TechCarousel";
@@ -38,10 +39,13 @@ export default function About() {
           >
             <div className="relative aspect-[4/5] rounded-2xl">
               <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                <img
+                <Image
                   src="/photo.jpg"
                   alt="Kevin Gonzalez"
-                  className="h-full w-full object-cover"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 280px, 280px"
+                  className="object-cover"
                   style={{ objectPosition: "center 15%" }}
                 />
               </div>
