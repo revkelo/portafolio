@@ -7,7 +7,6 @@
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useLang } from "@/lib/i18n/LangContext";
-import TechOrbitWrapper from "@/components/3d/TechOrbitWrapper";
 
 // Iconos SVG inline simples por categoria (trazos, sin dependencias externas).
 const icons: Record<string, React.ReactNode> = {
@@ -75,7 +74,7 @@ export default function Stack() {
   return (
     <section
       id="stack"
-      className="relative overflow-hidden bg-surface-alt/80 py-16 md:py-24 lg:py-32"
+      className="section-glass relative overflow-hidden py-16 md:py-24 lg:py-32"
     >
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionTitle
@@ -85,8 +84,7 @@ export default function Stack() {
           subtitle={t.stack.subtitle}
         />
 
-        {/* Tecnologias orbitando en 3D (hover muestra el nombre) */}
-        <TechOrbitWrapper />
+        {/* Las tecnologias orbitando en 3D ahora viven en el GlobalScene. */}
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat, i) => (

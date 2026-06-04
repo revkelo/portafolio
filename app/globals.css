@@ -78,6 +78,14 @@ body {
   }
 }
 
+/* Secciones con glass effect sobre el canvas 3D global (un solo Canvas WebGL
+   fijo de fondo). El fondo semi-transparente + blur deja ver la escena 3D. */
+.section-glass {
+  background: rgba(13, 13, 13, 0.82);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
 /* ============================================================
    ANIMACIONES Y TEXTURAS PROPIAS DEL PORTAFOLIO
    ============================================================ */

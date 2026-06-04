@@ -8,7 +8,6 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useLang } from "@/lib/i18n/LangContext";
-import ContactSceneWrapper from "@/components/3d/ContactSceneWrapper";
 
 const EMAIL = "kgagudelo@gmail.com";
 
@@ -74,9 +73,8 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contacto" className="relative overflow-hidden bg-[#0a0a0a]/75 py-16 md:py-24 lg:py-32">
-      {/* Convergencia de particulas 3D al entrar en viewport */}
-      <ContactSceneWrapper />
+    <section id="contacto" className="section-glass relative overflow-hidden py-16 md:py-24 lg:py-32">
+      {/* La convergencia de particulas 3D ahora vive en el GlobalScene. */}
 
       {/* Glow naranja sutil en el centro */}
       <div
