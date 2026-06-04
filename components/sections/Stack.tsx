@@ -1,98 +1,68 @@
 "use client";
 
 // PORTAFOLIO DE KEVIN GONZALEZ — revkelo
-// Stack: cards de categoria con hover naranja. Cada card lista sus tecnologias.
-// Para agregar tecnologias, editar el array `categories`.
+// Stack: grid responsive de categorias tecnologicas con tilt 3D en hover.
 
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { useLang } from "@/lib/i18n/LangContext";
 
-// Iconos SVG inline simples por categoria (trazos, sin dependencias externas).
 const icons: Record<string, React.ReactNode> = {
-  cloud: (
-    <path d="M17.5 19a4.5 4.5 0 0 0 .5-8.97A6 6 0 0 0 6.34 9.5 4 4 0 0 0 7 17.5" />
-  ),
-  backend: <path d="M4 6h16M4 12h16M4 18h10" />,
+  cloud:    <path d="M17.5 19a4.5 4.5 0 0 0 .5-8.97A6 6 0 0 0 6.34 9.5 4 4 0 0 0 7 17.5" />,
+  backend:  <path d="M4 6h16M4 12h16M4 18h10" />,
   frontend: <path d="m8 6-6 6 6 6M16 6l6 6-6 6" />,
-  data: <path d="M3 6c0 1.66 4 3 9 3s9-1.34 9-3-4-3-9-3-9 1.34-9 3Zm0 0v12c0 1.66 4 3 9 3s9-1.34 9-3V6" />,
-  db: <path d="M12 8c4.97 0 9-1.34 9-3s-4.03-3-9-3-9 1.34-9 3 4.03 3 9 3Zm9 4c0 1.66-4 3-9 3s-9-1.34-9-3m18-5v10c0 1.66-4 3-9 3s-9-1.34-9-3V7" />,
+  data:     <path d="M3 6c0 1.66 4 3 9 3s9-1.34 9-3-4-3-9-3-9 1.34-9 3Zm0 0v12c0 1.66 4 3 9 3s9-1.34 9-3V6" />,
+  db:       <path d="M12 8c4.97 0 9-1.34 9-3s-4.03-3-9-3-9 1.34-9 3 4.03 3 9 3Zm9 4c0 1.66-4 3-9 3s-9-1.34-9-3m18-5v10c0 1.66-4 3-9 3s-9-1.34-9-3V7" />,
 };
 
-interface Category {
-  icon: keyof typeof icons;
-  title: string;
-  techs: string[];
-  // Clases de span para el bento grid (grid-cols-4 en desktop).
-  span: string;
-}
-
-const categories: Category[] = [
+const categories = [
   {
-    icon: "cloud",
+    icon: "cloud" as const,
     title: "Cloud & DevOps",
-    techs: [
-      "AWS",
-      "Docker",
-      "Kubernetes",
-      "Terraform",
-      "Azure",
-      "GitHub Actions",
-      "CI/CD",
-    ],
-    // La mas importante: ancha en desktop, ancha en tablet.
-    span: "sm:col-span-2 lg:col-span-2",
+    techs: ["AWS", "Docker", "Kubernetes", "Terraform", "Azure", "GitHub Actions", "CI/CD"],
+    wide: true,
   },
   {
-    icon: "backend",
+    icon: "backend" as const,
     title: "Backend",
-    techs: ["Python", "FastAPI", "Java", "Spring Boot"],
-    span: "lg:col-span-1",
+    techs: ["Python", "FastAPI", "Java", "Spring Boot", "Node.js"],
+    wide: false,
   },
   {
-    icon: "frontend",
+    icon: "frontend" as const,
     title: "Frontend",
-    techs: ["TypeScript", "React", "Flutter", "Three.js"],
-    // Columna alta a la derecha: ocupa dos filas en desktop.
-    span: "lg:col-span-1 lg:row-span-2",
+    techs: ["TypeScript", "React", "Flutter", "Three.js", "Next.js"],
+    wide: false,
   },
   {
-    icon: "data",
+    icon: "data" as const,
     title: "Data & IA",
-    techs: ["DAMA-DMBOK", "Great Expectations", "Databricks", "LangChain"],
-    span: "lg:col-span-1",
+    techs: ["DAMA-DMBOK", "Great Expectations", "Databricks", "LangChain", "PySpark"],
+    wide: false,
   },
   {
-    icon: "db",
+    icon: "db" as const,
     title: "Databases",
-    techs: ["MySQL", "PostgreSQL", "Supabase", "DynamoDB"],
-    span: "sm:col-span-2 lg:col-span-2",
+    techs: ["MySQL", "PostgreSQL", "Supabase", "DynamoDB", "Redis"],
+    wide: true,
   },
 ];
 
 export default function Stack() {
   const { t } = useLang();
 
-  // Efecto tilt 3D: calcula el angulo de rotacion segun la posicion del cursor.
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    e.currentTarget.style.transform = `perspective(600px) rotateY(${
-      x * 12
-    }deg) rotateX(${-y * 12}deg) scale(1.02)`;
+    e.currentTarget.style.transform = `perspective(600px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) scale(1.02)`;
   };
-
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.transform =
-      "perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)";
+    e.currentTarget.style.transform = "perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)";
   };
 
   return (
-    <section
-      id="stack"
-      className="section-glass relative overflow-hidden py-16 md:py-24 lg:py-32"
-    >
+    <section id="stack" className="section-glass relative overflow-hidden py-16 md:py-24 lg:py-32">
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionTitle
           number={t.stack.number}
@@ -101,65 +71,82 @@ export default function Stack() {
           subtitle={t.stack.subtitle}
         />
 
-        {/* Las tecnologias orbitando en 3D ahora viven en el GlobalScene. */}
-
-        {/* Bento grid: cards de distintos tamanos. 1 col movil, 2 tablet, 4 desktop. */}
-        <div className="grid auto-rows-[minmax(0,1fr)] grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Grid: 1 col mobile → 2 cols tablet → 3 cols desktop */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(1, 1fr)", gap: "1.25rem" }}
+          className="sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat, i) => (
             <motion.div
               key={cat.title}
-              initial={{ opacity: 0, y: 60 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{
-                duration: 0.6,
-                delay: i * 0.12,
-                ease: [0.22, 1, 0.36, 1],
-              }}
+              transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              style={{ transition: "transform 0.15s ease" }}
-              className={`group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface p-6 hover:border-orange-primary hover:shadow-[0_0_30px_-10px_rgba(245,111,13,0.5)] ${cat.span}`}
+              style={{
+                transition: "transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+                background: "var(--surface)",
+                border: "1px solid var(--border)",
+                borderRadius: "1rem",
+                padding: "1.5rem",
+                position: "relative",
+                overflow: "hidden",
+                // Cards "wide" ocupan 2 columnas en desktop
+                gridColumn: cat.wide ? "span 1" : undefined,
+              }}
+              className={cat.wide ? "lg:col-span-1 sm:col-span-2 lg:col-span-1" : ""}
               data-cursor-hover
             >
-              {/* Numero de categoria (01-05) en naranja semi-transparente */}
+              {/* Número categoría */}
               <span
                 aria-hidden
-                className="pointer-events-none absolute right-4 top-3 select-none font-display text-3xl font-bold text-orange-primary opacity-15"
+                style={{
+                  position: "absolute", top: "0.75rem", right: "1rem",
+                  fontFamily: "var(--font-display)", fontSize: "2rem", fontWeight: 700,
+                  color: "#f56f0d", opacity: 0.12, userSelect: "none", pointerEvents: "none",
+                }}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
 
-              <div className="mb-4 flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-primary/10 text-orange-primary transition-colors group-hover:bg-orange-primary/20">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
+              {/* Ícono + título */}
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+                <span style={{
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  width: 40, height: 40, borderRadius: "0.5rem",
+                  background: "rgba(245,111,13,0.1)", color: "#f56f0d",
+                }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     {icons[cat.icon]}
                   </svg>
                 </span>
-                <h3 className="font-display text-lg font-bold text-text-primary transition-colors group-hover:text-orange-primary">
+                <h3 style={{
+                  fontFamily: "var(--font-display)", fontSize: "1.05rem", fontWeight: 700,
+                  color: "var(--text-primary)",
+                }}>
                   {cat.title}
                 </h3>
               </div>
 
-              <ul className="flex flex-wrap gap-2">
+              {/* Pills de tecnologías */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
                 {cat.techs.map((tech) => (
-                  <li
+                  <span
                     key={tech}
-                    className="rounded-full border border-border bg-surface-alt/50 px-3 py-1 text-sm text-text-secondary transition-colors group-hover:border-orange-primary/30"
+                    style={{
+                      borderRadius: "999px",
+                      border: "1px solid var(--border)",
+                      background: "var(--surface-alt)",
+                      padding: "0.2rem 0.75rem",
+                      fontSize: "0.78rem",
+                      color: "var(--text-secondary)",
+                    }}
                   >
                     {tech}
-                  </li>
+                  </span>
                 ))}
-              </ul>
+              </div>
             </motion.div>
           ))}
         </div>

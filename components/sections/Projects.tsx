@@ -1,8 +1,7 @@
 "use client";
 
 // PORTAFOLIO DE KEVIN GONZALEZ — revkelo
-// Projects: destacados en cards grandes (3 col) y el resto en cards pequenas.
-// La data vive en lib/data/projects.ts
+// Projects: grid responsive — featured en 2 cols desktop, resto en 3 cols.
 
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
@@ -12,7 +11,6 @@ import { useLang } from "@/lib/i18n/LangContext";
 
 export default function Projects() {
   const { t } = useLang();
-
   const featured = projects.filter((p) => p.featured);
   const rest = projects.filter((p) => !p.featured);
 
@@ -26,51 +24,45 @@ export default function Projects() {
           subtitle={t.projects.subtitle}
         />
 
-        {/* Destacados: scroll horizontal en desktop, columna en mobile */}
-        <div className="relative">
-          {/* Indicador de deslizar (solo desktop, donde el scroll es lateral) */}
-          <div className="mb-4 hidden items-center gap-2 text-sm text-text-secondary/70 md:flex">
-            <span className="uppercase tracking-[0.2em]">{t.projects.slideHint}</span>
-            <motion.span
-              aria-hidden
-              className="text-lg text-orange-primary"
-              animate={{ x: [0, 8, 0] }}
-              transition={{ duration: 1.4, ease: "easeInOut", repeat: Infinity }}
-            >
-              →
-            </motion.span>
-          </div>
-
-          <div className="no-scrollbar flex flex-col gap-6 md:snap-x md:snap-mandatory md:flex-row md:overflow-x-auto md:pb-4">
-            {featured.map((project, i) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                index={i}
-                featured
-                horizontal
-              />
-            ))}
-          </div>
-
-          {/* Degradado de borde derecho para sugerir mas contenido (desktop) */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-px top-0 bottom-4 hidden w-16 md:block"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent, var(--background))",
-            }}
-          />
+        {/* Featured: 1 col mobile → 2 cols desktop */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(1, 1fr)",
+          gap: "1.25rem",
+        }}
+          className="md:grid-cols-2"
+        >
+          {featured.map((project, i) => (
+            <ProjectCard key={project.id} project={project} index={i} featured />
+          ))}
         </div>
 
         {/* Resto */}
         {rest.length > 0 && (
           <>
-            <p className="mb-6 mt-16 font-display text-sm uppercase tracking-[0.3em] text-text-secondary">
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
+              style={{
+                marginTop: "3rem", marginBottom: "1.25rem",
+                fontFamily: "var(--font-display)", fontSize: "0.78rem",
+                textTransform: "uppercase", letterSpacing: "0.2em",
+                color: "var(--text-secondary)",
+              }}
+            >
               {t.projects.more}
-            </p>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            </motion.p>
+
+            {/* 1 col mobile → 2 cols tablet → 3 cols desktop */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(1, 1fr)",
+              gap: "1rem",
+            }}
+              className="sm:grid-cols-2 lg:grid-cols-3"
+            >
               {rest.map((project, i) => (
                 <ProjectCard key={project.id} project={project} index={i} />
               ))}

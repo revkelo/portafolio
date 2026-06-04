@@ -1,33 +1,29 @@
 "use client";
 
 // PORTAFOLIO DE KEVIN GONZALEZ — revkelo
-// Card de proyecto: badge de estado (pulsante si esta en desarrollo),
-// descripcion bilingue, tags como pills y manejo de proyectos privados.
+// ProjectCard: card de proyecto con colores via CSS vars (funciona sin Tailwind CSS en dev).
 
 import { motion } from "framer-motion";
 import type { Project } from "@/lib/data/projects";
 import { useLang } from "@/lib/i18n/LangContext";
 
-function tagClass(tag: string): string {
+function tagColor(tag: string): { bg: string; color: string; border: string } {
   const t = tag.toLowerCase();
-  if (t.includes("python"))
-    return "bg-blue-500/15 text-blue-500 border-blue-500/25";
+  if (t.includes("python"))    return { bg: "rgba(59,130,246,0.12)", color: "#60a5fa", border: "rgba(59,130,246,0.25)" };
   if (t.includes("typescript") || t.includes("react"))
-    return "bg-cyan-500/15 text-cyan-600 border-cyan-500/25";
+                               return { bg: "rgba(6,182,212,0.12)",  color: "#22d3ee", border: "rgba(6,182,212,0.25)" };
   if (t.includes("flutter") || t.includes("dart"))
-    return "bg-sky-500/15 text-sky-500 border-sky-500/25";
+                               return { bg: "rgba(14,165,233,0.12)", color: "#38bdf8", border: "rgba(14,165,233,0.25)" };
   if (t.includes("aws") || t.includes("docker"))
-    return "bg-orange-500/15 text-orange-500 border-orange-500/25";
-  if (t.includes("fastapi"))
-    return "bg-green-500/15 text-green-600 border-green-500/25";
-  return "bg-surface-alt border-border text-text-secondary";
+                               return { bg: "rgba(245,111,13,0.12)", color: "#fb923c", border: "rgba(245,111,13,0.25)" };
+  if (t.includes("fastapi"))   return { bg: "rgba(34,197,94,0.12)",  color: "#4ade80", border: "rgba(34,197,94,0.25)" };
+  return { bg: "var(--surface-alt)", color: "var(--text-secondary)", border: "var(--border)" };
 }
 
 export default function ProjectCard({
   project,
   index,
   featured = false,
-  horizontal = false,
 }: {
   project: Project;
   index: number;
@@ -35,137 +31,152 @@ export default function ProjectCard({
   horizontal?: boolean;
 }) {
   const { lang, t } = useLang();
-
   const description = lang === "en" ? project.description_en : project.description;
   const inProgress = project.status === "in-progress";
-  const statusLabel = inProgress
-    ? t.projects.statusInProgress
-    : t.projects.statusCompleted;
   const isPrivate = !project.github;
 
   return (
     <motion.article
-      initial={horizontal ? { opacity: 0, x: 40 } : { opacity: 0, y: 28 }}
-      whileInView={horizontal ? { opacity: 1, x: 0 } : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.08 }}
-      className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] hover:border-orange-primary hover:shadow-[0_0_40px_-12px_rgba(245,111,13,0.6)] ${
-        featured ? "md:p-8" : ""
-      } ${
-        horizontal
-          ? "min-w-[340px] snap-start md:w-[380px] md:flex-none"
-          : ""
-      }`}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.07 }}
+      style={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        borderRadius: "1rem",
+        border: "1px solid var(--border)",
+        background: "var(--surface)",
+        padding: featured ? "1.75rem" : "1.25rem",
+        overflow: "hidden",
+        transition: "border-color 0.2s, box-shadow 0.2s, transform 0.2s",
+        height: "100%",
+      }}
+      whileHover={{
+        y: -4,
+        boxShadow: "0 0 32px -8px rgba(245,111,13,0.5)",
+        borderColor: "#f56f0d",
+      }}
       data-cursor-hover
     >
-      {/* Decoracion diagonal naranja en la esquina superior derecha (featured) */}
+      {/* Decoración diagonal featured */}
       {featured && (
-        <div
-          aria-hidden
-          className="absolute top-0 right-0 h-16 w-16 overflow-hidden rounded-tr-2xl"
-        >
-          <div className="absolute -top-8 -right-8 h-16 w-16 rotate-45 bg-orange-primary/20" />
+        <div style={{
+          position: "absolute", top: 0, right: 0,
+          width: 64, height: 64, overflow: "hidden", borderRadius: "0 1rem 0 0",
+        }}>
+          <div style={{
+            position: "absolute", top: -32, right: -32,
+            width: 64, height: 64, transform: "rotate(45deg)",
+            background: "rgba(245,111,13,0.2)",
+          }} />
         </div>
       )}
 
-      {/* Numero de proyecto (01, 02, 03) en naranja semi-transparente */}
+      {/* Número proyecto */}
       {featured && (
-        <span
-          aria-hidden
-          className="pointer-events-none absolute left-4 top-2 select-none font-display text-2xl font-bold text-orange-primary opacity-20"
-        >
+        <span style={{
+          position: "absolute", top: "0.5rem", left: "1rem",
+          fontFamily: "var(--font-display)", fontSize: "1.5rem", fontWeight: 700,
+          color: "#f56f0d", opacity: 0.18, userSelect: "none", pointerEvents: "none",
+        }}>
           {String(index + 1).padStart(2, "0")}
         </span>
       )}
 
-      <div className={`mb-4 flex items-start justify-between gap-4 ${featured ? "mt-6" : ""}`}>
-        <h3
-          className={`min-w-0 break-words font-display font-bold text-text-primary transition-colors group-hover:text-orange-primary ${
-            featured ? "text-xl sm:text-2xl" : "text-lg sm:text-xl"
-          }`}
-        >
+      {/* Header: título + badge */}
+      <div style={{
+        display: "flex", alignItems: "flex-start", justifyContent: "space-between",
+        gap: "0.75rem", marginBottom: "0.75rem",
+        marginTop: featured ? "1.25rem" : 0,
+      }}>
+        <h3 style={{
+          fontFamily: "var(--font-display)",
+          fontSize: featured ? "1.2rem" : "1rem",
+          fontWeight: 700,
+          color: "var(--text-primary)",
+          flex: 1, wordBreak: "break-word",
+        }}>
           {project.title}
         </h3>
-
-        {/* Badge de estado */}
-        <span
-          className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-xs ${
-            inProgress
-              ? "border-orange-primary/40 text-orange-primary"
-              : "border-emerald-500/40 text-emerald-400"
-          }`}
-        >
-          <span
-            className={`h-1.5 w-1.5 rounded-full ${
-              inProgress ? "bg-orange-primary pulse-dot" : "bg-emerald-400"
-            }`}
-          />
-          {statusLabel}
+        <span style={{
+          display: "flex", alignItems: "center", gap: "0.35rem",
+          borderRadius: "999px",
+          border: `1px solid ${inProgress ? "rgba(245,111,13,0.4)" : "rgba(74,222,128,0.4)"}`,
+          padding: "0.2rem 0.65rem",
+          fontSize: "0.72rem",
+          color: inProgress ? "#f56f0d" : "#4ade80",
+          whiteSpace: "nowrap",
+          flexShrink: 0,
+        }}>
+          <span style={{
+            width: 6, height: 6, borderRadius: "50%",
+            background: inProgress ? "#f56f0d" : "#4ade80",
+          }} />
+          {inProgress ? t.projects.statusInProgress : t.projects.statusCompleted}
         </span>
       </div>
 
-      <p
-        className={`mb-5 flex-1 leading-relaxed text-text-secondary ${
-          featured ? "text-base" : "text-sm"
-        }`}
-      >
+      {/* Descripción */}
+      <p style={{
+        flex: 1,
+        fontSize: featured ? "0.95rem" : "0.85rem",
+        lineHeight: 1.65,
+        color: "var(--text-secondary)",
+        marginBottom: "1rem",
+      }}>
         {description}
       </p>
 
-      {/* Tags como pills con colores de marca por tecnologia */}
-      <div className="mb-5 flex flex-wrap gap-2">
-        {project.tags.map((tag) => (
-          <span
-            key={tag}
-            className={`rounded-full border px-2.5 py-1 text-xs ${tagClass(tag)}`}
-          >
-            {tag}
-          </span>
-        ))}
+      {/* Tags */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem", marginBottom: "1rem" }}>
+        {project.tags.map((tag) => {
+          const c = tagColor(tag);
+          return (
+            <span key={tag} style={{
+              borderRadius: "999px",
+              border: `1px solid ${c.border}`,
+              background: c.bg,
+              padding: "0.15rem 0.6rem",
+              fontSize: "0.72rem",
+              color: c.color,
+            }}>
+              {tag}
+            </span>
+          );
+        })}
       </div>
 
-      <div className="flex items-center gap-4 text-sm">
+      {/* Links */}
+      <div style={{ display: "flex", gap: "1rem", fontSize: "0.85rem" }}>
         {isPrivate ? (
-          <span className="flex items-center gap-1.5 text-text-secondary/50">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+          <span style={{ display: "flex", alignItems: "center", gap: "0.35rem", color: "var(--text-secondary)", opacity: 0.5 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <rect x="3" y="11" width="18" height="11" rx="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
             {t.projects.private}
           </span>
         ) : (
-          <a
-            href={project.github!}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-text-secondary transition-colors hover:text-orange-primary"
+          <a href={project.github!} target="_blank" rel="noopener noreferrer"
+            style={{ color: "var(--text-secondary)", textDecoration: "none" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "#f56f0d")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--text-secondary)")}
           >
             {t.projects.code} →
           </a>
         )}
-
         {project.demo ? (
-          <a
-            href={project.demo}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-text-secondary transition-colors hover:text-orange-primary"
+          <a href={project.demo} target="_blank" rel="noopener noreferrer"
+            style={{ color: "var(--text-secondary)", textDecoration: "none" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "#f56f0d")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--text-secondary)")}
           >
             {t.projects.demo} →
           </a>
         ) : (
-          <span className="cursor-not-allowed text-text-secondary/30">
-            {t.projects.demo}
-          </span>
+          <span style={{ color: "var(--text-secondary)", opacity: 0.3 }}>{t.projects.demo}</span>
         )}
       </div>
     </motion.article>
