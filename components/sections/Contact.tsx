@@ -164,91 +164,100 @@ export default function Contact() {
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionTitle number={t.contact.number} label={t.contact.label} title={t.contact.title} subtitle={t.contact.subtitle} />
 
-
         {/* CTA grande */}
-        <h3
-          className="font-display font-bold leading-[1.0] text-text-primary"
-          style={{ fontSize: "clamp(2.5rem, 8vw, 7rem)" }}
+        <motion.h3
+          className="font-display font-bold leading-[1.0] text-text-primary mb-12"
+          style={{ fontSize: "clamp(2.2rem, 6vw, 5.5rem)" }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          {t.contact.cta.split(" ").map((word, i) => (
-            <motion.span
-              key={i}
-              className="mr-[0.2em] inline-block"
-              initial={{ opacity: 0, y: 50, rotateX: -30 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: i * 0.1 }}
+          {t.contact.cta}
+        </motion.h3>
+
+        {/* Layout 2 columnas */}
+        <div className="grid gap-12 lg:grid-cols-[1fr_320px] lg:gap-16">
+
+          {/* Columna izquierda — email + botones */}
+          <div className="flex flex-col gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
             >
-              {word}
-            </motion.span>
-          ))}
-        </h3>
+              <p className="mb-3 text-sm uppercase tracking-widest text-text-secondary/50">
+                {lang === "es" ? "Escríbeme a" : "Reach me at"}
+              </p>
+              <EmailButton email={EMAIL} copy={t.contact.copy} copyLabel={t.contact.copy} onCopy={copyEmail} />
+            </motion.div>
 
-
-        {/* Stats */}
-        <motion.div
-          ref={statsRef}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-10 flex items-center justify-center gap-12 sm:gap-20"
-        >
-          {stats.map((s) => (
-            <StatItem key={s.label} value={s.value} label={s.label} active={statsInView} />
-          ))}
-        </motion.div>
-
-        {/* Email con borde SVG */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <EmailButton email={EMAIL} copy={t.contact.copy} copyLabel={t.contact.copy} onCopy={copyEmail} />
-        </motion.div>
-
-        {/* Botones */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-8 flex flex-col gap-3 sm:flex-row"
-        >
-          {channels.map((c, i) => (
-            <motion.a
-              key={c.label}
-              href={c.href}
-              target={c.href.startsWith("http") ? "_blank" : undefined}
-              rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+            <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.3 + i * 0.08 }}
-              className="flex items-center justify-center gap-2 rounded-full border border-orange-primary/40 px-6 py-3 text-orange-primary transition-all hover:bg-orange-primary hover:text-background hover:shadow-[0_0_20px_rgba(240,100,0,0.4)]"
-              data-cursor-hover
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="flex flex-wrap gap-3"
             >
-              <Icon name={c.icon} />
-              {c.label}
-            </motion.a>
-          ))}
-        </motion.div>
+              {channels.map((c, i) => (
+                <motion.a
+                  key={c.label}
+                  href={c.href}
+                  target={c.href.startsWith("http") ? "_blank" : undefined}
+                  rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.2 + i * 0.07 }}
+                  className="flex items-center gap-2 rounded-full border border-orange-primary/40 px-5 py-2.5 text-sm text-orange-primary transition-all hover:bg-orange-primary hover:text-background hover:shadow-[0_0_18px_rgba(240,100,0,0.35)]"
+                  data-cursor-hover
+                >
+                  <Icon name={c.icon} />
+                  {c.label}
+                </motion.a>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Columna derecha — stats */}
+          <motion.div
+            ref={statsRef}
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex flex-row justify-around lg:flex-col lg:justify-center lg:gap-8 rounded-2xl border border-white/5 bg-surface/30 p-6 backdrop-blur-sm"
+          >
+            {stats.map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
+                className="text-center lg:text-left"
+              >
+                <StatItem value={s.value} label="" active={statsInView} />
+                <p className="mt-1 text-xs uppercase tracking-widest text-text-secondary/60">{s.label}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
 
         {/* Frase final */}
         <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-16 text-center font-display text-2xl font-bold italic text-orange-primary sm:text-3xl"
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mt-16 text-center font-display text-xl font-bold italic text-orange-primary sm:text-2xl"
         >
           {t.contact.closing}
         </motion.p>
-        <p className="mt-3 text-center text-sm text-text-secondary/50">{t.contact.availability}</p>
+        <p className="mt-2 text-center text-sm text-text-secondary/50">{t.contact.availability}</p>
       </div>
 
       {/* Footer */}
