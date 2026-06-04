@@ -28,6 +28,7 @@ const DARK_VARS: Record<string, string> = {
   "--code-bool":           "#4ade80",
   "--code-str":            "#f56f0d",
   "--code-border":         "rgba(245,111,13,0.18)",
+  "--hero-overlay":        "rgba(13,13,13,0)",
 };
 
 const LIGHT_VARS: Record<string, string> = {
@@ -52,6 +53,7 @@ const LIGHT_VARS: Record<string, string> = {
   "--code-bool":           "#16a34a",
   "--code-str":            "#c04800",
   "--code-border":         "rgba(37,33,28,0.18)",
+  "--hero-overlay":        "rgba(243,222,205,0.72)",
 };
 
 export function applyThemeVars(theme: Theme) {
@@ -75,7 +77,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const stored = (localStorage.getItem("theme") as Theme | null) ?? "dark";
     setTheme(stored);
     applyThemeVars(stored);
-    console.log("[Theme] hydrated →", stored, "| --color-background:", document.documentElement.style.getPropertyValue("--color-background"));
   }, []);
 
   const toggle = useCallback(() => {
@@ -83,7 +84,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const next = prev === "dark" ? "light" : "dark";
       localStorage.setItem("theme", next);
       applyThemeVars(next);
-      console.log("[Theme] toggled →", next, "| --color-background:", document.documentElement.style.getPropertyValue("--color-background"));
       return next;
     });
   }, []);

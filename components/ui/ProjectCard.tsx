@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import type { Project } from "@/lib/data/projects";
 import { useLang } from "@/lib/i18n/LangContext";
 
@@ -29,6 +29,20 @@ export default function ProjectCard({ project, index, featured = false }: {
 }) {
   const { lang, t } = useLang();
   const [hovered, setHovered] = useState(false);
+  const cardRef = useRef<HTMLElement>(null);
+
+  // 3D tilt con useMotionValue
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]),  { stiffness: 200, damping: 25 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]),  { stiffness: 200, damping: 25 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set((e.clientX - rect.left) / rect.width  - 0.5);
+    mouseY.set((e.clientY - rect.top)  / rect.height - 0.5);
+  };
+  const handleMouseLeave = () => { mouseX.set(0); mouseY.set(0); };
   const description = lang === "en" ? project.description_en : project.description;
   const inProgress  = project.status === "in-progress";
   const isPrivate   = !project.github;
@@ -41,13 +55,16 @@ export default function ProjectCard({ project, index, featured = false }: {
 
   return (
     <motion.article
+      ref={cardRef}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.07 }}
       onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseLeave={() => { setHovered(false); handleMouseLeave(); }}
+      onMouseMove={handleMouseMove}
       style={{
+        rotateX, rotateY, transformPerspective: 800,
         position: "relative", display: "flex", flexDirection: "column",
         borderRadius: "1.1rem", overflow: "hidden",
         border: "1px solid rgba(245,111,13,0.10)",
