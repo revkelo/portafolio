@@ -152,11 +152,9 @@ function WaveSolid({ shared }: { shared: WaveShared }) {
       <meshStandardMaterial
         color={orange}
         emissive={orange}
-        emissiveIntensity={0.5}
-        roughness={0.2}
-        metalness={0.0}
-        transparent
-        opacity={0.28}
+        emissiveIntensity={0.8}
+        roughness={0.15}
+        metalness={0.1}
         side={THREE.DoubleSide}
         toneMapped={false}
       />
