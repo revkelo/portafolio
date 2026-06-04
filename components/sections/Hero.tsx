@@ -72,7 +72,12 @@ export default function Hero() {
       id="hero"
       className="relative flex min-h-screen items-center overflow-hidden"
     >
-      {/* El planeta 3D del hero ahora vive en el GlobalScene (un solo Canvas). */}
+      {/* Overlay modo claro: suaviza el canvas 3D oscuro sobre fondo beige */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 transition-colors duration-300"
+        style={{ background: "var(--hero-overlay)" }}
+      />
 
       {/* Lineas diagonales naranjas sutiles (banner original de Kevin) */}
       <div aria-hidden className="diagonal-lines pointer-events-none absolute inset-0 z-0" />
