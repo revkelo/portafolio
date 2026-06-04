@@ -79,7 +79,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full bg-background text-text-primary">
+      <body className="min-h-full">
         {/* Canvas 3D fijo detras de todo el contenido (el viaje persistente) */}
         <GlobalSceneWrapper />
         <ThemeProvider>
