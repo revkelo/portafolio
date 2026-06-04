@@ -141,9 +141,8 @@ export default function Hero() {
           </span>
           <br />
           <span
-            className="inline-block text-orange-primary"
+            className="inline-block text-text-primary"
             aria-label="Gonzalez"
-            style={{ WebkitTextStroke: "1px rgba(245,111,13,0.3)" }}
           >
             {"Gonzalez".split("").map((letter, i) => (
               <motion.span
