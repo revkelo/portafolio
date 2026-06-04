@@ -15,7 +15,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Float, Stars, Text } from "@react-three/drei";
+import { Float, Stars } from "@react-three/drei";
+// Text removido: carga fuente de CDN externo al runtime y crashea silenciosamente
 // Note: EffectComposer removido — causa WebGL Context Lost con alpha:true
 // El glow naranja se logra via CSS (.glow-pulse, emissiveIntensity en materiales)
 import * as THREE from "three";
@@ -217,20 +218,7 @@ function HeroPlanetObjects({
           />
         </mesh>
 
-        {/* Texto flotante con la propuesta de valor */}
-        {!isMobile && (
-          <Float speed={1} floatIntensity={0.3}>
-            <Text
-              fontSize={0.15}
-              color="#c0c0c0"
-              position={[2.5, 1.5, 0]}
-              maxWidth={3}
-              anchorX="left"
-            >
-              Cloud & DevOps · Data · AI
-            </Text>
-          </Float>
-        )}
+        {/* Text removido — CDN de fuente causa crash silencioso */}
       </group>
     </Float>
   );
