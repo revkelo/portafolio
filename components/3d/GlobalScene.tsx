@@ -130,9 +130,9 @@ function WaveSolid({ shared }: { shared: WaveShared }) {
   }, [n]);
 
   // Colores del gradiente: valle oscuro → base → pico brillante
-  const colorLow  = useMemo(() => new THREE.Color('#7a2500'), []);
-  const colorMid  = useMemo(() => new THREE.Color('#f56f0d'), []);
-  const colorHigh = useMemo(() => new THREE.Color('#ffe066'), []);
+  const colorLow  = useMemo(() => new THREE.Color('#b23200'), []); // naranja quemado oscuro
+  const colorMid  = useMemo(() => new THREE.Color('#ff6a00'), []); // naranja vivo
+  const colorHigh = useMemo(() => new THREE.Color('#ffb347'), []); // naranja dorado claro
 
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
