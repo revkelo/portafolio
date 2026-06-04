@@ -205,7 +205,7 @@ function WaveGrid({
     // Targets por seccion.
     const targetAmp = 1.1 + w.about * 0.5; // about: amplitud sube a 1.2
     const targetFreq = 1 + w.stack * 0.9; // stack: frecuencia aumenta
-    const targetFlat = w.contact; // contact: aplanar + espiral hacia 0
+    const targetFlat = 0; // convergencia en contact desactivada — ola sigue normal
 
     // Interpolar estados de forma suave.
     const k = Math.min(1, delta * 2.2);
