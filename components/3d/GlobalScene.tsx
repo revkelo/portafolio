@@ -2,24 +2,36 @@
 
 // PORTAFOLIO DE KEVIN GONZALEZ — revkelo
 // GlobalScene: UN SOLO Canvas WebGL fijo que persiste en TODA la pagina.
-// Consolida todos los objetos 3D del sitio en un unico contexto WebGL para
-// performance y consistencia visual:
-//   - Stars (siempre)            - MouseParticles (siempre)
-//   - CursorOrb (siempre, desktop) - ScrollCamera (siempre)
-//   - HeroPlanetObjects   (visible solo en hero)
-//   - AboutGeometryObjects (visible solo en about)
-//   - TechOrbitObjects    (visible solo en stack)
-//   - ContactParticles    (visible solo en contact)
-// Post-processing: EffectComposer + Bloom para el glow naranja cinematografico.
+//
+// CONCEPTO: "Digital Universe" — el codigo y el espacio se fusionan.
+// La escena es un universo digital: un nucleo-servidor (Digital Core) rodeado
+// de nodos de tecnologias conectados por lineas, streams de datos en helices,
+// y un grid de red de fondo tipo Matrix. Todo sobre un cielo estrellado sutil.
+//
+// Objetos por seccion:
+//   - DigitalCore   (siempre)        - DataStreams (siempre)
+//   - NetworkGrid   (siempre)        - Stars (siempre, sutil)
+//   - CursorOrb     (siempre, desktop) - ScrollCamera (siempre)
+//   - AboutPillars  (visible solo en about)
+//   - (stack)       las conexiones brillan + chispas viajan por las lineas
+//   - (contact)     los nodos convergen hacia el centro
+//
+// Reglas tecnicas:
+//   - NO <Text> de drei (CDN de fuente crashea).
+//   - NO <EffectComposer> (WebGL Context Lost con alpha:true).
+//   - El glow naranja se logra via emissive en materiales + CSS.
+//   - useMemo para posiciones/geometrias estaticas. Nunca crear objetos
+//     Three.js dentro de useFrame.
 // IMPORTANTE: importar SIEMPRE via dynamic(ssr:false) (ver GlobalSceneWrapper).
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Float, Stars } from "@react-three/drei";
-// Text removido: carga fuente de CDN externo al runtime y crashea silenciosamente
-// Note: EffectComposer removido — causa WebGL Context Lost con alpha:true
-// El glow naranja se logra via CSS (.glow-pulse, emissiveIntensity en materiales)
+import { Float, Stars, Line } from "@react-three/drei";
 import * as THREE from "three";
+
+// Paleta del Digital Universe.
+const ORANGE = "#f06400";
+const ORANGE_DARK = "#c44a00";
 
 // Rangos de scroll por seccion (progress 0..1). Orden real de la pagina:
 // hero, about, experience, stack, projects, contact.
@@ -48,56 +60,486 @@ function useInSection(
 }
 
 // ----------------------------------------------------------------------------
-// Particulas que reaccionan al mouse (el grupo se inclina) + drift propio.
+// NODOS DE TECNOLOGIAS — la "red de servicios" que orbita el Digital Core.
 // ----------------------------------------------------------------------------
-function MouseParticles({
-  mouse,
-  count,
+interface TechNode {
+  color: string;
+  label: string;
+  r: number;
+  speed: number;
+  angle: number;
+}
+
+const TECH_NODES: TechNode[] = [
+  { color: "#3776AB", label: "Python", r: 2.5, speed: 0.6, angle: 0 },
+  { color: "#FF9900", label: "AWS", r: 3.2, speed: 0.4, angle: 1.05 },
+  { color: "#2496ED", label: "Docker", r: 2.0, speed: 0.9, angle: 2.1 },
+  { color: "#009688", label: "FastAPI", r: 3.5, speed: 0.5, angle: 3.14 },
+  { color: "#3178C6", label: "TypeScript", r: 2.8, speed: 0.7, angle: 4.2 },
+  { color: "#02569B", label: "Flutter", r: 2.2, speed: 1.0, angle: 5.24 },
+];
+
+// ----------------------------------------------------------------------------
+// DIGITAL CORE + RED DE NODOS.
+// Es el corazon de la escena: un icosaedro wireframe (nodo/servidor) con un
+// core solido que pulsa, rodeado de 6 nodos que orbitan, cada uno conectado al
+// centro por una linea. En "stack" las conexiones brillan y viajan chispas; en
+// "contact" los nodos convergen hacia el centro.
+// ----------------------------------------------------------------------------
+function NodeOrbit({
+  node,
+  posRef,
+  converge,
+  brighten,
 }: {
-  mouse: React.RefObject<{ x: number; y: number }>;
-  count: number;
+  node: TechNode;
+  // Buffer compartido que escribimos cada frame para que la linea/chispa lo lean.
+  posRef: React.RefObject<THREE.Vector3>;
+  converge: React.RefObject<number>; // 0..1 hacia el centro (contact)
+  brighten: React.RefObject<number>; // 0..1 brillo extra (stack)
 }) {
-  const groupRef = useRef<THREE.Group>(null);
-  const pointsRef = useRef<THREE.Points>(null);
+  const ref = useRef<THREE.Group>(null);
+  const matRef = useRef<THREE.MeshStandardMaterial>(null);
+
+  useFrame(({ clock }) => {
+    if (!ref.current) return;
+    const t = clock.elapsedTime * node.speed + node.angle;
+    // Radio efectivo: se contrae hacia el centro cuando convergemos (contact).
+    const r = node.r * (1 - converge.current * 0.92);
+    const x = Math.cos(t) * r;
+    const z = Math.sin(t) * r;
+    const y = Math.sin(t * 0.5) * 0.4 * (1 - converge.current);
+    ref.current.position.set(x, y, z);
+    posRef.current.set(x, y, z);
+
+    if (matRef.current) {
+      matRef.current.emissiveIntensity = 1.1 + brighten.current * 1.6;
+    }
+  });
+
+  return (
+    <group ref={ref}>
+      <mesh>
+        <sphereGeometry args={[0.14, 24, 24]} />
+        <meshStandardMaterial
+          ref={matRef}
+          color={node.color}
+          emissive={node.color}
+          emissiveIntensity={1.1}
+          roughness={0.3}
+          metalness={0.5}
+          toneMapped={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// Linea de conexion centro -> nodo. Reescribe sus puntos cada frame siguiendo
+// la posicion viva del nodo. En stack sube su opacidad (brighten).
+function NodeConnection({
+  node,
+  posRef,
+  brighten,
+}: {
+  node: TechNode;
+  posRef: React.RefObject<THREE.Vector3>;
+  brighten: React.RefObject<number>;
+}) {
+  const lineRef = useRef<{
+    geometry: THREE.BufferGeometry;
+    material: THREE.Material & { opacity: number };
+  }>(null);
+  const points = useMemo(
+    () => [new THREE.Vector3(0, 0, 0), new THREE.Vector3()],
+    [],
+  );
+
+  useFrame(() => {
+    const obj = lineRef.current;
+    if (!obj) return;
+    points[1].copy(posRef.current);
+    obj.geometry.setFromPoints(points);
+    obj.material.opacity = 0.25 + brighten.current * 0.55;
+  });
+
+  return (
+    <Line
+      // @ts-expect-error drei Line ref expone geometry/material en runtime
+      ref={lineRef}
+      points={[
+        [0, 0, 0],
+        [node.r, 0, 0],
+      ]}
+      color={node.color}
+      lineWidth={0.8}
+      transparent
+      opacity={0.3}
+    />
+  );
+}
+
+// Chispa que viaja desde el centro hasta el nodo a lo largo de la linea.
+// Solo visible/animada en stack (brighten > 0).
+function NodeSpark({
+  posRef,
+  color,
+  offset,
+  brighten,
+}: {
+  posRef: React.RefObject<THREE.Vector3>;
+  color: string;
+  offset: number;
+  brighten: React.RefObject<number>;
+}) {
+  const ref = useRef<THREE.Mesh>(null);
+  const matRef = useRef<THREE.MeshBasicMaterial>(null);
+
+  useFrame(({ clock }) => {
+    if (!ref.current) return;
+    // Progreso 0..1 que recorre la linea de forma ciclica.
+    const tt = (clock.elapsedTime * 0.6 + offset) % 1;
+    ref.current.position.copy(posRef.current).multiplyScalar(tt);
+    const s = 0.04 + Math.sin(tt * Math.PI) * 0.03;
+    ref.current.scale.setScalar(s * Math.max(0.001, brighten.current));
+    if (matRef.current) {
+      matRef.current.opacity = brighten.current;
+    }
+  });
+
+  return (
+    <mesh ref={ref}>
+      <sphereGeometry args={[1, 8, 8]} />
+      <meshBasicMaterial
+        ref={matRef}
+        color={color}
+        transparent
+        opacity={0}
+        toneMapped={false}
+      />
+    </mesh>
+  );
+}
+
+function DigitalCore({
+  isMobile,
+  inStack,
+  inContact,
+}: {
+  isMobile: boolean;
+  inStack: boolean;
+  inContact: boolean;
+}) {
+  const wireRef = useRef<THREE.Mesh>(null);
+  const coreRef = useRef<THREE.Mesh>(null);
+
+  // Estados interpolados (viven en RAF, sin GSAP).
+  const brighten = useRef(0); // stack: brillo de conexiones + chispas
+  const converge = useRef(0); // contact: nodos hacia el centro
+
+  // Posiciones vivas de cada nodo (compartidas con lineas/chispas).
+  const nodePositions = useMemo(
+    () => TECH_NODES.map(() => new THREE.Vector3()),
+    [],
+  );
+
+  const scale = isMobile ? 0.9 : 1.4;
+
+  useFrame(({ clock }, delta) => {
+    // Interpolar estados de seccion.
+    brighten.current +=
+      ((inStack ? 1 : 0) - brighten.current) * Math.min(1, delta * 2.5);
+    converge.current +=
+      ((inContact ? 1 : 0) - converge.current) * Math.min(1, delta * 1.6);
+
+    const t = clock.elapsedTime;
+    if (wireRef.current) {
+      wireRef.current.rotation.y += delta * 0.12;
+      wireRef.current.rotation.x += delta * 0.05;
+    }
+    if (coreRef.current) {
+      // El core del servidor pulsa de tamaño.
+      coreRef.current.scale.setScalar(Math.sin(t) * 0.05 + 0.4);
+    }
+  });
+
+  return (
+    <Float speed={1.2} floatIntensity={0.25} rotationIntensity={0.2}>
+      <group scale={scale}>
+        {/* Luz interior que emana del core (compensa el bloom removido). */}
+        <pointLight
+          position={[0, 0, 0]}
+          color={ORANGE}
+          intensity={2.5}
+          distance={9}
+          decay={2}
+        />
+
+        {/* Icosaedro wireframe — el nodo/servidor central. */}
+        <mesh ref={wireRef}>
+          <icosahedronGeometry args={[1.2, 2]} />
+          <meshBasicMaterial
+            color={ORANGE}
+            wireframe
+            transparent
+            opacity={0.6}
+            toneMapped={false}
+          />
+        </mesh>
+
+        {/* Core solido interior que pulsa — el "corazon" del servidor. */}
+        <mesh ref={coreRef}>
+          <sphereGeometry args={[1, 32, 32]} />
+          <meshStandardMaterial
+            color={ORANGE}
+            emissive={ORANGE}
+            emissiveIntensity={2.4}
+            roughness={0.2}
+            metalness={0.3}
+            toneMapped={false}
+          />
+        </mesh>
+
+        {/* Red de nodos: cada nodo + su linea + su chispa. */}
+        {TECH_NODES.map((node, i) => (
+          <group key={node.label}>
+            <NodeOrbit
+              node={node}
+              posRef={{ current: nodePositions[i] }}
+              converge={converge}
+              brighten={brighten}
+            />
+            <NodeConnection
+              node={node}
+              posRef={{ current: nodePositions[i] }}
+              brighten={brighten}
+            />
+            <NodeSpark
+              posRef={{ current: nodePositions[i] }}
+              color={node.color}
+              offset={i / TECH_NODES.length}
+              brighten={brighten}
+            />
+          </group>
+        ))}
+      </group>
+    </Float>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// DATA STREAMS — 3 helices de particulas (datos fluyendo por un cable).
+// ----------------------------------------------------------------------------
+const HELIX_POINTS = 150;
+
+interface HelixDef {
+  color: string;
+  radius: number;
+  phase: number;
+  dir: number; // sentido de avance de la hélice
+  rotSpeed: number;
+}
+
+const HELICES: HelixDef[] = [
+  { color: ORANGE, radius: 2.2, phase: 0, dir: 1, rotSpeed: 0.08 },
+  { color: ORANGE_DARK, radius: 2.8, phase: 2.1, dir: -1, rotSpeed: -0.05 },
+  { color: "#ffffff", radius: 3.4, phase: 4.2, dir: 1, rotSpeed: 0.03 },
+];
+
+function Helix({ def, isMobile }: { def: HelixDef; isMobile: boolean }) {
+  const ref = useRef<THREE.Points>(null);
 
   const positions = useMemo(() => {
-    const arr = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * 18;
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 18;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 12;
+    const arr = new Float32Array(HELIX_POINTS * 3);
+    const height = 16;
+    const step = height / HELIX_POINTS;
+    const turns = 6; // vueltas de la hélice
+    for (let i = 0; i < HELIX_POINTS; i++) {
+      const t = i * ((turns * Math.PI * 2) / HELIX_POINTS);
+      arr[i * 3] = def.radius * Math.cos(t * def.dir + def.phase);
+      arr[i * 3 + 1] = i * step - height / 2;
+      arr[i * 3 + 2] = def.radius * Math.sin(t * def.dir + def.phase);
     }
     return arr;
-  }, [count]);
+  }, [def]);
 
   useFrame((_, delta) => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y += delta * 0.02;
+    if (ref.current) {
+      ref.current.rotation.y += delta * def.rotSpeed;
     }
-    if (groupRef.current && mouse.current) {
-      const targetX = mouse.current.y * 0.1;
-      const targetY = mouse.current.x * 0.15;
-      groupRef.current.rotation.x +=
-        (targetX - groupRef.current.rotation.x) * 0.05;
-      groupRef.current.rotation.y +=
-        (targetY - groupRef.current.rotation.y) * 0.05;
+  });
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+      </bufferGeometry>
+      <pointsMaterial
+        size={isMobile ? 0.05 : 0.07}
+        color={def.color}
+        transparent
+        opacity={def.color === "#ffffff" ? 0.35 : 0.8}
+        sizeAttenuation
+      />
+    </points>
+  );
+}
+
+function DataStreams({ isMobile }: { isMobile: boolean }) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame((_, delta) => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += delta * 0.02;
     }
   });
 
   return (
     <group ref={groupRef}>
-      <points ref={pointsRef}>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-        </bufferGeometry>
-        <pointsMaterial
-          size={0.06}
-          color="#ff6400"
+      {HELICES.map((def, i) => (
+        <Helix key={i} def={def} isMobile={isMobile} />
+      ))}
+    </group>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// NETWORK GRID — grid sutil de fondo (sensacion de espacio digital / Matrix).
+// Se acerca lentamente a la camara con wrap-around.
+// ----------------------------------------------------------------------------
+const GRID_SIZE = 8;
+const GRID_SPACING = 2;
+
+function NetworkGrid() {
+  const groupRef = useRef<THREE.Group>(null);
+
+  // Geometria de un grid 8x8 (lineas H y V) construida una sola vez.
+  const geometry = useMemo(() => {
+    const half = (GRID_SIZE * GRID_SPACING) / 2;
+    const pts: number[] = [];
+    for (let i = 0; i <= GRID_SIZE; i++) {
+      const o = -half + i * GRID_SPACING;
+      // Linea horizontal.
+      pts.push(-half, o, 0, half, o, 0);
+      // Linea vertical.
+      pts.push(o, -half, 0, o, half, 0);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute(
+      "position",
+      new THREE.Float32BufferAttribute(pts, 3),
+    );
+    return geo;
+  }, []);
+
+  useFrame((_, delta) => {
+    if (!groupRef.current) return;
+    // Avanza hacia la camara y hace wrap para sensacion infinita.
+    groupRef.current.position.z += delta * 0.4;
+    if (groupRef.current.position.z > -4) {
+      groupRef.current.position.z = -12;
+    }
+  });
+
+  useEffect(() => () => geometry.dispose(), [geometry]);
+
+  return (
+    <group ref={groupRef} position={[0, 0, -8]}>
+      <lineSegments geometry={geometry}>
+        <lineBasicMaterial
+          color={ORANGE}
           transparent
-          opacity={0.7}
-          sizeAttenuation
+          opacity={0.04}
+          toneMapped={false}
         />
-      </points>
+      </lineSegments>
+    </group>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// ABOUT: 3 "pilares del stack" en orbita lenta (Cloud / Data / Code).
+// ----------------------------------------------------------------------------
+function AboutPillars({
+  mouse,
+  isMobile,
+}: {
+  mouse: React.RefObject<{ x: number; y: number }>;
+  isMobile: boolean;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const cubeRef = useRef<THREE.Mesh>(null);
+  const octaRef = useRef<THREE.Mesh>(null);
+  const icoRef = useRef<THREE.Mesh>(null);
+
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+    if (groupRef.current && mouse.current) {
+      // El conjunto reacciona suavemente al mouse.
+      const ty = mouse.current.x * 0.3;
+      const tx = mouse.current.y * 0.2;
+      groupRef.current.rotation.y += (ty - groupRef.current.rotation.y) * 0.04;
+      groupRef.current.rotation.x += (tx - groupRef.current.rotation.x) * 0.04;
+    }
+    if (cubeRef.current) {
+      cubeRef.current.rotation.x = t * 0.3;
+      cubeRef.current.rotation.y = t * 0.2;
+    }
+    if (octaRef.current) {
+      octaRef.current.rotation.y = t * 0.4;
+      octaRef.current.rotation.z = t * 0.2;
+    }
+    if (icoRef.current) {
+      icoRef.current.rotation.x = t * 0.25;
+      icoRef.current.rotation.y = t * 0.35;
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      {/* Cloud — cubo wireframe naranja. */}
+      <Float speed={1} floatIntensity={0.6} rotationIntensity={0.2}>
+        <mesh ref={cubeRef} position={[-3.4, 1, -2]}>
+          <boxGeometry args={[0.9, 0.9, 0.9]} />
+          <meshBasicMaterial
+            color={ORANGE}
+            wireframe
+            transparent
+            opacity={0.7}
+            toneMapped={false}
+          />
+        </mesh>
+      </Float>
+
+      {/* Data — octaedro wireframe naranja. */}
+      <Float speed={1.3} floatIntensity={0.5} rotationIntensity={0.2}>
+        <mesh ref={octaRef} position={[3.6, -1, -1]}>
+          <octahedronGeometry args={[0.8, 0]} />
+          <meshBasicMaterial
+            color={ORANGE}
+            wireframe
+            transparent
+            opacity={0.7}
+            toneMapped={false}
+          />
+        </mesh>
+      </Float>
+
+      {/* Code — icosaedro pequeño emissive. */}
+      {!isMobile && (
+        <Float speed={1.5} floatIntensity={0.5} rotationIntensity={0.3}>
+          <mesh ref={icoRef} position={[0, 2.6, -3]}>
+            <icosahedronGeometry args={[0.55, 0]} />
+            <meshStandardMaterial
+              color={ORANGE_DARK}
+              emissive={ORANGE}
+              emissiveIntensity={1.6}
+              roughness={0.3}
+              toneMapped={false}
+            />
+          </mesh>
+        </Float>
+      )}
     </group>
   );
 }
@@ -128,389 +570,12 @@ function CursorOrb({
     <mesh ref={meshRef}>
       <sphereGeometry args={[0.05, 16, 16]} />
       <meshStandardMaterial
-        color="#f06400"
-        emissive="#f06400"
+        color={ORANGE}
+        emissive={ORANGE}
         emissiveIntensity={3}
         toneMapped={false}
       />
     </mesh>
-  );
-}
-
-// ----------------------------------------------------------------------------
-// HERO: planeta central naranja con emissive + 2 anillos orbitando + texto.
-// (Antes vivia en HeroPlanet.tsx con su propio Canvas; ahora es un objeto mas.)
-// ----------------------------------------------------------------------------
-function HeroPlanetObjects({
-  mouse,
-  isMobile,
-}: {
-  mouse: React.RefObject<{ x: number; y: number }>;
-  isMobile: boolean;
-}) {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const ring1Ref = useRef<THREE.Mesh>(null);
-  const ring2Ref = useRef<THREE.Mesh>(null);
-  const groupRef = useRef<THREE.Group>(null);
-
-  const scale = isMobile ? 0.8 : 1.2;
-
-  useFrame((_, delta) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += delta * 0.15;
-    }
-    if (ring1Ref.current) {
-      ring1Ref.current.rotation.z += delta * 0.25;
-    }
-    if (ring2Ref.current) {
-      ring2Ref.current.rotation.z -= delta * 0.15;
-    }
-    // El planeta orbita suavemente siguiendo el mouse (en vez de OrbitControls).
-    if (groupRef.current && mouse.current) {
-      const ty = mouse.current.x * 0.4;
-      const tx = mouse.current.y * 0.25;
-      groupRef.current.rotation.y +=
-        (ty - groupRef.current.rotation.y) * 0.04;
-      groupRef.current.rotation.x +=
-        (tx - groupRef.current.rotation.x) * 0.04;
-    }
-  });
-
-  return (
-    <Float speed={1.5} floatIntensity={0.3} rotationIntensity={0.4}>
-      <group ref={groupRef} scale={scale}>
-        {/* PointLight naranja suave dentro del Canvas, cerca del planeta del hero.
-            Compensa el glow que antes daba el EffectComposer/Bloom (ya removido). */}
-        <pointLight position={[0, 0, 1.5]} color="#f06400" intensity={3} distance={8} decay={2} />
-
-        {/* Esfera central naranja con emissive alto (compensa el bloom removido) */}
-        <mesh ref={meshRef}>
-          <sphereGeometry args={[1, 64, 64]} />
-          <meshStandardMaterial
-            color="#f06400"
-            emissive="#f06400"
-            emissiveIntensity={2.2}
-            roughness={0.2}
-            metalness={0.3}
-            toneMapped={false}
-          />
-        </mesh>
-
-        {/* Ring 1: rotado 45deg en X, emissive fuerte */}
-        <mesh ref={ring1Ref} rotation={[Math.PI / 4, 0, 0]}>
-          <torusGeometry args={[2.2, 0.012, 16, 120]} />
-          <meshStandardMaterial
-            color="#f06400"
-            emissive="#f06400"
-            emissiveIntensity={3}
-            toneMapped={false}
-          />
-        </mesh>
-
-        {/* Ring 2: rotado -30deg en X, mas sutil */}
-        <mesh ref={ring2Ref} rotation={[-Math.PI / 6, 0, 0]}>
-          <torusGeometry args={[2.8, 0.008, 16, 120]} />
-          <meshStandardMaterial
-            color="#f06400"
-            emissive="#f06400"
-            emissiveIntensity={2.5}
-            toneMapped={false}
-          />
-        </mesh>
-
-        {/* Text removido — CDN de fuente causa crash silencioso */}
-      </group>
-    </Float>
-  );
-}
-
-// ----------------------------------------------------------------------------
-// ABOUT: 3 formas geometricas que flotan y reaccionan al mouse.
-// ----------------------------------------------------------------------------
-function AboutGeometryObjects({
-  mouse,
-  isMobile,
-}: {
-  mouse: React.RefObject<{ x: number; y: number }>;
-  isMobile: boolean;
-}) {
-  const icoRef = useRef<THREE.Mesh>(null);
-  const octaRef = useRef<THREE.Mesh>(null);
-  const torusRef = useRef<THREE.Mesh>(null);
-  const torusMat = useRef<THREE.MeshStandardMaterial>(null);
-
-  const bases = useMemo(
-    () => ({
-      ico: new THREE.Vector3(-3, 1, -2),
-      octa: new THREE.Vector3(3.5, -1, -1),
-      torus: new THREE.Vector3(0, 2.5, -3),
-    }),
-    [],
-  );
-
-  useFrame(({ clock }) => {
-    const t = clock.elapsedTime;
-    const mx = mouse.current?.x ?? 0;
-    const my = mouse.current?.y ?? 0;
-
-    if (icoRef.current) {
-      icoRef.current.rotation.x = t * 0.2;
-      icoRef.current.rotation.y = t * 0.15;
-      icoRef.current.position.x = bases.ico.x + mx * 0.6;
-      icoRef.current.position.y = bases.ico.y + my * 0.4;
-    }
-    if (octaRef.current) {
-      octaRef.current.rotation.y = t * 0.4;
-      octaRef.current.rotation.z = t * 0.2;
-      octaRef.current.position.x = bases.octa.x - mx * 0.5;
-      octaRef.current.position.y = bases.octa.y - my * 0.3;
-    }
-    if (torusRef.current) {
-      torusRef.current.rotation.x = t * 0.3;
-      torusRef.current.position.x = bases.torus.x + mx * 0.3;
-    }
-    if (torusMat.current) {
-      torusMat.current.emissiveIntensity = 1.2 + Math.sin(t) * 0.6;
-    }
-  });
-
-  return (
-    <>
-      {/* Icosahedron wireframe naranja, flotacion lenta */}
-      <Float speed={1} floatIntensity={0.6} rotationIntensity={0.2}>
-        <mesh ref={icoRef} position={bases.ico.toArray()}>
-          <icosahedronGeometry args={[0.8, 0]} />
-          <meshStandardMaterial
-            color="#f06400"
-            emissive="#f06400"
-            emissiveIntensity={1.4}
-            wireframe
-            toneMapped={false}
-          />
-        </mesh>
-      </Float>
-
-      {/* Octahedron naranja con emissive */}
-      <mesh ref={octaRef} position={bases.octa.toArray()}>
-        <octahedronGeometry args={[0.7, 0]} />
-        <meshStandardMaterial
-          color="#f06400"
-          emissive="#f06400"
-          emissiveIntensity={2}
-          roughness={0.3}
-          metalness={0.4}
-          toneMapped={false}
-        />
-      </mesh>
-
-      {/* Torus naranja con emissive pulsante */}
-      {!isMobile && (
-        <Float speed={1.4} floatIntensity={0.5}>
-          <mesh ref={torusRef} position={bases.torus.toArray()}>
-            <torusGeometry args={[0.5, 0.18, 24, 80]} />
-            <meshStandardMaterial
-              ref={torusMat}
-              color="#c44a00"
-              emissive="#f06400"
-              emissiveIntensity={1.2}
-              roughness={0.4}
-              toneMapped={false}
-            />
-          </mesh>
-        </Float>
-      )}
-    </>
-  );
-}
-
-// ----------------------------------------------------------------------------
-// STACK: esferas de tecnologias orbitando un nucleo naranja.
-// ----------------------------------------------------------------------------
-interface TechItem {
-  name: string;
-  color: string;
-  radius: number;
-  speed: number;
-  angle: number;
-}
-
-const TECH_ITEMS: TechItem[] = [
-  { name: "Python", color: "#3776AB", radius: 2.5, speed: 0.8, angle: 0 },
-  { name: "AWS", color: "#FF9900", radius: 3.2, speed: 0.5, angle: 1 },
-  { name: "Docker", color: "#2496ED", radius: 2.0, speed: 1.1, angle: 2 },
-  { name: "FastAPI", color: "#009688", radius: 3.8, speed: 0.7, angle: 3 },
-  { name: "TypeScript", color: "#3178C6", radius: 2.8, speed: 0.9, angle: 4 },
-  { name: "React", color: "#61DAFB", radius: 1.8, speed: 1.3, angle: 5 },
-];
-
-function OrbitingTech({ item }: { item: TechItem }) {
-  const ref = useRef<THREE.Group>(null);
-
-  useFrame(({ clock }) => {
-    if (!ref.current) return;
-    const t = clock.elapsedTime * item.speed + item.angle;
-    ref.current.position.x = Math.cos(t) * item.radius;
-    ref.current.position.z = Math.sin(t) * item.radius;
-    ref.current.position.y = Math.sin(t * 0.5) * 0.4;
-  });
-
-  return (
-    <group ref={ref}>
-      <mesh>
-        <sphereGeometry args={[0.14, 24, 24]} />
-        <meshStandardMaterial
-          color={item.color}
-          emissive={item.color}
-          emissiveIntensity={1.1}
-          roughness={0.3}
-          metalness={0.5}
-          toneMapped={false}
-        />
-      </mesh>
-    </group>
-  );
-}
-
-function TechOrbitObjects() {
-  const groupRef = useRef<THREE.Group>(null);
-
-  useFrame((_, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.08;
-    }
-  });
-
-  return (
-    // Posicionado bajo y atras para que orbite "detras" del contenido del stack.
-    <group ref={groupRef} position={[0, -0.5, -1]}>
-      {/* Nucleo naranja brillante */}
-      <mesh>
-        <sphereGeometry args={[0.5, 32, 32]} />
-        <meshStandardMaterial
-          color="#f06400"
-          emissive="#f06400"
-          emissiveIntensity={1.4}
-          transparent
-          opacity={0.7}
-          roughness={0.2}
-          toneMapped={false}
-        />
-      </mesh>
-      {TECH_ITEMS.map((item) => (
-        <OrbitingTech key={item.name} item={item} />
-      ))}
-    </group>
-  );
-}
-
-// ----------------------------------------------------------------------------
-// CONTACT: particulas que convergen en un anillo perfecto que pulsa.
-// La convergencia arranca cuando la seccion entra en viewport (active=true).
-// ----------------------------------------------------------------------------
-const CONTACT_COUNT = 220;
-
-function ContactParticles({
-  active,
-  isMobile,
-}: {
-  active: boolean;
-  isMobile: boolean;
-}) {
-  const pointsRef = useRef<THREE.Points>(null);
-  const coreRef = useRef<THREE.Mesh>(null);
-
-  // Estado de convergencia interpolado 0..1 (suave, sin GSAP para vivir en RAF).
-  const conv = useRef(0);
-
-  // Posiciones iniciales DENTRO del viewport + destino en anillo perfecto.
-  const { start, ringTargets } = useMemo(() => {
-    const start = new Float32Array(CONTACT_COUNT * 3);
-    const ringTargets = new Float32Array(CONTACT_COUNT * 3);
-    for (let i = 0; i < CONTACT_COUNT; i++) {
-      // Inicio: disperso DENTRO del viewport visible.
-      start[i * 3] = (Math.random() - 0.5) * 6;
-      start[i * 3 + 1] = (Math.random() - 0.5) * 4;
-      start[i * 3 + 2] = (Math.random() - 0.5) * 3;
-      // Destino: anillo PERFECTO (radio fijo) con cos/sin.
-      const a = (i / CONTACT_COUNT) * Math.PI * 2;
-      const r = 1.7;
-      ringTargets[i * 3] = Math.cos(a) * r;
-      ringTargets[i * 3 + 1] = Math.sin(a) * r;
-      ringTargets[i * 3 + 2] = 0;
-    }
-    return { start, ringTargets };
-  }, []);
-
-  // Buffer mutable que copia las posiciones iniciales.
-  const positions = useMemo(() => start.slice(), [start]);
-
-  useFrame(({ clock }, delta) => {
-    // Avanzar/retroceder la convergencia segun visibilidad.
-    const target = active ? 1 : 0;
-    conv.current += (target - conv.current) * Math.min(1, delta * 1.6);
-    const c = THREE.MathUtils.smoothstep(conv.current, 0, 1);
-
-    const geo = pointsRef.current?.geometry;
-    if (geo) {
-      const attr = geo.getAttribute("position") as THREE.BufferAttribute;
-      const arr = attr.array as Float32Array;
-      for (let i = 0; i < CONTACT_COUNT; i++) {
-        arr[i * 3] = THREE.MathUtils.lerp(
-          start[i * 3],
-          ringTargets[i * 3],
-          c,
-        );
-        arr[i * 3 + 1] = THREE.MathUtils.lerp(
-          start[i * 3 + 1],
-          ringTargets[i * 3 + 1],
-          c,
-        );
-        arr[i * 3 + 2] = THREE.MathUtils.lerp(
-          start[i * 3 + 2],
-          ringTargets[i * 3 + 2],
-          c,
-        );
-      }
-      attr.needsUpdate = true;
-    }
-
-    if (pointsRef.current) {
-      pointsRef.current.rotation.z += 0.002 * c;
-    }
-    if (coreRef.current) {
-      const pulse = 1 + Math.sin(clock.elapsedTime * 1.5) * 0.12;
-      coreRef.current.scale.setScalar(Math.max(0.001, c * pulse));
-    }
-  });
-
-  return (
-    <group>
-      <points ref={pointsRef}>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-        </bufferGeometry>
-        <pointsMaterial
-          size={isMobile ? 0.05 : 0.07}
-          color="#ff6400"
-          transparent
-          opacity={0.85}
-          sizeAttenuation
-        />
-      </points>
-
-      {/* Nucleo brillante que aparece y pulsa al converger */}
-      <mesh ref={coreRef}>
-        <sphereGeometry args={[0.5, 32, 32]} />
-        <meshStandardMaterial
-          color="#f06400"
-          emissive="#f06400"
-          emissiveIntensity={2}
-          toneMapped={false}
-          transparent
-          opacity={0.85}
-        />
-      </mesh>
-    </group>
   );
 }
 
@@ -563,61 +628,55 @@ function SceneContents({
   mouse,
   progress,
   isMobile,
-  particleCount,
   starCount,
 }: {
   mouse: React.RefObject<{ x: number; y: number }>;
   progress: React.RefObject<number>;
   isMobile: boolean;
-  particleCount: number;
   starCount: number;
 }) {
-  const inHero = useInSection(progress, SECTIONS.hero);
   const inAbout = useInSection(progress, SECTIONS.about);
   const inStack = useInSection(progress, SECTIONS.stack);
   const inContact = useInSection(progress, SECTIONS.contact);
 
   return (
     <>
-      {/* Iluminacion dramatica */}
-      <ambientLight intensity={0.05} />
-      <pointLight position={[5, 5, 5]} color="#f06400" intensity={2} />
+      {/* Iluminacion dramatica. */}
+      <ambientLight intensity={0.06} />
+      <pointLight position={[5, 5, 5]} color={ORANGE} intensity={2} />
       <pointLight position={[-5, -3, 3]} color="#ff8c42" intensity={1} />
       <pointLight position={[0, -5, -2]} color="#1a0a00" intensity={0.5} />
-      {/* Luz de relleno fria muy sutil */}
       <pointLight position={[-3, 4, -3]} color="#0a0a1a" intensity={0.3} />
 
+      {/* Cielo estrellado sutil (fondo del universo digital). */}
       <Stars
-        radius={80}
-        depth={40}
+        radius={90}
+        depth={50}
         count={starCount}
-        factor={6}
+        factor={4}
         saturation={0}
         fade
-        speed={0.5}
+        speed={0.4}
       />
 
-      <MouseParticles mouse={mouse} count={particleCount} />
+      {/* Fondo: grid de red + streams de datos en helice. */}
+      <NetworkGrid />
+      <DataStreams isMobile={isMobile} />
+
       {!isMobile && <CursorOrb mouse={mouse} />}
       <ScrollCamera progress={progress} />
 
-      {/* Planeta siempre visible (base de la escena) — se ve en todas las secciones */}
-      <HeroPlanetObjects mouse={mouse} isMobile={isMobile} />
+      {/* Digital Core: siempre visible, reacciona a stack/contact. */}
+      <DigitalCore
+        isMobile={isMobile}
+        inStack={inStack}
+        inContact={inContact}
+      />
 
-      {/* Objetos adicionales por sección */}
+      {/* About: pilares del stack en orbita. */}
       <group visible={inAbout}>
-        <AboutGeometryObjects mouse={mouse} isMobile={isMobile} />
+        <AboutPillars mouse={mouse} isMobile={isMobile} />
       </group>
-
-      <group visible={inStack}>
-        <TechOrbitObjects />
-      </group>
-
-      <group visible={inContact}>
-        <ContactParticles active={inContact} isMobile={isMobile} />
-      </group>
-
-{/* Bloom removido — usa CSS emissive para el glow naranja */}
     </>
   );
 }
@@ -663,8 +722,7 @@ export default function GlobalScene() {
     };
   }, []);
 
-  const particleCount = isMobile ? 60 : 120;
-  const starCount = isMobile ? 800 : 2000;
+  const starCount = isMobile ? 600 : 1400;
 
   return (
     <Canvas
@@ -680,8 +738,12 @@ export default function GlobalScene() {
         depth: true,
       }}
       onCreated={({ gl }) => {
-        // Previene que el navegador descarte el contexto WebGL al minimizar/cambiar tab
-        gl.domElement.addEventListener("webglcontextlost", (e) => e.preventDefault(), false);
+        // Previene que el navegador descarte el contexto WebGL al minimizar/cambiar tab.
+        gl.domElement.addEventListener(
+          "webglcontextlost",
+          (e) => e.preventDefault(),
+          false,
+        );
       }}
       style={{ position: "fixed", inset: 0, zIndex: 0, background: "transparent" }}
     >
@@ -689,7 +751,6 @@ export default function GlobalScene() {
         mouse={mouse}
         progress={progress}
         isMobile={isMobile}
-        particleCount={particleCount}
         starCount={starCount}
       />
     </Canvas>
