@@ -3,35 +3,46 @@
 // PORTAFOLIO DE KEVIN GONZALEZ — revkelo
 // GlobalScene: UN SOLO Canvas WebGL fijo que persiste en TODA la pagina.
 //
-// CONCEPTO: "Digital Universe" — el codigo y el espacio se fusionan.
-// La escena es un universo digital: un nucleo-servidor (Digital Core) rodeado
-// de nodos de tecnologias conectados por lineas, streams de datos en helices,
-// y un grid de red de fondo tipo Matrix. Todo sobre un cielo estrellado sutil.
+// CONCEPTO: "Wave Field" — una superficie viva de puntos que ondea como un
+// campo de datos o una funcion matematica. Elegante, organico, tecnico.
+// Un grid NxN de puntos cuya altura (Y) oscila con ondas senoidales que parten
+// del centro; una malla de lineas une los puntos (solo desktop) creando una red
+// deformable; particulas mas brillantes flotan sobre la ola; una esfera emissive
+// pulsa en el origen como fuente de la onda; todo sobre un cielo estrellado sutil.
 //
 // Objetos por seccion:
-//   - DigitalCore   (siempre)        - DataStreams (siempre)
-//   - NetworkGrid   (siempre)        - Stars (siempre, sutil)
-//   - CursorOrb     (siempre, desktop) - ScrollCamera (siempre)
-//   - AboutPillars  (visible solo en about)
-//   - (stack)       las conexiones brillan + chispas viajan por las lineas
-//   - (contact)     los nodos convergen hacia el centro
+//   - WaveGrid      (siempre)        - WaveParticles (siempre)
+//   - WaveMesh      (siempre, desktop)- CentralHalo   (siempre)
+//   - Stars         (siempre, sutil) - CursorOrb (siempre, desktop)
+//   - ScrollCamera  (siempre)
+//
+// Variacion por seccion (progress 0..1):
+//   - hero:    amplitud normal, ola estandar
+//   - about:   amplitud sube, ola mas dramatica
+//   - stack:   frecuencia aumenta — ola mas rapida y compacta
+//   - contact: los puntos convergen y se aplanan (amplitud -> 0)
 //
 // Reglas tecnicas:
 //   - NO <Text> de drei (CDN de fuente crashea).
 //   - NO <EffectComposer> (WebGL Context Lost con alpha:true).
 //   - El glow naranja se logra via emissive en materiales + CSS.
 //   - useMemo para posiciones/geometrias estaticas. Nunca crear objetos
-//     Three.js dentro de useFrame.
+//     Three.js dentro de useFrame; solo se reescriben BufferAttributes.
 // IMPORTANTE: importar SIEMPRE via dynamic(ssr:false) (ver GlobalSceneWrapper).
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Float, Stars, Line } from "@react-three/drei";
+import { Stars } from "@react-three/drei";
 import * as THREE from "three";
 
-// Paleta del Digital Universe.
+// Paleta del Wave Field.
 const ORANGE = "#f06400";
 const ORANGE_DARK = "#c44a00";
+
+// Parametros del grid.
+const GRID_DESKTOP = 30; // 30x30 = 900 puntos
+const GRID_MOBILE = 20; // 20x20 = 400 puntos
+const SPACING = 0.35;
 
 // Rangos de scroll por seccion (progress 0..1). Orden real de la pagina:
 // hero, about, experience, stack, projects, contact.
@@ -44,503 +55,290 @@ const SECTIONS = {
   contact: [0.88, 1.0],
 } as const;
 
-// Hook: ¿el progress actual cae dentro del rango [a, b]? (con un pequeño margen
-// para que la transicion de visibilidad no sea brusca en los bordes).
-function useInSection(
-  progress: React.RefObject<number>,
-  range: readonly [number, number],
+// Pesos por seccion leidos directo de progress.current en useFrame (sin state).
+// Devuelve cuanto "pertenece" el progreso a cada seccion clave para mezclar
+// amplitud / frecuencia / convergencia de forma continua.
+function sectionWeights(p: number) {
+  // Triangular-ish: 1 en el centro del rango, cae a 0 fuera con margen.
+  const inRange = (a: number, b: number) => {
+    const m = 0.05; // margen de transicion
+    if (p <= a - m || p >= b + m) return 0;
+    if (p < a) return (p - (a - m)) / m;
+    if (p > b) return (b + m - p) / m;
+    return 1;
+  };
+  return {
+    about: inRange(SECTIONS.about[0], SECTIONS.about[1]),
+    stack: inRange(SECTIONS.stack[0], SECTIONS.stack[1]),
+    contact: inRange(SECTIONS.contact[0], SECTIONS.contact[1]),
+  };
+}
+
+// ----------------------------------------------------------------------------
+// WAVE GRID — los N*N puntos de la ola. La superficie principal.
+// Comparte el array de posiciones con WaveMesh y WaveParticles via refs para
+// que todos lean la misma altura de ola sin recalcular.
+// ----------------------------------------------------------------------------
+interface WaveShared {
+  positions: Float32Array;
+  n: number;
+  half: number;
+  // Estados interpolados (viven en RAF). Los lee WaveParticles tambien.
+  amp: React.RefObject<number>;
+  freq: React.RefObject<number>;
+  flat: React.RefObject<number>; // 0..1 convergencia/aplanado (contact)
+}
+
+// Calcula la altura de la ola en un punto (x,z) dado el tiempo y estados.
+function waveHeight(
+  x: number,
+  z: number,
+  t: number,
+  amp: number,
+  freq: number,
+  flat: number,
 ) {
-  const [inSection, setInSection] = useState(range[0] <= 0.0001);
-  useFrame(() => {
-    const p = progress.current ?? 0;
-    const visible = p >= range[0] - 0.04 && p <= range[1] + 0.04;
-    setInSection((prev) => (prev === visible ? prev : visible));
-  });
-  return inSection;
+  const dist = Math.sqrt(x * x + z * z);
+  const y =
+    amp *
+    Math.sin(x * 1.2 * freq + t) *
+    Math.cos(z * 0.8 * freq + t * 0.7) *
+    Math.sin(dist * 0.5 - t * 1.2);
+  return y * (1 - flat);
 }
 
-// ----------------------------------------------------------------------------
-// NODOS DE TECNOLOGIAS — la "red de servicios" que orbita el Digital Core.
-// ----------------------------------------------------------------------------
-interface TechNode {
-  color: string;
-  label: string;
-  r: number;
-  speed: number;
-  angle: number;
-}
-
-const TECH_NODES: TechNode[] = [
-  { color: "#3776AB", label: "Python", r: 2.5, speed: 0.6, angle: 0 },
-  { color: "#FF9900", label: "AWS", r: 3.2, speed: 0.4, angle: 1.05 },
-  { color: "#2496ED", label: "Docker", r: 2.0, speed: 0.9, angle: 2.1 },
-  { color: "#009688", label: "FastAPI", r: 3.5, speed: 0.5, angle: 3.14 },
-  { color: "#3178C6", label: "TypeScript", r: 2.8, speed: 0.7, angle: 4.2 },
-  { color: "#02569B", label: "Flutter", r: 2.2, speed: 1.0, angle: 5.24 },
-];
-
-// ----------------------------------------------------------------------------
-// DIGITAL CORE + RED DE NODOS.
-// Es el corazon de la escena: un icosaedro wireframe (nodo/servidor) con un
-// core solido que pulsa, rodeado de 6 nodos que orbitan, cada uno conectado al
-// centro por una linea. En "stack" las conexiones brillan y viajan chispas; en
-// "contact" los nodos convergen hacia el centro.
-// ----------------------------------------------------------------------------
-function NodeOrbit({
-  node,
-  posRef,
-  converge,
-  brighten,
+function WaveGrid({
+  shared,
+  progress,
 }: {
-  node: TechNode;
-  // Buffer compartido que escribimos cada frame para que la linea/chispa lo lean.
-  posRef: React.RefObject<THREE.Vector3>;
-  converge: React.RefObject<number>; // 0..1 hacia el centro (contact)
-  brighten: React.RefObject<number>; // 0..1 brillo extra (stack)
+  shared: WaveShared;
+  progress: React.RefObject<number>;
 }) {
-  const ref = useRef<THREE.Group>(null);
-  const matRef = useRef<THREE.MeshStandardMaterial>(null);
+  const pointsRef = useRef<THREE.Points>(null);
 
-  useFrame(({ clock }) => {
-    if (!ref.current) return;
-    const t = clock.elapsedTime * node.speed + node.angle;
-    // Radio efectivo: se contrae hacia el centro cuando convergemos (contact).
-    const r = node.r * (1 - converge.current * 0.92);
-    const x = Math.cos(t) * r;
-    const z = Math.sin(t) * r;
-    const y = Math.sin(t * 0.5) * 0.4 * (1 - converge.current);
-    ref.current.position.set(x, y, z);
-    posRef.current.set(x, y, z);
-
-    if (matRef.current) {
-      matRef.current.emissiveIntensity = 1.1 + brighten.current * 1.6;
-    }
-  });
-
-  return (
-    <group ref={ref}>
-      <mesh>
-        <sphereGeometry args={[0.14, 24, 24]} />
-        <meshStandardMaterial
-          ref={matRef}
-          color={node.color}
-          emissive={node.color}
-          emissiveIntensity={1.1}
-          roughness={0.3}
-          metalness={0.5}
-          toneMapped={false}
-        />
-      </mesh>
-    </group>
-  );
-}
-
-// Linea de conexion centro -> nodo. Reescribe sus puntos cada frame siguiendo
-// la posicion viva del nodo. En stack sube su opacidad (brighten).
-function NodeConnection({
-  node,
-  posRef,
-  brighten,
-}: {
-  node: TechNode;
-  posRef: React.RefObject<THREE.Vector3>;
-  brighten: React.RefObject<number>;
-}) {
-  const lineRef = useRef<{
-    geometry: THREE.BufferGeometry;
-    material: THREE.Material & { opacity: number };
-  }>(null);
-  const points = useMemo(
-    () => [new THREE.Vector3(0, 0, 0), new THREE.Vector3()],
-    [],
-  );
-
-  useFrame(() => {
-    const obj = lineRef.current;
-    if (!obj) return;
-    points[1].copy(posRef.current);
-    obj.geometry.setFromPoints(points);
-    obj.material.opacity = 0.25 + brighten.current * 0.55;
-  });
-
-  return (
-    <Line
-      // @ts-expect-error drei Line ref expone geometry/material en runtime
-      ref={lineRef}
-      points={[
-        [0, 0, 0],
-        [node.r, 0, 0],
-      ]}
-      color={node.color}
-      lineWidth={0.8}
-      transparent
-      opacity={0.3}
-    />
-  );
-}
-
-// Chispa que viaja desde el centro hasta el nodo a lo largo de la linea.
-// Solo visible/animada en stack (brighten > 0).
-function NodeSpark({
-  posRef,
-  color,
-  offset,
-  brighten,
-}: {
-  posRef: React.RefObject<THREE.Vector3>;
-  color: string;
-  offset: number;
-  brighten: React.RefObject<number>;
-}) {
-  const ref = useRef<THREE.Mesh>(null);
-  const matRef = useRef<THREE.MeshBasicMaterial>(null);
-
-  useFrame(({ clock }) => {
-    if (!ref.current) return;
-    // Progreso 0..1 que recorre la linea de forma ciclica.
-    const tt = (clock.elapsedTime * 0.6 + offset) % 1;
-    ref.current.position.copy(posRef.current).multiplyScalar(tt);
-    const s = 0.04 + Math.sin(tt * Math.PI) * 0.03;
-    ref.current.scale.setScalar(s * Math.max(0.001, brighten.current));
-    if (matRef.current) {
-      matRef.current.opacity = brighten.current;
-    }
-  });
-
-  return (
-    <mesh ref={ref}>
-      <sphereGeometry args={[1, 8, 8]} />
-      <meshBasicMaterial
-        ref={matRef}
-        color={color}
-        transparent
-        opacity={0}
-        toneMapped={false}
-      />
-    </mesh>
-  );
-}
-
-function DigitalCore({
-  isMobile,
-  inStack,
-  inContact,
-}: {
-  isMobile: boolean;
-  inStack: boolean;
-  inContact: boolean;
-}) {
-  const wireRef = useRef<THREE.Mesh>(null);
-  const coreRef = useRef<THREE.Mesh>(null);
-
-  // Estados interpolados (viven en RAF, sin GSAP).
-  const brighten = useRef(0); // stack: brillo de conexiones + chispas
-  const converge = useRef(0); // contact: nodos hacia el centro
-
-  // Posiciones vivas de cada nodo (compartidas con lineas/chispas).
-  const nodePositions = useMemo(
-    () => TECH_NODES.map(() => new THREE.Vector3()),
-    [],
-  );
-
-  const scale = isMobile ? 0.9 : 1.4;
+  // Posiciones iniciales del grid (x,z fijos; y se recalcula cada frame).
+  const positions = shared.positions;
 
   useFrame(({ clock }, delta) => {
-    // Interpolar estados de seccion.
-    brighten.current +=
-      ((inStack ? 1 : 0) - brighten.current) * Math.min(1, delta * 2.5);
-    converge.current +=
-      ((inContact ? 1 : 0) - converge.current) * Math.min(1, delta * 1.6);
-
     const t = clock.elapsedTime;
-    if (wireRef.current) {
-      wireRef.current.rotation.y += delta * 0.12;
-      wireRef.current.rotation.x += delta * 0.05;
+    const w = sectionWeights(progress.current ?? 0);
+
+    // Targets por seccion.
+    const targetAmp = 0.8 + w.about * 0.4; // about: amplitud sube a 1.2
+    const targetFreq = 1 + w.stack * 0.9; // stack: frecuencia aumenta
+    const targetFlat = w.contact; // contact: aplanar hacia 0
+
+    // Interpolar estados de forma suave.
+    const k = Math.min(1, delta * 2.2);
+    shared.amp.current += (targetAmp - shared.amp.current) * k;
+    shared.freq.current += (targetFreq - shared.freq.current) * k;
+    shared.flat.current += (targetFlat - shared.flat.current) * k;
+
+    const amp = shared.amp.current;
+    const freq = shared.freq.current;
+    const flat = shared.flat.current;
+    const n = shared.n;
+    const half = shared.half;
+
+    // Recalcular Y de cada vertice.
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
+        const idx = (i * n + j) * 3;
+        const x = positions[idx] + 0; // x ya esta en el array
+        const z = positions[idx + 2];
+        positions[idx + 1] = waveHeight(x, z, t, amp, freq, flat);
+      }
     }
-    if (coreRef.current) {
-      // El core del servidor pulsa de tamaño.
-      coreRef.current.scale.setScalar(Math.sin(t) * 0.05 + 0.4);
-    }
-  });
+    void half;
 
-  return (
-    <Float speed={1.2} floatIntensity={0.25} rotationIntensity={0.2}>
-      <group scale={scale}>
-        {/* Luz interior que emana del core (compensa el bloom removido). */}
-        <pointLight
-          position={[0, 0, 0]}
-          color={ORANGE}
-          intensity={2.5}
-          distance={9}
-          decay={2}
-        />
-
-        {/* Icosaedro wireframe — el nodo/servidor central. */}
-        <mesh ref={wireRef}>
-          <icosahedronGeometry args={[1.2, 2]} />
-          <meshBasicMaterial
-            color={ORANGE}
-            wireframe
-            transparent
-            opacity={0.6}
-            toneMapped={false}
-          />
-        </mesh>
-
-        {/* Core solido interior que pulsa — el "corazon" del servidor. */}
-        <mesh ref={coreRef}>
-          <sphereGeometry args={[1, 32, 32]} />
-          <meshStandardMaterial
-            color={ORANGE}
-            emissive={ORANGE}
-            emissiveIntensity={2.4}
-            roughness={0.2}
-            metalness={0.3}
-            toneMapped={false}
-          />
-        </mesh>
-
-        {/* Red de nodos: cada nodo + su linea + su chispa. */}
-        {TECH_NODES.map((node, i) => (
-          <group key={node.label}>
-            <NodeOrbit
-              node={node}
-              posRef={{ current: nodePositions[i] }}
-              converge={converge}
-              brighten={brighten}
-            />
-            <NodeConnection
-              node={node}
-              posRef={{ current: nodePositions[i] }}
-              brighten={brighten}
-            />
-            <NodeSpark
-              posRef={{ current: nodePositions[i] }}
-              color={node.color}
-              offset={i / TECH_NODES.length}
-              brighten={brighten}
-            />
-          </group>
-        ))}
-      </group>
-    </Float>
-  );
-}
-
-// ----------------------------------------------------------------------------
-// DATA STREAMS — 3 helices de particulas (datos fluyendo por un cable).
-// ----------------------------------------------------------------------------
-const HELIX_POINTS = 150;
-
-interface HelixDef {
-  color: string;
-  radius: number;
-  phase: number;
-  dir: number; // sentido de avance de la hélice
-  rotSpeed: number;
-}
-
-const HELICES: HelixDef[] = [
-  { color: ORANGE, radius: 2.2, phase: 0, dir: 1, rotSpeed: 0.08 },
-  { color: ORANGE_DARK, radius: 2.8, phase: 2.1, dir: -1, rotSpeed: -0.05 },
-  { color: "#ffffff", radius: 3.4, phase: 4.2, dir: 1, rotSpeed: 0.03 },
-];
-
-function Helix({ def, isMobile }: { def: HelixDef; isMobile: boolean }) {
-  const ref = useRef<THREE.Points>(null);
-
-  const positions = useMemo(() => {
-    const arr = new Float32Array(HELIX_POINTS * 3);
-    const height = 16;
-    const step = height / HELIX_POINTS;
-    const turns = 6; // vueltas de la hélice
-    for (let i = 0; i < HELIX_POINTS; i++) {
-      const t = i * ((turns * Math.PI * 2) / HELIX_POINTS);
-      arr[i * 3] = def.radius * Math.cos(t * def.dir + def.phase);
-      arr[i * 3 + 1] = i * step - height / 2;
-      arr[i * 3 + 2] = def.radius * Math.sin(t * def.dir + def.phase);
-    }
-    return arr;
-  }, [def]);
-
-  useFrame((_, delta) => {
-    if (ref.current) {
-      ref.current.rotation.y += delta * def.rotSpeed;
+    const geo = pointsRef.current?.geometry;
+    if (geo) {
+      const attr = geo.getAttribute("position") as THREE.BufferAttribute;
+      attr.needsUpdate = true;
     }
   });
 
   return (
-    <points ref={ref}>
+    <points ref={pointsRef}>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={isMobile ? 0.05 : 0.07}
-        color={def.color}
+        size={0.04}
+        color={ORANGE}
         transparent
-        opacity={def.color === "#ffffff" ? 0.35 : 0.8}
+        opacity={0.7}
         sizeAttenuation
+        toneMapped={false}
       />
     </points>
   );
 }
 
-function DataStreams({ isMobile }: { isMobile: boolean }) {
-  const groupRef = useRef<THREE.Group>(null);
+// ----------------------------------------------------------------------------
+// WAVE MESH — la red de lineas entre puntos adyacentes del grid (solo desktop).
+// Lee el MISMO array de posiciones que WaveGrid (ya actualizado este frame) y
+// vuelca cada par adyacente en su propio buffer de lineas.
+// ----------------------------------------------------------------------------
+function WaveMesh({ shared }: { shared: WaveShared }) {
+  const lineRef = useRef<THREE.LineSegments>(null);
+  const n = shared.n;
 
-  useFrame((_, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.02;
+  // Buffer de lineas: por cada celda, una arista horizontal y una vertical.
+  // Cantidad de segmentos = horizontales + verticales.
+  const segPositions = useMemo(() => {
+    const horiz = n * (n - 1);
+    const vert = (n - 1) * n;
+    return new Float32Array((horiz + vert) * 2 * 3); // 2 vertices * 3 comps
+  }, [n]);
+
+  useFrame(() => {
+    const src = shared.positions;
+    const dst = segPositions;
+    let s = 0;
+    // Aristas horizontales: (i, j) -> (i, j+1).
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n - 1; j++) {
+        const a = (i * n + j) * 3;
+        const b = (i * n + (j + 1)) * 3;
+        dst[s++] = src[a];
+        dst[s++] = src[a + 1];
+        dst[s++] = src[a + 2];
+        dst[s++] = src[b];
+        dst[s++] = src[b + 1];
+        dst[s++] = src[b + 2];
+      }
+    }
+    // Aristas verticales: (i, j) -> (i+1, j).
+    for (let i = 0; i < n - 1; i++) {
+      for (let j = 0; j < n; j++) {
+        const a = (i * n + j) * 3;
+        const b = ((i + 1) * n + j) * 3;
+        dst[s++] = src[a];
+        dst[s++] = src[a + 1];
+        dst[s++] = src[a + 2];
+        dst[s++] = src[b];
+        dst[s++] = src[b + 1];
+        dst[s++] = src[b + 2];
+      }
+    }
+    const geo = lineRef.current?.geometry;
+    if (geo) {
+      const attr = geo.getAttribute("position") as THREE.BufferAttribute;
+      attr.needsUpdate = true;
     }
   });
 
   return (
-    <group ref={groupRef}>
-      {HELICES.map((def, i) => (
-        <Helix key={i} def={def} isMobile={isMobile} />
-      ))}
-    </group>
+    <lineSegments ref={lineRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[segPositions, 3]} />
+      </bufferGeometry>
+      <lineBasicMaterial
+        color={ORANGE}
+        transparent
+        opacity={0.12}
+        toneMapped={false}
+      />
+    </lineSegments>
   );
 }
 
 // ----------------------------------------------------------------------------
-// NETWORK GRID — grid sutil de fondo (sensacion de espacio digital / Matrix).
-// Se acerca lentamente a la camara con wrap-around.
+// WAVE PARTICLES — particulas flotantes sobre la ola. Mas grandes y brillantes
+// que los puntos del grid. Cada una sigue la altura de la ola en su (x,z) mas un
+// offset propio que oscila suavemente.
 // ----------------------------------------------------------------------------
-const GRID_SIZE = 8;
-const GRID_SPACING = 2;
-
-function NetworkGrid() {
-  const groupRef = useRef<THREE.Group>(null);
-
-  // Geometria de un grid 8x8 (lineas H y V) construida una sola vez.
-  const geometry = useMemo(() => {
-    const half = (GRID_SIZE * GRID_SPACING) / 2;
-    const pts: number[] = [];
-    for (let i = 0; i <= GRID_SIZE; i++) {
-      const o = -half + i * GRID_SPACING;
-      // Linea horizontal.
-      pts.push(-half, o, 0, half, o, 0);
-      // Linea vertical.
-      pts.push(o, -half, 0, o, half, 0);
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(pts, 3),
-    );
-    return geo;
-  }, []);
-
-  useFrame((_, delta) => {
-    if (!groupRef.current) return;
-    // Avanza hacia la camara y hace wrap para sensacion infinita.
-    groupRef.current.position.z += delta * 0.4;
-    if (groupRef.current.position.z > -4) {
-      groupRef.current.position.z = -12;
-    }
-  });
-
-  useEffect(() => () => geometry.dispose(), [geometry]);
-
-  return (
-    <group ref={groupRef} position={[0, 0, -8]}>
-      <lineSegments geometry={geometry}>
-        <lineBasicMaterial
-          color={ORANGE}
-          transparent
-          opacity={0.04}
-          toneMapped={false}
-        />
-      </lineSegments>
-    </group>
-  );
-}
-
-// ----------------------------------------------------------------------------
-// ABOUT: 3 "pilares del stack" en orbita lenta (Cloud / Data / Code).
-// ----------------------------------------------------------------------------
-function AboutPillars({
-  mouse,
-  isMobile,
+function WaveParticles({
+  shared,
+  count,
 }: {
-  mouse: React.RefObject<{ x: number; y: number }>;
-  isMobile: boolean;
+  shared: WaveShared;
+  count: number;
 }) {
-  const groupRef = useRef<THREE.Group>(null);
-  const cubeRef = useRef<THREE.Mesh>(null);
-  const octaRef = useRef<THREE.Mesh>(null);
-  const icoRef = useRef<THREE.Mesh>(null);
+  const pointsRef = useRef<THREE.Points>(null);
+
+  // Datos estaticos por particula: x, z y offset/fase de flotacion.
+  const data = useMemo(() => {
+    const xs = new Float32Array(count);
+    const zs = new Float32Array(count);
+    const offs = new Float32Array(count);
+    const phases = new Float32Array(count);
+    const span = shared.half * 2;
+    for (let i = 0; i < count; i++) {
+      xs[i] = (Math.random() - 0.5) * span;
+      zs[i] = (Math.random() - 0.5) * span;
+      offs[i] = 0.2 + Math.random() * 0.6; // offset sobre la ola
+      phases[i] = Math.random() * Math.PI * 2;
+    }
+    return { xs, zs, offs, phases };
+  }, [count, shared.half]);
+
+  const positions = useMemo(() => new Float32Array(count * 3), [count]);
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
-    if (groupRef.current && mouse.current) {
-      // El conjunto reacciona suavemente al mouse.
-      const ty = mouse.current.x * 0.3;
-      const tx = mouse.current.y * 0.2;
-      groupRef.current.rotation.y += (ty - groupRef.current.rotation.y) * 0.04;
-      groupRef.current.rotation.x += (tx - groupRef.current.rotation.x) * 0.04;
+    const amp = shared.amp.current;
+    const freq = shared.freq.current;
+    const flat = shared.flat.current;
+    for (let i = 0; i < count; i++) {
+      const x = data.xs[i];
+      const z = data.zs[i];
+      const baseY = waveHeight(x, z, t, amp, freq, flat);
+      const floatY = data.offs[i] * (1 - flat) + Math.sin(t + data.phases[i]) * 0.08;
+      positions[i * 3] = x;
+      positions[i * 3 + 1] = baseY + floatY;
+      positions[i * 3 + 2] = z;
     }
-    if (cubeRef.current) {
-      cubeRef.current.rotation.x = t * 0.3;
-      cubeRef.current.rotation.y = t * 0.2;
-    }
-    if (octaRef.current) {
-      octaRef.current.rotation.y = t * 0.4;
-      octaRef.current.rotation.z = t * 0.2;
-    }
-    if (icoRef.current) {
-      icoRef.current.rotation.x = t * 0.25;
-      icoRef.current.rotation.y = t * 0.35;
+    const geo = pointsRef.current?.geometry;
+    if (geo) {
+      const attr = geo.getAttribute("position") as THREE.BufferAttribute;
+      attr.needsUpdate = true;
     }
   });
 
   return (
-    <group ref={groupRef}>
-      {/* Cloud — cubo wireframe naranja. */}
-      <Float speed={1} floatIntensity={0.6} rotationIntensity={0.2}>
-        <mesh ref={cubeRef} position={[-3.4, 1, -2]}>
-          <boxGeometry args={[0.9, 0.9, 0.9]} />
-          <meshBasicMaterial
-            color={ORANGE}
-            wireframe
-            transparent
-            opacity={0.7}
-            toneMapped={false}
-          />
-        </mesh>
-      </Float>
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.1}
+        color="#ff8c2a"
+        transparent
+        opacity={0.9}
+        sizeAttenuation
+        toneMapped={false}
+      />
+    </points>
+  );
+}
 
-      {/* Data — octaedro wireframe naranja. */}
-      <Float speed={1.3} floatIntensity={0.5} rotationIntensity={0.2}>
-        <mesh ref={octaRef} position={[3.6, -1, -1]}>
-          <octahedronGeometry args={[0.8, 0]} />
-          <meshBasicMaterial
-            color={ORANGE}
-            wireframe
-            transparent
-            opacity={0.7}
-            toneMapped={false}
-          />
-        </mesh>
-      </Float>
+// ----------------------------------------------------------------------------
+// CENTRAL HALO — esfera emissive en el origen. Pulsa con el reloj: es el
+// "origen" de la ola de donde parten las ondas concentricas.
+// ----------------------------------------------------------------------------
+function CentralHalo() {
+  const meshRef = useRef<THREE.Mesh>(null);
 
-      {/* Code — icosaedro pequeño emissive. */}
-      {!isMobile && (
-        <Float speed={1.5} floatIntensity={0.5} rotationIntensity={0.3}>
-          <mesh ref={icoRef} position={[0, 2.6, -3]}>
-            <icosahedronGeometry args={[0.55, 0]} />
-            <meshStandardMaterial
-              color={ORANGE_DARK}
-              emissive={ORANGE}
-              emissiveIntensity={1.6}
-              roughness={0.3}
-              toneMapped={false}
-            />
-          </mesh>
-        </Float>
-      )}
-    </group>
+  useFrame(({ clock }) => {
+    if (!meshRef.current) return;
+    const s = 1 + Math.sin(clock.elapsedTime * 1.6) * 0.18;
+    meshRef.current.scale.setScalar(s);
+  });
+
+  return (
+    <mesh ref={meshRef}>
+      <sphereGeometry args={[0.15, 24, 24]} />
+      <meshStandardMaterial
+        color={ORANGE}
+        emissive={ORANGE}
+        emissiveIntensity={3}
+        roughness={0.2}
+        metalness={0.2}
+        toneMapped={false}
+      />
+    </mesh>
   );
 }
 
@@ -581,18 +379,18 @@ function CursorOrb({
 
 // ----------------------------------------------------------------------------
 // Camara que se mueve segun el progreso de scroll (lerp entre keyframes).
+// Ajustada para la ola: vista desde arriba que deriva lateralmente.
 // ----------------------------------------------------------------------------
 const CAMERA_KEYS: { at: number; pos: [number, number, number] }[] = [
-  { at: 0.0, pos: [0, 0, 5] },
-  { at: 0.2, pos: [0.5, 0.2, 4.8] },
-  { at: 0.4, pos: [-0.5, -0.3, 4.5] },
-  { at: 0.6, pos: [0.8, 0.4, 5.2] },
-  { at: 0.8, pos: [-0.3, 0.6, 4.8] },
-  { at: 1.0, pos: [0, 0, 3.8] },
+  { at: 0.0, pos: [0, 3, 8] },
+  { at: 0.25, pos: [2, 2, 7] },
+  { at: 0.5, pos: [-2, 1, 6] },
+  { at: 0.75, pos: [1, 2, 7] },
+  { at: 1.0, pos: [0, 2, 6] },
 ];
 
 function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
-  const target = useMemo(() => new THREE.Vector3(0, 0, 5), []);
+  const target = useMemo(() => new THREE.Vector3(0, 3, 8), []);
 
   useFrame(({ camera }) => {
     const p = THREE.MathUtils.clamp(progress.current ?? 0, 0, 1);
@@ -622,7 +420,8 @@ function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
 }
 
 // ----------------------------------------------------------------------------
-// Contenido de la escena (dentro del Canvas). Gestiona visibilidad por seccion.
+// Contenido de la escena (dentro del Canvas). Construye el buffer compartido del
+// grid y reacciona al mouse inclinando el plano de la ola.
 // ----------------------------------------------------------------------------
 function SceneContents({
   mouse,
@@ -635,47 +434,67 @@ function SceneContents({
   isMobile: boolean;
   starCount: number;
 }) {
-  const inAbout = useInSection(progress, SECTIONS.about);
-  const inStack = useInSection(progress, SECTIONS.stack);
-  const inContact = useInSection(progress, SECTIONS.contact);
+  const groupRef = useRef<THREE.Group>(null);
+
+  // Estados interpolados de la ola (compartidos por todos los sub-componentes).
+  const amp = useRef(0.8);
+  const freq = useRef(1);
+  const flat = useRef(0);
+
+  // Buffer del grid + posiciones x,z fijas. Una sola vez.
+  const shared = useMemo<WaveShared>(() => {
+    const n = isMobile ? GRID_MOBILE : GRID_DESKTOP;
+    const half = ((n - 1) * SPACING) / 2;
+    const positions = new Float32Array(n * n * 3);
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
+        const idx = (i * n + j) * 3;
+        positions[idx] = -half + j * SPACING; // x
+        positions[idx + 1] = 0; // y (se recalcula en RAF)
+        positions[idx + 2] = -half + i * SPACING; // z
+      }
+    }
+    return { positions, n, half, amp, freq, flat };
+  }, [isMobile]);
+
+  const particleCount = isMobile ? 30 : 70;
+
+  // Reaccion al mouse: el plano de la ola se inclina ligeramente.
+  useFrame(() => {
+    const g = groupRef.current;
+    if (!g || !mouse.current) return;
+    g.rotation.x += (mouse.current.y * 0.08 - g.rotation.x) * 0.05;
+    g.rotation.y += (mouse.current.x * 0.08 - g.rotation.y) * 0.05;
+  });
 
   return (
     <>
-      {/* Iluminacion dramatica. */}
-      <ambientLight intensity={0.06} />
-      <pointLight position={[5, 5, 5]} color={ORANGE} intensity={2} />
-      <pointLight position={[-5, -3, 3]} color="#ff8c42" intensity={1} />
-      <pointLight position={[0, -5, -2]} color="#1a0a00" intensity={0.5} />
-      <pointLight position={[-3, 4, -3]} color="#0a0a1a" intensity={0.3} />
+      {/* Iluminacion: el halo y los emissive llevan el peso del color. */}
+      <ambientLight intensity={0.15} />
+      <pointLight position={[0, 4, 2]} color={ORANGE} intensity={2.2} distance={20} decay={2} />
+      <pointLight position={[-5, 2, -3]} color={ORANGE_DARK} intensity={1} />
+      <pointLight position={[5, 1, 4]} color="#ff8c42" intensity={0.8} />
 
-      {/* Cielo estrellado sutil (fondo del universo digital). */}
+      {/* Cielo estrellado muy sutil — la ola es la protagonista. */}
       <Stars
-        radius={90}
-        depth={50}
-        count={starCount}
-        factor={4}
+        radius={120}
+        depth={60}
+        count={isMobile ? 600 : starCount}
+        factor={3}
         saturation={0}
         fade
-        speed={0.4}
+        speed={0.3}
       />
 
-      {/* Fondo: grid de red + streams de datos en helice. */}
-      <NetworkGrid />
-      <DataStreams isMobile={isMobile} />
-
-      {!isMobile && <CursorOrb mouse={mouse} />}
       <ScrollCamera progress={progress} />
+      {!isMobile && <CursorOrb mouse={mouse} />}
 
-      {/* Digital Core: siempre visible, reacciona a stack/contact. */}
-      <DigitalCore
-        isMobile={isMobile}
-        inStack={inStack}
-        inContact={inContact}
-      />
-
-      {/* About: pilares del stack en orbita. */}
-      <group visible={inAbout}>
-        <AboutPillars mouse={mouse} isMobile={isMobile} />
+      {/* Campo de ola: grid de puntos + malla de lineas + particulas + halo. */}
+      <group ref={groupRef}>
+        <WaveGrid shared={shared} progress={progress} />
+        {!isMobile && <WaveMesh shared={shared} />}
+        <WaveParticles shared={shared} count={particleCount} />
+        <CentralHalo />
       </group>
     </>
   );
@@ -722,12 +541,12 @@ export default function GlobalScene() {
     };
   }, []);
 
-  const starCount = isMobile ? 600 : 1400;
+  const starCount = isMobile ? 600 : 1500;
 
   return (
     <Canvas
       frameloop="always"
-      camera={{ position: [0, 0, 5], fov: 60 }}
+      camera={{ position: [0, 3, 8], fov: 60 }}
       dpr={[1, isMobile ? 1 : 1.5]}
       gl={{
         alpha: true,
