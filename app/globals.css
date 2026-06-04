@@ -77,3 +77,154 @@ body {
     cursor: none;
   }
 }
+
+/* ============================================================
+   ANIMACIONES Y TEXTURAS PROPIAS DEL PORTAFOLIO
+   ============================================================ */
+
+/* Grid de puntos animado del hero (radial-gradient repetido) */
+.dot-grid {
+  background-image: radial-gradient(
+    rgba(240, 100, 0, 0.18) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+  background-position: 0 0;
+  animation: dot-grid-pan 24s linear infinite;
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 70% at 50% 40%,
+    #000 0%,
+    transparent 75%
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 70% at 50% 40%,
+    #000 0%,
+    transparent 75%
+  );
+}
+
+@keyframes dot-grid-pan {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 28px 28px;
+  }
+}
+
+/* Cursor parpadeante naranja del terminal */
+.terminal-cursor {
+  display: inline-block;
+  width: 0.6ch;
+  height: 1.1em;
+  margin-left: 2px;
+  background: #f06400;
+  transform: translateY(0.15em);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Efecto glitch/scan sutil en hover sobre el nombre */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.glitch:hover::before {
+  opacity: 0.9;
+  color: #f06400;
+  animation: glitch-x 0.5s steps(2, end) infinite;
+  clip-path: inset(0 0 55% 0);
+}
+.glitch:hover::after {
+  opacity: 0.9;
+  color: #c0c0c0;
+  animation: glitch-x 0.45s steps(2, end) reverse infinite;
+  clip-path: inset(55% 0 0 0);
+}
+
+@keyframes glitch-x {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-2px, 1px);
+  }
+  50% {
+    transform: translate(2px, -1px);
+  }
+  75% {
+    transform: translate(-1px, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* Flecha del scroll indicator (rebote) */
+@keyframes bounce-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+.scroll-arrow {
+  animation: bounce-soft 1.8s ease-in-out infinite;
+}
+
+/* Badge "en desarrollo" pulsante */
+@keyframes pulse-orange {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(240, 100, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(240, 100, 0, 0);
+  }
+}
+.pulse-dot {
+  animation: pulse-orange 1.8s ease-in-out infinite;
+}
+
+/* Capa de grano/ruido sutil sobre todo el sitio */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot-grid,
+  .terminal-cursor,
+  .scroll-arrow,
+  .pulse-dot,
+  .glitch:hover::before,
+  .glitch:hover::after {
+    animation: none;
+  }
+}

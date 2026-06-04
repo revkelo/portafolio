@@ -1,71 +1,92 @@
 "use client";
 
 // PORTAFOLIO DE KEVIN GONZALEZ — revkelo
-// About: bio corta + highlights del stack.
+// About: foto placeholder (iniciales KG) + bio bilingue + 3 highlights.
 
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";
-
-const highlights = [
-  {
-    title: "Cloud & DevOps",
-    desc: "Infraestructura en AWS y Azure, Docker, CI/CD y arquitecturas serverless.",
-  },
-  {
-    title: "Full-Stack",
-    desc: "APIs con FastAPI y Java, frontends con React, Next.js y Flutter.",
-  },
-  {
-    title: "Data Governance",
-    desc: "Calidad, gobierno y migracion de datos preservando seguridad y estructura.",
-  },
-];
+import { useLang } from "@/lib/i18n/LangContext";
 
 export default function About() {
+  const { t } = useLang();
+
   return (
     <section id="about" className="bg-background py-28">
       <div className="mx-auto max-w-6xl px-6">
         <SectionTitle
-          title="Sobre mi"
-          subtitle="Ingeniero enfocado en construir software confiable de punta a punta."
+          number={t.about.number}
+          label={t.about.label}
+          title={t.about.title}
+          subtitle={t.about.subtitle}
         />
 
-        <div className="grid gap-12 md:grid-cols-2">
+        <div className="grid gap-12 md:grid-cols-[260px_1fr] md:gap-16">
+          {/* Foto placeholder con iniciales KG (hasta agregar public/photo.jpg) */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, ease: "easeOut" }}
+            className="mx-auto w-full max-w-[260px]"
           >
-            <p className="text-lg leading-relaxed text-text-secondary">
-              Soy <span className="text-text-primary">Kevin Gonzalez</span>,
-              Cloud & DevOps Engineer y desarrollador Full-Stack desde Bogota.
-              Diseno y despliego sistemas que combinan la nube, automatizacion y
-              buenas practicas de gobierno de datos.
-            </p>
-            <p className="mt-5 text-lg leading-relaxed text-text-secondary">
-              Trabajo con Python, FastAPI, Java, TypeScript, React y Flutter,
-              apoyado en Docker, AWS y Azure para entregar productos escalables
-              y mantenibles.
+            <div
+              className="relative flex aspect-[4/5] items-center justify-center overflow-hidden rounded-2xl border border-orange-primary/30 bg-surface"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle at 50% 30%, rgba(240,100,0,0.18), transparent 60%)",
+              }}
+            >
+              <span className="font-display text-7xl font-bold text-orange-primary">
+                KG
+              </span>
+            </div>
+            <p className="mt-3 text-center text-xs text-text-secondary/60">
+              {t.about.photoHint}
             </p>
           </motion.div>
 
-          <div className="grid gap-4">
-            {highlights.map((item, i) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.1 }}
-                className="rounded-2xl border border-white/5 bg-surface p-6 transition-colors hover:border-orange-primary/50"
-              >
-                <h3 className="font-display text-lg font-bold text-orange-primary">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm text-text-secondary">{item.desc}</p>
-              </motion.div>
-            ))}
+          <div>
+            <motion.p
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="text-lg leading-relaxed text-text-secondary"
+            >
+              {t.about.bio}
+            </motion.p>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {t.about.highlights.map((item, i) => (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{
+                    duration: 0.5,
+                    ease: "easeOut",
+                    delay: i * 0.1,
+                  }}
+                  className="rounded-2xl border border-white/5 bg-surface p-5 transition-colors hover:border-orange-primary/50"
+                  data-cursor-hover
+                >
+                  <span
+                    aria-hidden
+                    className="mb-3 block h-1 w-6 bg-orange-primary"
+                    style={{
+                      clipPath: "polygon(30% 0, 100% 0, 70% 100%, 0 100%)",
+                    }}
+                  />
+                  <h3 className="font-display text-base font-bold text-orange-primary">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-text-secondary">
+                    {item.desc}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

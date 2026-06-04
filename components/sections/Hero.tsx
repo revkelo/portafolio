@@ -1,29 +1,57 @@
 "use client";
 
 // PORTAFOLIO DE KEVIN GONZALEZ — revkelo
-// Hero: nombre grande, roles que se alternan, 2 CTA y separador diagonal naranja.
+// Hero: grid de puntos animado + glow naranja, nombre con efecto glitch,
+// contadores animados, barra de terminal con cursor parpadeante y scroll indicator.
 
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { useLang } from "@/lib/i18n/LangContext";
 
-const roles = ["Cloud & DevOps Engineer", "Full-Stack Developer", "Data Governance"];
+// Hook simple para contar de 0 a `target` cuando el elemento entra en viewport.
+function useCountUp(target: number, active: boolean, duration = 1400) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    if (!active) return;
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - start) / duration);
+      // easeOutCubic
+      const eased = 1 - Math.pow(1 - p, 3);
+      setValue(Math.round(eased * target));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, active, duration]);
+  return value;
+}
 
 export default function Hero() {
-  const [roleIndex, setRoleIndex] = useState(0);
+  const { t } = useLang();
+  const metricsRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(metricsRef, { once: true, margin: "-40px" });
 
-  useEffect(() => {
-    const id = setInterval(() => {
-      setRoleIndex((i) => (i + 1) % roles.length);
-    }, 2600);
-    return () => clearInterval(id);
-  }, []);
+  const years = useCountUp(5, inView);
+  const repos = useCountUp(15, inView);
+  const countries = useCountUp(3, inView);
+
+  const metrics = [
+    { value: `+${years}`, label: t.hero.metrics.years },
+    { value: `${repos}+`, label: t.hero.metrics.repos },
+    { value: `${countries}`, label: t.hero.metrics.countries },
+  ];
 
   return (
     <section
       id="hero"
       className="relative flex min-h-screen items-center overflow-hidden bg-background"
     >
-      {/* Gradiente sutil naranja en la esquina inferior derecha */}
+      {/* Grid de puntos animado */}
+      <div aria-hidden className="dot-grid pointer-events-none absolute inset-0" />
+
+      {/* Glow naranja */}
       <div
         aria-hidden
         className="pointer-events-none absolute -bottom-40 -right-40 h-[36rem] w-[36rem] rounded-full opacity-30 blur-3xl"
@@ -33,81 +61,124 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-28">
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="mb-4 font-display text-sm uppercase tracking-[0.3em] text-orange-primary"
         >
-          Bogota, Colombia
+          {t.hero.location}
         </motion.p>
 
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.04 }}
+          className="mb-2 text-lg text-text-secondary"
+        >
+          {t.hero.greeting}
+        </motion.p>
+
+        {/* Nombre con glitch en hover */}
         <motion.h1
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.08 }}
           className="font-display text-5xl font-bold leading-[1.05] text-text-primary sm:text-7xl md:text-8xl"
+          data-cursor-hover
         >
-          Kevin
+          <span className="glitch" data-text="Kevin">
+            Kevin
+          </span>
           <br />
-          Gonzalez
+          <span className="glitch text-orange-primary" data-text="Gonzalez">
+            Gonzalez
+          </span>
         </motion.h1>
 
+        {/* Barra de terminal con cursor parpadeante */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          className="mt-6 flex h-9 items-center"
+          className="mt-8 inline-flex max-w-full items-center rounded-lg border border-white/10 bg-surface/70 px-4 py-2.5 font-mono text-sm text-text-secondary backdrop-blur-sm sm:text-base"
         >
-          <span className="mr-3 text-text-secondary">{">"}</span>
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={roleIndex}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.35 }}
-              className="font-display text-lg text-text-primary sm:text-2xl"
-            >
-              {roles[roleIndex]}
-            </motion.span>
-          </AnimatePresence>
+          <span className="mr-2 text-orange-primary">{">"}</span>
+          <span className="truncate">{t.hero.terminal}</span>
+          <span className="terminal-cursor" aria-hidden />
         </motion.div>
 
+        {/* Contadores animados */}
+        <motion.div
+          ref={metricsRef}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.28 }}
+          className="mt-12 flex flex-wrap gap-x-12 gap-y-6"
+        >
+          {metrics.map((m) => (
+            <div key={m.label}>
+              <p className="font-display text-4xl font-bold text-orange-primary sm:text-5xl">
+                {m.value}
+              </p>
+              <p className="mt-1 max-w-[8rem] text-sm text-text-secondary">
+                {m.label}
+              </p>
+            </div>
+          ))}
+        </motion.div>
+
+        {/* CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.32 }}
-          className="mt-10 flex flex-wrap gap-4"
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.36 }}
+          className="mt-12 flex flex-wrap gap-4"
         >
           <a
             href="#proyectos"
             className="rounded-full bg-orange-primary px-7 py-3 font-medium text-background transition-colors hover:bg-orange-dark"
+            data-cursor-hover
           >
-            Ver proyectos
+            {t.hero.cta1}
           </a>
           <a
             href="/cv-kevin-gonzalez.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full border border-orange-primary px-7 py-3 font-medium text-orange-primary transition-colors hover:bg-orange-primary hover:text-background"
+            data-cursor-hover
           >
-            Descargar CV
+            {t.hero.cta2}
           </a>
         </motion.div>
       </div>
 
-      {/* Separador diagonal naranja al final */}
-      <div
-        aria-hidden
-        className="absolute bottom-0 left-0 h-24 w-full"
-        style={{
-          background: "linear-gradient(135deg, transparent 60%, #f06400 60%)",
-          opacity: 0.9,
-          clipPath: "polygon(0 100%, 100% 100%, 100% 60%)",
-        }}
-      />
+      {/* Scroll indicator */}
+      <a
+        href="#about"
+        aria-label={t.hero.scroll}
+        className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-text-secondary"
+        data-cursor-hover
+      >
+        <span className="text-xs uppercase tracking-[0.3em]">
+          {t.hero.scroll}
+        </span>
+        <svg
+          className="scroll-arrow"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 5v14M5 12l7 7 7-7" />
+        </svg>
+      </a>
     </section>
   );
 }
