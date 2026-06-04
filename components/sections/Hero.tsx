@@ -100,22 +100,49 @@ export default function Hero() {
           {t.hero.greeting}
         </motion.p>
 
-        {/* Nombre con glitch en hover */}
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.08 }}
+        {/* Nombre con reveal letra por letra (caen desde arriba) */}
+        <h1
           className="font-display text-5xl font-bold leading-[1.05] text-text-primary sm:text-7xl md:text-8xl"
           data-cursor-hover
         >
-          <span className="glitch" data-text="Kevin">
-            Kevin
+          <span className="inline-block" aria-label="Kevin">
+            {"Kevin".split("").map((letter, i) => (
+              <motion.span
+                key={`k-${i}`}
+                aria-hidden
+                className="inline-block"
+                initial={{ opacity: 0, y: 60 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: i * 0.04,
+                }}
+              >
+                {letter}
+              </motion.span>
+            ))}
           </span>
           <br />
-          <span className="glitch text-orange-primary" data-text="Gonzalez">
-            Gonzalez
+          <span className="inline-block text-orange-primary" aria-label="Gonzalez">
+            {"Gonzalez".split("").map((letter, i) => (
+              <motion.span
+                key={`g-${i}`}
+                aria-hidden
+                className="inline-block"
+                initial={{ opacity: 0, y: 60 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: 0.3 + i * 0.04,
+                }}
+              >
+                {letter}
+              </motion.span>
+            ))}
           </span>
-        </motion.h1>
+        </h1>
 
         {/* Barra de terminal con cursor parpadeante */}
         <motion.div

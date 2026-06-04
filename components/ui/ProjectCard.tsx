@@ -12,10 +12,12 @@ export default function ProjectCard({
   project,
   index,
   featured = false,
+  horizontal = false,
 }: {
   project: Project;
   index: number;
   featured?: boolean;
+  horizontal?: boolean;
 }) {
   const { lang, t } = useLang();
 
@@ -28,12 +30,16 @@ export default function ProjectCard({
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={horizontal ? { opacity: 0, x: 40 } : { opacity: 0, y: 28 }}
+      whileInView={horizontal ? { opacity: 1, x: 0 } : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.08 }}
       className={`group flex h-full flex-col rounded-2xl border border-white/5 bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] hover:border-orange-primary hover:shadow-[0_0_40px_-12px_rgba(240,100,0,0.6)] ${
         featured ? "md:p-8" : ""
+      } ${
+        horizontal
+          ? "min-w-[340px] snap-start md:w-[380px] md:flex-none"
+          : ""
       }`}
       data-cursor-hover
     >

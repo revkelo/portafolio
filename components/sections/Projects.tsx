@@ -25,11 +25,36 @@ export default function Projects() {
           subtitle={t.projects.subtitle}
         />
 
-        {/* Destacados */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {featured.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} featured />
-          ))}
+        {/* Destacados: scroll horizontal en desktop, columna en mobile */}
+        <div className="relative">
+          {/* Indicador de deslizar (solo desktop, donde el scroll es lateral) */}
+          <div className="mb-4 hidden items-center gap-2 text-sm text-text-secondary/70 md:flex">
+            <span aria-hidden className="text-orange-primary">←</span>
+            <span className="uppercase tracking-[0.2em]">{t.projects.slideHint}</span>
+            <span aria-hidden className="text-orange-primary">→</span>
+          </div>
+
+          <div className="no-scrollbar flex flex-col gap-6 md:snap-x md:snap-mandatory md:flex-row md:overflow-x-auto md:pb-4">
+            {featured.map((project, i) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                index={i}
+                featured
+                horizontal
+              />
+            ))}
+          </div>
+
+          {/* Degradado de borde derecho para sugerir mas contenido (desktop) */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-px top-0 bottom-4 hidden w-16 md:block"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, var(--background))",
+            }}
+          />
         </div>
 
         {/* Resto */}

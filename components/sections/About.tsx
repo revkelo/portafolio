@@ -47,15 +47,21 @@ export default function About() {
           </motion.div>
 
           <div>
-            <motion.p
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="text-lg leading-relaxed text-text-secondary"
-            >
-              {t.about.bio}
-            </motion.p>
+            {/* Bio con scrub: cada palabra se ilumina secuencialmente al scrollear */}
+            <p className="text-lg leading-relaxed">
+              {t.about.bio.split(" ").map((word, i) => (
+                <motion.span
+                  key={`${word}-${i}`}
+                  className="inline-block"
+                  initial={{ color: "rgba(192,192,192,0.25)" }}
+                  whileInView={{ color: "#FFFFFF" }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.3, delay: i * 0.025 }}
+                >
+                  {word}&nbsp;
+                </motion.span>
+              ))}
+            </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               {t.about.highlights.map((item, i) => (

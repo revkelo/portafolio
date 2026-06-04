@@ -8,6 +8,7 @@ import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import CustomCursor from "@/components/ui/CustomCursor";
+import ScrollProgress from "@/components/ui/ScrollProgress";
 import { LangProvider } from "@/lib/i18n/LangContext";
 
 const spaceGrotesk = Space_Grotesk({
@@ -66,6 +67,7 @@ export default function RootLayout({
       <body className="min-h-full bg-background text-text-primary">
         <LangProvider>
           <div aria-hidden className="grain-overlay" />
+          <ScrollProgress />
           <CustomCursor />
           <SmoothScroll>{children}</SmoothScroll>
         </LangProvider>

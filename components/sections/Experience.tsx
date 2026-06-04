@@ -24,9 +24,14 @@ export default function Experience() {
 
         {/* Timeline: linea naranja a la izquierda + cards */}
         <div className="relative pl-8 sm:pl-10">
-          {/* Linea vertical */}
-          <span
+          {/* Linea vertical que crece hacia abajo al entrar en viewport */}
+          <motion.span
             aria-hidden
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            style={{ transformOrigin: "top" }}
             className="absolute left-[7px] top-2 bottom-2 w-0.5 bg-gradient-to-b from-orange-primary via-orange-primary/40 to-transparent sm:left-[9px]"
           />
 
@@ -34,10 +39,10 @@ export default function Experience() {
             {t.experience.items.map((item, i) => (
               <motion.div
                 key={item.company}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.08 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.2 }}
                 className="relative"
               >
                 {/* Nodo del timeline */}

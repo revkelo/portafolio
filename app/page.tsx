@@ -11,16 +11,35 @@ import Stack from "@/components/sections/Stack";
 import Projects from "@/components/sections/Projects";
 import Contact from "@/components/sections/Contact";
 
+// Separador futurista: linea fina con gradiente naranja -> transparente -> naranja
+function SectionDivider() {
+  return (
+    <div
+      aria-hidden
+      className="h-px w-full"
+      style={{
+        background:
+          "linear-gradient(90deg, transparent, #f06400, transparent)",
+      }}
+    />
+  );
+}
+
 export default function Home() {
   return (
     <>
       <Navbar />
       <main>
         <Hero />
+        <SectionDivider />
         <About />
+        <SectionDivider />
         <Experience />
+        <SectionDivider />
         <Stack />
+        <SectionDivider />
         <Projects />
+        <SectionDivider />
         <Contact />
       </main>
     </>

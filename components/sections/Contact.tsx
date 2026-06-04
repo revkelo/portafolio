@@ -98,22 +98,45 @@ export default function Contact() {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          {/* CTA grande */}
+          {/* CTA grande: split por palabras con stagger */}
           <h3 className="font-display text-3xl font-bold text-text-primary sm:text-4xl md:text-6xl">
-            {t.contact.cta}
+            {t.contact.cta.split(" ").map((word, i) => (
+              <motion.span
+                key={`${word}-${i}`}
+                className="mr-[0.25em] inline-block"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{
+                  duration: 0.5,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: i * 0.08,
+                }}
+              >
+                {word}
+              </motion.span>
+            ))}
           </h3>
 
-          {/* Email copiable */}
-          <button
-            onClick={copyEmail}
-            className="group relative mt-8 inline-flex flex-wrap items-center gap-x-3 gap-y-1 break-all text-left font-display text-xl font-bold text-orange-primary transition-colors hover:text-orange-dark sm:text-2xl md:text-4xl"
-            data-cursor-hover
+          {/* Email copiable con glow pulsante al entrar en viewport */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+            className="glow-pulse mt-8 inline-block rounded-2xl"
           >
-            {EMAIL}
-            <span className="text-xs font-normal uppercase tracking-widest text-text-secondary/60 opacity-0 transition-opacity group-hover:opacity-100">
-              {t.contact.copy}
-            </span>
-          </button>
+            <button
+              onClick={copyEmail}
+              className="group relative inline-flex flex-wrap items-center gap-x-3 gap-y-1 break-all rounded-2xl px-5 py-3 text-left font-display text-xl font-bold text-orange-primary transition-colors hover:text-orange-dark sm:text-2xl md:text-4xl"
+              data-cursor-hover
+            >
+              {EMAIL}
+              <span className="text-xs font-normal uppercase tracking-widest text-text-secondary/60 opacity-0 transition-opacity group-hover:opacity-100">
+                {t.contact.copy}
+              </span>
+            </button>
+          </motion.div>
 
           {/* Botones con icono */}
           <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
