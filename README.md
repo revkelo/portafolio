@@ -1,6 +1,6 @@
 # Portfolio — Kevin Gonzalez
 
-**Live:** `revkelo.vercel.app` (pending deploy) · [GitHub](https://github.com/revkelo) · [LinkedIn](https://linkedin.com/in/kagonzalezdev)
+**Live:** [revkelo.dev](https://revkelo.dev) · [GitHub](https://github.com/revkelo) · [LinkedIn](https://linkedin.com/in/kagonzalezdev)
 
 Portafolio web profesional con escena 3D inmersiva, animaciones de scroll, carrusel de tecnologías, modo oscuro/claro y soporte bilingüe ES/EN.
 
@@ -101,6 +101,21 @@ Editar `lib/data/projects.ts`:
 1. Crear `components/sections/MiSeccion.tsx` con `"use client"`
 2. Importar en `app/page.tsx` y colocar en orden con `<SectionDivider />`
 3. Añadir las cadenas en `lib/i18n/translations.ts` (ES + EN)
+
+---
+
+## Nuevas características (2026)
+
+- **Full-page scroll** — navegación por secciones con `FullPageScroll` + `SectionSlot`
+- **Keyboard shortcuts** — `j/k` navega secciones, `g+letra` salta directo, `?` muestra panel
+- **Easter egg** — escribe `revkelo` en cualquier página
+- **Music player** — ambient drone Am7 generado con Web Audio API
+- **Back to top** — botón flotante naranja aparece al bajar
+- **Experience split-screen** — panel sticky izquierdo + bullets animados derecha
+- **Stack bento grid** — colores por categoría, iconos reales de skillicons.dev
+- **OpenGraph image** — generada dinámicamente con Next.js ImageResponse
+- **Security headers** — X-Frame-Options, XSS Protection, Content-Type, Permissions-Policy
+- **robots.txt + sitemap.ts** — SEO completo
 
 ---
 
