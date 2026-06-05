@@ -232,13 +232,13 @@ export default function Hero() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.36 }}
           className="mt-12 flex flex-row flex-wrap items-center justify-center gap-4"
         >
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent("navigate-section", { detail: { index: 4 } }))}
+          <a
+            href="#proyectos"
             className="cta-shine rounded-full bg-orange-primary px-7 py-3 text-center font-medium text-background transition-colors hover:bg-orange-dark"
             data-cursor-hover
           >
             {t.hero.cta1}
-          </button>
+          </a>
           <a
             href="/cv-kevin-gonzalez.pdf"
             target="_blank"
@@ -252,8 +252,8 @@ export default function Hero() {
       </motion.div>
 
       {/* Scroll indicator: flecha + linea vertical naranja que pulsa */}
-      <button
-        onClick={() => window.dispatchEvent(new CustomEvent("navigate-section", { detail: { index: 1 } }))}
+      <a
+        href="#about"
         aria-label={t.hero.scroll}
         className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3 text-orange-primary"
         data-cursor-hover
@@ -275,7 +275,7 @@ export default function Hero() {
           aria-hidden
           className="pulse-dot h-10 w-px rounded-full bg-gradient-to-b from-orange-primary to-transparent"
         />
-      </button>
+      </a>
     </section>
   );
 }

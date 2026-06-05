@@ -117,22 +117,22 @@ export default function Navbar() {
             : "none",
         }}
       >
-        <motion.button
-          onClick={() => window.dispatchEvent(new CustomEvent("navigate-section", { detail: { index: 0 } }))}
+        <motion.a
+          href="#hero"
           whileHover={{ scale: 1.05 }}
           className="group flex items-center font-display text-2xl font-bold tracking-tight text-orange-primary"
           data-cursor-hover
         >
           KG
           <span className="ml-0.5 mt-2 h-1.5 w-1.5 rounded-full bg-orange-primary pulse-dot" />
-        </motion.button>
+        </motion.a>
 
         {/* Links desktop */}
         <ul className="hidden items-center gap-8 md:flex">
-          {sections.map((s, i) => (
+          {sections.map((s) => (
             <li key={s.id}>
-              <motion.button
-                onClick={() => window.dispatchEvent(new CustomEvent("navigate-section", { detail: { index: i } }))}
+              <motion.a
+                href={`#${s.id}`}
                 whileHover={{ y: -2 }}
                 className="relative inline-block text-sm text-text-secondary transition-colors hover:text-orange-primary"
                 data-cursor-hover
@@ -144,7 +144,7 @@ export default function Navbar() {
                     className="absolute -bottom-1.5 left-0 h-0.5 w-full bg-orange-primary"
                   />
                 )}
-              </motion.button>
+              </motion.a>
             </li>
           ))}
         </ul>
@@ -152,13 +152,13 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <ThemeToggle className="hidden sm:flex" />
           <LangToggle className="hidden sm:flex" />
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent("navigate-section", { detail: { index: 5 } }))}
+          <a
+            href="#contacto"
             className="hidden rounded-full border border-orange-primary/40 px-4 py-1.5 text-sm text-orange-primary transition-colors hover:bg-orange-primary hover:text-background md:inline-block"
             data-cursor-hover
           >
             {t.nav.cta}
-          </button>
+          </a>
 
           {/* Hamburger movil */}
           <button
@@ -205,21 +205,19 @@ export default function Navbar() {
                 </button>
               </div>
 
-              {sections.map((s, i) => (
-                <button
+              {sections.map((s) => (
+                <a
                   key={s.id}
-                  onClick={() => {
-                    window.dispatchEvent(new CustomEvent("navigate-section", { detail: { index: i } }));
-                    setOpen(false);
-                  }}
-                  className={`border-b border-border py-3 text-left font-display text-lg transition-colors w-full ${
+                  href={`#${s.id}`}
+                  onClick={() => setOpen(false)}
+                  className={`border-b border-border py-3 font-display text-lg transition-colors ${
                     active === s.id
                       ? "text-orange-primary"
                       : "text-text-primary hover:text-orange-primary"
                   }`}
                 >
                   {t.nav[s.key]}
-                </button>
+                </a>
               ))}
 
               <div className="mt-6 flex items-center gap-3">

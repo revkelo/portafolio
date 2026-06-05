@@ -46,14 +46,20 @@ export default function FullPageScroll({ children }: { children: React.ReactNode
     []
   );
 
-  // Listener para navegación programática desde otros componentes (ej. CTAs del hero).
+  // Escucha cambios de hash para que href="#section" funcione normalmente.
   useEffect(() => {
-    const handler = (e: Event) => {
-      const { index } = (e as CustomEvent<{ index: number }>).detail;
-      go(index);
+    const hashMap: Record<string, number> = {
+      "#hero": 0, "#about": 1, "#experience": 2,
+      "#stack": 3, "#proyectos": 4, "#contacto": 5,
     };
-    window.addEventListener("navigate-section", handler);
-    return () => window.removeEventListener("navigate-section", handler);
+    const onHash = () => {
+      const idx = hashMap[window.location.hash];
+      if (idx !== undefined) go(idx);
+    };
+    window.addEventListener("hashchange", onHash);
+    // Navegar al hash inicial si existe
+    onHash();
+    return () => window.removeEventListener("hashchange", onHash);
   }, [go]);
 
   useEffect(() => {
