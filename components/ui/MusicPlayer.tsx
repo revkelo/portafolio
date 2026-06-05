@@ -13,8 +13,7 @@ export default function MusicPlayer() {
   const gainRef = useRef<GainNode | null>(null);
 
   useEffect(() => {
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-    setIsDesktop(mq.matches);
+    setIsDesktop(window.innerWidth >= 768 && !('ontouchstart' in window));
   }, []);
 
   function start() {

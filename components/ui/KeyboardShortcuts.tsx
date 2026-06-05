@@ -22,10 +22,9 @@ export default function KeyboardShortcuts() {
   const [isDesktop, setIsDesktop] = useState(false);
   const gTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Solo activar en desktop con mouse — igual que CustomCursor
+  // Solo activar en desktop — ocultar en touch devices
   useEffect(() => {
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-    setIsDesktop(mq.matches);
+    setIsDesktop(window.innerWidth >= 768 && !('ontouchstart' in window));
   }, []);
 
   useEffect(() => {
