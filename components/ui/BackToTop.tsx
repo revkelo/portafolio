@@ -23,6 +23,7 @@ export default function BackToTop() {
           whileTap={{ scale: 0.95 }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           aria-label="Volver arriba"
+          className="hidden sm:flex"
           style={{
             position: "fixed", bottom: "1.5rem", right: "1.5rem", zIndex: 200,
             width: 40, height: 40, borderRadius: "50%",

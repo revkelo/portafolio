@@ -83,6 +83,7 @@ export default function KeyboardShortcuts() {
         whileHover={{ scale: 1.1, borderColor: "rgba(245,111,13,0.5)" }}
         onClick={() => setOpen(v => !v)}
         aria-label="Atajos de teclado"
+        className="hidden sm:flex"
         style={{
           position: "fixed", bottom: "1.5rem", left: "1.5rem", zIndex: 200,
           width: 36, height: 36, borderRadius: "0.5rem",

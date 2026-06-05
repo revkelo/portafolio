@@ -90,6 +90,7 @@ export default function MusicPlayer() {
       onClick={toggle}
       title={playing ? "Detener música ambient" : "Reproducir música ambient"}
       aria-label={playing ? "Detener música" : "Reproducir música"}
+      className="hidden sm:flex"
       style={{
         position: "fixed", bottom: "4rem", left: "1.5rem", zIndex: 200,
         width: 36, height: 36, borderRadius: "50%",

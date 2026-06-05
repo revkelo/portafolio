@@ -70,7 +70,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       id="hero"
-      className="relative flex min-h-screen items-center overflow-hidden"
+      className="relative flex min-h-screen items-center overflow-hidden pb-8"
     >
       {/* Overlay modo claro: suaviza el canvas 3D oscuro sobre fondo beige */}
       <div
@@ -215,31 +215,27 @@ export default function Hero() {
           <span className="terminal-cursor" aria-hidden />
         </motion.div>
 
-        {/* Contadores animados — fila con separadores verticales naranjas */}
+        {/* Contadores — 2x2 en mobile, fila en desktop */}
         <motion.div
           ref={metricsRef}
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.28 }}
-          className="mt-12 flex flex-wrap items-stretch gap-y-6"
+          className="mt-10 grid grid-cols-2 gap-x-6 gap-y-5 sm:flex sm:flex-wrap sm:items-stretch sm:gap-y-6"
         >
           {metrics.map((m, i) => (
             <div key={m.label} className="flex items-stretch">
               {i > 0 && (
                 <span
                   aria-hidden
-                  className="mr-6 w-px self-stretch bg-orange-primary/40 sm:mr-8 sm:ml-2"
+                  className="mr-6 hidden w-px self-stretch bg-orange-primary/40 sm:mr-8 sm:ml-2 sm:block"
                 />
               )}
               <div>
-                <p
-                  className={`font-display text-4xl font-bold text-orange-primary sm:text-5xl ${
-                    m.done ? "metric-flash" : ""
-                  }`}
-                >
+                <p className={`font-display text-3xl font-bold text-orange-primary sm:text-5xl ${m.done ? "metric-flash" : ""}`}>
                   {m.value}
                 </p>
-                <p className="mt-1 max-w-[8rem] text-sm text-text-secondary">
+                <p className="mt-1 text-xs text-text-secondary sm:text-sm sm:max-w-[8rem]">
                   {m.label}
                 </p>
               </div>
