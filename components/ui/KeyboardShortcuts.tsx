@@ -17,9 +17,16 @@ function scrollTo(id: string) {
 }
 
 export default function KeyboardShortcuts() {
-  const [open, setOpen]   = useState(false);
-  const [gMode, setGMode] = useState(false);
+  const [open, setOpen]      = useState(false);
+  const [gMode, setGMode]    = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const gTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Solo activar en desktop con mouse — igual que CustomCursor
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    setIsDesktop(mq.matches);
+  }, []);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -75,6 +82,8 @@ export default function KeyboardShortcuts() {
     { keys: ["?"], desc: "Mostrar / ocultar atajos" },
     { keys: ["Esc"], desc: "Cerrar paneles" },
   ];
+
+  if (!isDesktop) return null;
 
   return (
     <>

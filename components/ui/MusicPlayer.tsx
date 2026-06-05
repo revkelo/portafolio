@@ -7,9 +7,15 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 export default function MusicPlayer() {
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying]    = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const ctxRef  = useRef<AudioContext | null>(null);
   const gainRef = useRef<GainNode | null>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    setIsDesktop(mq.matches);
+  }, []);
 
   function start() {
     const ctx    = new AudioContext();
@@ -82,6 +88,8 @@ export default function MusicPlayer() {
   };
 
   useEffect(() => () => { if (playing) stop(); }, []);
+
+  if (!isDesktop) return null;
 
   return (
     <motion.button

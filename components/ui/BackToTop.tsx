@@ -4,13 +4,18 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function BackToTop() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible]    = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    setIsDesktop(mq.matches);
     const onScroll = () => setVisible(window.scrollY > 400);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  if (!isDesktop) return null;
 
   return (
     <AnimatePresence>
