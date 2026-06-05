@@ -86,15 +86,6 @@ export default function Hero() {
       <motion.div aria-hidden style={{ y: yDecor }} className="corner-dots pointer-events-none absolute left-7 top-7 z-0 opacity-50" />
       <motion.div aria-hidden style={{ y: yDecor }} className="corner-dots pointer-events-none absolute bottom-14 right-7 z-0 opacity-50" />
 
-      {/* Línea vertical separadora — estilo banner */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute bottom-0 left-[54%] top-0 z-0 hidden w-px lg:block"
-        style={{
-          background:
-            "linear-gradient(to bottom, transparent 5%, rgba(245,111,13,0.30) 25%, rgba(245,111,13,0.30) 75%, transparent 95%)",
-        }}
-      />
 
 
       <motion.div style={{ y: yText, opacity }} className="relative z-10 mx-auto w-full max-w-4xl px-4 py-24 text-center sm:px-6 sm:py-28 lg:px-8">
