@@ -1,12 +1,14 @@
 import type { MetadataRoute } from "next";
 
+const BASE_URL = "https://revkelo.dev";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    {
-      url: "https://revkelo.dev",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
-    },
+    { url: BASE_URL,                       lastModified: new Date(), changeFrequency: "monthly", priority: 1   },
+    { url: `${BASE_URL}/#about`,           lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/#experience`,      lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/#stack`,           lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/#proyectos`,       lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE_URL}/#contacto`,        lastModified: new Date(), changeFrequency: "yearly",  priority: 0.6 },
   ];
 }

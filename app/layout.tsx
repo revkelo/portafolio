@@ -37,28 +37,87 @@ export const viewport: Viewport = {
   ],
 };
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://revkelo.dev";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://revkelo.dev"),
-  title: "Kevin Gonzalez — Cloud & DevOps Engineer · Full-Stack Developer",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Kevin Gonzalez — Cloud & DevOps Engineer · Full-Stack Developer",
+    template: "%s | Kevin Gonzalez",
+  },
   description:
-    "Portafolio de Kevin Gonzalez. Cloud & DevOps Engineer, Full-Stack Developer y Data Governance. Python, FastAPI, React, Flutter, AWS y Azure desde Bogota, Colombia.",
+    "Portafolio de Kevin Gonzalez (revkelo). Cloud & DevOps Engineer, Full-Stack Developer y Data Governance. Python, FastAPI, React, Next.js, Flutter, AWS y Azure desde Bogotá, Colombia. Disponible para proyectos freelance y oportunidades full-time.",
   keywords: [
     "Kevin Gonzalez",
-    "Cloud Engineer",
-    "DevOps",
-    "Full-Stack",
+    "revkelo",
+    "Cloud Engineer Colombia",
+    "DevOps Engineer Bogotá",
+    "Full-Stack Developer",
     "Data Governance",
-    "Bogota",
-    "AWS",
+    "Python Developer",
+    "FastAPI",
+    "AWS Engineer",
     "Azure",
+    "React Developer",
+    "Flutter Developer",
+    "Next.js",
+    "Kubernetes",
+    "Terraform",
+    "Bogotá Colombia",
+    "Ingeniero de Sistemas",
+    "Universidad El Bosque",
+    "portafolio desarrollador",
   ],
   authors: [{ name: "Kevin Gonzalez", url: "https://github.com/revkelo" }],
+  creator: "Kevin Gonzalez",
+  publisher: "Kevin Gonzalez",
+  category: "Technology",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      "es-CO": SITE_URL,
+      "en-US": `${SITE_URL}?lang=en`,
+    },
+  },
   openGraph: {
+    title: "Kevin Gonzalez — Cloud & DevOps Engineer · Full-Stack Developer",
+    description:
+      "Cloud & DevOps Engineer · Full-Stack Developer · Data Governance. Python, AWS, FastAPI, Flutter desde Bogotá, Colombia.",
+    url: SITE_URL,
+    siteName: "Kevin Gonzalez Portfolio",
+    locale: "es_CO",
+    alternateLocale: ["en_US"],
+    type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Kevin Gonzalez — Cloud & DevOps Engineer · Full-Stack Developer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
     title: "Kevin Gonzalez — Cloud & DevOps Engineer",
     description:
-      "Cloud & DevOps Engineer · Full-Stack Developer · Data Governance.",
-    locale: "es_CO",
-    type: "website",
+      "Cloud & DevOps · Full-Stack · Data Governance. Python, AWS, FastAPI, Flutter. Bogotá, Colombia.",
+    images: ["/opengraph-image"],
+    creator: "@revkelo",
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? "",
   },
 };
 
@@ -87,28 +146,84 @@ export default function RootLayout({
           }}
         />
 
-        {/* JSON-LD: structured data para SEO */}
+        {/* JSON-LD: structured data para SEO y AI crawlers */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              "name": "Kevin Gonzalez",
-              "jobTitle": "Cloud & DevOps Engineer",
-              "description": "Cloud & DevOps Engineer, Full-Stack Developer y Data Governance desde Bogotá, Colombia.",
-              "url": "https://revkelo.dev",
-              "sameAs": [
-                "https://github.com/revkelo",
-                "https://linkedin.com/in/kagonzalezdev"
-              ],
-              "knowsAbout": ["Cloud Computing", "DevOps", "AWS", "Azure", "Python", "React", "Flutter", "Data Governance"],
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Bogotá",
-                "addressCountry": "CO"
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Person",
+                "@id": "https://revkelo.dev/#person",
+                "name": "Kevin Gonzalez",
+                "alternateName": "revkelo",
+                "jobTitle": "Cloud & DevOps Engineer",
+                "description": "Ingeniero de Sistemas de la Universidad El Bosque. Cloud & DevOps Engineer, Full-Stack Developer y especialista en Data Governance desde Bogotá, Colombia. Disponible para proyectos freelance y oportunidades full-time.",
+                "url": "https://revkelo.dev",
+                "image": "https://revkelo.dev/photo.jpg",
+                "email": "kgagudelo@gmail.com",
+                "sameAs": [
+                  "https://github.com/revkelo",
+                  "https://linkedin.com/in/kagonzalezdev"
+                ],
+                "knowsAbout": [
+                  "Cloud Computing", "DevOps", "AWS", "Azure", "Kubernetes",
+                  "Terraform", "Python", "FastAPI", "React", "Next.js",
+                  "Flutter", "Dart", "TypeScript", "Java", "Spring Boot",
+                  "Data Governance", "DAMA-DMBOK", "Databricks", "Docker",
+                  "PostgreSQL", "Supabase", "GraphQL"
+                ],
+                "hasOccupation": {
+                  "@type": "Occupation",
+                  "name": "Cloud & DevOps Engineer",
+                  "occupationLocation": { "@type": "City", "name": "Bogotá" },
+                  "skills": "AWS, Azure, Kubernetes, Terraform, Python, FastAPI, React, Flutter"
+                },
+                "alumniOf": {
+                  "@type": "CollegeOrUniversity",
+                  "name": "Universidad El Bosque",
+                  "address": { "@type": "PostalAddress", "addressLocality": "Bogotá", "addressCountry": "CO" }
+                },
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Bogotá",
+                  "addressRegion": "Cundinamarca",
+                  "addressCountry": "CO"
+                },
+                "nationality": { "@type": "Country", "name": "Colombia" }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "@id": "https://revkelo.dev/#website",
+                "url": "https://revkelo.dev",
+                "name": "Kevin Gonzalez Portfolio",
+                "description": "Portafolio profesional de Kevin Gonzalez — Cloud & DevOps Engineer, Full-Stack Developer.",
+                "author": { "@id": "https://revkelo.dev/#person" },
+                "inLanguage": ["es-CO", "en-US"],
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://revkelo.dev/?q={search_term_string}",
+                  "query-input": "required name=search_term_string"
+                }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "WebPage",
+                "@id": "https://revkelo.dev/#webpage",
+                "url": "https://revkelo.dev",
+                "name": "Kevin Gonzalez — Cloud & DevOps Engineer · Full-Stack Developer",
+                "isPartOf": { "@id": "https://revkelo.dev/#website" },
+                "about": { "@id": "https://revkelo.dev/#person" },
+                "description": "Portafolio de Kevin Gonzalez. Cloud & DevOps Engineer, Full-Stack Developer y Data Governance desde Bogotá, Colombia.",
+                "breadcrumb": {
+                  "@type": "BreadcrumbList",
+                  "itemListElement": [
+                    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://revkelo.dev" }
+                  ]
+                }
               }
-            })
+            ])
           }}
         />
       </head>
