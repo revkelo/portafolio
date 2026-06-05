@@ -734,23 +734,98 @@ function CursorOrb({ shared }: { shared: WaveShared }) {
 }
 
 // ----------------------------------------------------------------------------
+// SHOOTING STARS — estrellas fugaces que cruzan el cielo periodicamente.
+// Usa lineSegments con un buffer compartido: MAX pares de vertices (cabeza/cola).
+// ----------------------------------------------------------------------------
+const SHOOTING_MAX = 3;
+
+function ShootingStars() {
+  const lineRef = useRef<THREE.LineSegments>(null);
+  const positions = useMemo(() => new Float32Array(SHOOTING_MAX * 2 * 3), []);
+
+  const stars = useMemo(() => Array.from({ length: SHOOTING_MAX }, (_, i) => ({
+    active: false, progress: 0, speed: 0,
+    ox: 0, oy: 0, oz: 0,
+    dx: 0, dy: 0, dz: 0,
+    tailLen: 0,
+    nextSpawn: i * 2 + Math.random() * 3,
+  })), []);
+
+  useFrame(({ }, delta) => {
+    for (let i = 0; i < SHOOTING_MAX; i++) {
+      const s = stars[i];
+      const base = i * 6;
+
+      if (!s.active) {
+        s.nextSpawn -= delta;
+        if (s.nextSpawn <= 0) {
+          s.ox = (Math.random() - 0.5) * 50;
+          s.oy = 9 + Math.random() * 12;
+          s.oz = -5 + (Math.random() - 0.5) * 20;
+          const angle = 0.18 + Math.random() * 0.18;
+          const side  = Math.random() > 0.5 ? 1 : -1;
+          s.dx = Math.cos(angle) * side;
+          s.dy = -Math.sin(angle);
+          s.dz = (Math.random() - 0.5) * 0.2;
+          s.tailLen  = 3.5 + Math.random() * 5;
+          s.speed    = 16 + Math.random() * 12;
+          s.progress = 0;
+          s.active   = true;
+        }
+        for (let k = 0; k < 6; k++) positions[base + k] = 9999;
+      } else {
+        s.progress += delta * s.speed;
+        if (s.progress > s.tailLen + 10) {
+          s.active = false;
+          s.nextSpawn = 4 + Math.random() * 7;
+        }
+        const tail = Math.min(s.progress, s.tailLen);
+        // cabeza
+        positions[base]     = s.ox + s.dx * s.progress;
+        positions[base + 1] = s.oy + s.dy * s.progress;
+        positions[base + 2] = s.oz + s.dz * s.progress;
+        // cola
+        positions[base + 3] = s.ox + s.dx * (s.progress - tail);
+        positions[base + 4] = s.oy + s.dy * (s.progress - tail);
+        positions[base + 5] = s.oz + s.dz * (s.progress - tail);
+      }
+    }
+    if (lineRef.current) {
+      (lineRef.current.geometry.attributes.position as THREE.BufferAttribute).needsUpdate = true;
+      // Opacidad global: siempre visible cuando hay estrellas activas
+      const mat = lineRef.current.material as THREE.LineBasicMaterial;
+      mat.opacity = 0.9;
+    }
+  });
+
+  return (
+    <lineSegments ref={lineRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+      </bufferGeometry>
+      <lineBasicMaterial color="#ffe8c0" transparent opacity={0.9} toneMapped={false} />
+    </lineSegments>
+  );
+}
+
+// ----------------------------------------------------------------------------
 // Camara que se mueve segun el progreso de scroll (lerp entre keyframes).
 // Ajustada para la ola: vista desde arriba que deriva lateralmente.
 // ----------------------------------------------------------------------------
 const CAMERA_KEYS: { at: number; pos: [number, number, number] }[] = [
-  { at: 0.00, pos: [ 0.0, 2.5, 7.5] },  // hero: centrado
-  { at: 0.12, pos: [ 2.5, 2.0, 6.0] },  // sweep derecha suave
-  { at: 0.22, pos: [ 0.5, 1.8, 5.5] },  // zoom in diagonal
-  { at: 0.35, pos: [-2.5, 2.2, 7.0] },  // sweep izquierda suave
-  { at: 0.48, pos: [-0.5, 1.6, 5.5] },  // zoom in izquierda
-  { at: 0.60, pos: [ 2.0, 2.6, 7.5] },  // sube y barre derecha
-  { at: 0.72, pos: [ 0.2, 1.8, 5.8] },  // cierra hacia centro
-  { at: 0.85, pos: [-1.5, 2.0, 6.5] },  // último sweep izquierda
-  { at: 1.00, pos: [ 0.0, 2.0, 6.5] },  // contact: centro
+  { at: 0.00, pos: [ 0.0, 4.2, 8.5] },  // hero: centrado alto
+  { at: 0.12, pos: [ 2.5, 3.8, 7.0] },  // sweep derecha suave
+  { at: 0.22, pos: [ 0.5, 3.4, 6.5] },  // zoom in diagonal
+  { at: 0.35, pos: [-2.5, 3.8, 8.0] },  // sweep izquierda suave
+  { at: 0.48, pos: [-0.5, 3.2, 6.5] },  // zoom in izquierda
+  { at: 0.60, pos: [ 2.0, 4.2, 8.5] },  // sube y barre derecha
+  { at: 0.72, pos: [ 0.2, 3.4, 6.8] },  // cierra hacia centro
+  { at: 0.85, pos: [-1.5, 3.6, 7.5] },  // último sweep izquierda
+  { at: 1.00, pos: [ 0.0, 3.6, 7.5] },  // contact: centro
 ];
 
 function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
-  const target = useMemo(() => new THREE.Vector3(0, 2.5, 7.5), []);
+  const target = useMemo(() => new THREE.Vector3(0, 4.2, 8.5), []);
 
   useFrame(({ camera }) => {
     const p = THREE.MathUtils.clamp(progress.current ?? 0, 0, 1);
@@ -893,14 +968,15 @@ function SceneContents({
 
       {/* Cielo estrellado muy sutil — la ola es la protagonista. */}
       <Stars
-        radius={120}
-        depth={60}
-        count={isMobile ? 600 : starCount}
-        factor={3}
+        radius={160}
+        depth={80}
+        count={isMobile ? 1200 : starCount}
+        factor={4}
         saturation={0}
         fade
-        speed={0.3}
+        speed={0.2}
       />
+      <ShootingStars />
 
       <ScrollCamera progress={progress} />
 
@@ -954,12 +1030,12 @@ export default function GlobalScene() {
     return () => window.removeEventListener("sectionchange", onSection);
   }, []);
 
-  const starCount = isMobile ? 600 : 1500;
+  const starCount = isMobile ? 1200 : 3500;
 
   return (
     <Canvas
       frameloop="always"
-      camera={{ position: [0, 2.5, 7.5], fov: 72 }}
+      camera={{ position: [0, 4.2, 8.5], fov: 72 }}
       dpr={[1, isMobile ? 2 : 1.5]}
       gl={{
         alpha: true,
