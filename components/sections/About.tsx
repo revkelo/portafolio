@@ -74,23 +74,24 @@ export default function About() {
             </p>
 
             {/* Info pills */}
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
               {[
                 { icon: "🟢", label: "Disponible" },
                 { icon: "☁️", label: "Cloud & DevOps" },
-                { icon: "🗄️", label: "Data Governance" },
+                { icon: "📊", label: "Data Governance" },
                 { icon: "📍", label: "Bogotá, Colombia" },
                 { icon: "🎓", label: "Ing. Sistemas — UEB" },
               ].map((pill) => (
                 <span
                   key={pill.label}
                   style={{
-                    display: "inline-flex", alignItems: "center", gap: "0.35rem",
+                    display: "flex", alignItems: "center", gap: "0.35rem",
                     padding: "0.3rem 0.75rem", borderRadius: "999px",
                     background: "rgba(245,111,13,0.07)",
                     border: "1px solid rgba(245,111,13,0.18)",
                     fontSize: "0.75rem", color: "var(--text-secondary)",
                     fontFamily: "var(--font-display)",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   <span>{pill.icon}</span>
