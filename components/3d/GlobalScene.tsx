@@ -184,8 +184,12 @@ function WaveSolid({ shared }: { shared: WaveShared }) {
 
   return (
     <mesh ref={meshRef} geometry={geometry}>
-      <meshBasicMaterial
+      <meshStandardMaterial
         vertexColors
+        emissive="#ff6600"
+        emissiveIntensity={1.5}
+        roughness={0.08}
+        metalness={0.15}
         transparent
         opacity={0.82}
         side={THREE.FrontSide}
