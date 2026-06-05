@@ -6,9 +6,9 @@ import { useLang } from "@/lib/i18n/LangContext";
 
 // Identidad visual por empresa
 const PALETTE = [
-  { color: "#f56f0d", dim: "rgba(245,111,13,0.12)", glow: "rgba(245,111,13,0.22)", border: "rgba(245,111,13,0.2)"  }, // Corona – naranja
-  { color: "#3b82f6", dim: "rgba(59,130,246,0.10)",  glow: "rgba(59,130,246,0.20)",  border: "rgba(59,130,246,0.18)"  }, // PI – azul
-  { color: "#a78bfa", dim: "rgba(167,139,250,0.10)", glow: "rgba(167,139,250,0.20)", border: "rgba(167,139,250,0.18)" }, // UEB – violeta
+  { color: "#3b82f6", dim: "rgba(59,130,246,0.10)",  glow: "rgba(59,130,246,0.22)",  border: "rgba(59,130,246,0.20)"  }, // Corona – azul
+  { color: "#f56f0d", dim: "rgba(245,111,13,0.12)",  glow: "rgba(245,111,13,0.22)",  border: "rgba(245,111,13,0.2)"   }, // PI – naranja
+  { color: "#22c55e", dim: "rgba(34,197,94,0.10)",   glow: "rgba(34,197,94,0.20)",   border: "rgba(34,197,94,0.18)"   }, // UEB – verde
 ];
 
 // Stat destacada si hay un número en los bullets
