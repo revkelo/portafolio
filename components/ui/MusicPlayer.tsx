@@ -4,12 +4,19 @@
 // Acorde Am7 en ondas seno suaves con breathing lento — sonido orgánico, no áspero.
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function MusicPlayer() {
   const [playing, setPlaying] = useState(false);
+  const [visible, setVisible] = useState(false);
   const ctxRef  = useRef<AudioContext | null>(null);
   const gainRef = useRef<GainNode | null>(null);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 400);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   function start() {
     const ctx    = new AudioContext();
@@ -84,39 +91,46 @@ export default function MusicPlayer() {
   useEffect(() => () => { if (playing) stop(); }, []);
 
   return (
-    <motion.button
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      onClick={toggle}
-      title={playing ? "Detener música ambient" : "Reproducir música ambient"}
-      aria-label={playing ? "Detener música" : "Reproducir música"}
-      className="hidden sm:flex"
-      style={{
-        position: "fixed", bottom: "4rem", left: "1.5rem", zIndex: 200,
-        width: 36, height: 36, borderRadius: "50%",
-        background: playing ? "rgba(245,111,13,0.15)" : "rgba(13,13,13,0.88)",
-        border: `1px solid ${playing ? "rgba(245,111,13,0.55)" : "rgba(245,111,13,0.2)"}`,
-        color: playing ? "#f56f0d" : "rgba(245,111,13,0.5)",
-        cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-        backdropFilter: "blur(10px)", transition: "all 0.3s ease",
-      }}
-    >
-      {playing ? (
-        <div style={{ display: "flex", gap: 2, alignItems: "center" }}>
-          {[0, 1, 2].map(i => (
-            <motion.span
-              key={i}
-              animate={{ height: ["5px", "11px", "5px"] }}
-              transition={{ repeat: Infinity, duration: 0.9, delay: i * 0.18, ease: "easeInOut" }}
-              style={{ display: "block", width: 2.5, background: "#f56f0d", borderRadius: 2 }}
-            />
-          ))}
-        </div>
-      ) : (
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
-        </svg>
+    <AnimatePresence>
+      {visible && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8, y: 8 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.8, y: 8 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={toggle}
+          title={playing ? "Detener música ambient" : "Reproducir música ambient"}
+          aria-label={playing ? "Detener música" : "Reproducir música"}
+          className="hidden sm:flex"
+          style={{
+            position: "fixed", bottom: "4rem", left: "1.5rem", zIndex: 200,
+            width: 36, height: 36, borderRadius: "50%",
+            background: playing ? "rgba(245,111,13,0.15)" : "rgba(13,13,13,0.88)",
+            border: `1px solid ${playing ? "rgba(245,111,13,0.55)" : "rgba(245,111,13,0.2)"}`,
+            color: playing ? "#f56f0d" : "rgba(245,111,13,0.5)",
+            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+            backdropFilter: "blur(10px)", transition: "all 0.3s ease",
+          }}
+        >
+          {playing ? (
+            <div style={{ display: "flex", gap: 2, alignItems: "center" }}>
+              {[0, 1, 2].map(i => (
+                <motion.span
+                  key={i}
+                  animate={{ height: ["5px", "11px", "5px"] }}
+                  transition={{ repeat: Infinity, duration: 0.9, delay: i * 0.18, ease: "easeInOut" }}
+                  style={{ display: "block", width: 2.5, background: "#f56f0d", borderRadius: 2 }}
+                />
+              ))}
+            </div>
+          ) : (
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
+            </svg>
+          )}
+        </motion.button>
       )}
-    </motion.button>
+    </AnimatePresence>
   );
 }

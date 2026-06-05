@@ -17,9 +17,16 @@ function scrollTo(id: string) {
 }
 
 export default function KeyboardShortcuts() {
-  const [open, setOpen]   = useState(false);
-  const [gMode, setGMode] = useState(false);
+  const [open, setOpen]     = useState(false);
+  const [gMode, setGMode]   = useState(false);
+  const [visible, setVisible] = useState(false);
   const gTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 400);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -78,24 +85,31 @@ export default function KeyboardShortcuts() {
 
   return (
     <>
-      <motion.button
-        whileHover={{ scale: 1.1, borderColor: "rgba(245,111,13,0.5)" }}
-        onClick={() => setOpen(v => !v)}
-        aria-label="Atajos de teclado"
-        style={{
-          position: "fixed", bottom: "1.5rem", left: "1.5rem", zIndex: 200,
-          width: 36, height: 36, borderRadius: "0.5rem",
-          background: "rgba(13,13,13,0.90)",
-          border: "1px solid rgba(245,111,13,0.22)",
-          color: "rgba(245,111,13,0.65)", cursor: "pointer",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          backdropFilter: "blur(10px)", fontFamily: "monospace",
-          fontSize: "0.85rem", fontWeight: 700,
-          transition: "border-color 0.2s",
-        }}
-      >
-        ?
-      </motion.button>
+      <AnimatePresence>
+        {visible && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 8 }}
+            whileHover={{ scale: 1.1, borderColor: "rgba(245,111,13,0.5)" }}
+            onClick={() => setOpen(v => !v)}
+            aria-label="Atajos de teclado"
+            style={{
+              position: "fixed", bottom: "1.5rem", left: "1.5rem", zIndex: 200,
+              width: 36, height: 36, borderRadius: "0.5rem",
+              background: "rgba(13,13,13,0.90)",
+              border: "1px solid rgba(245,111,13,0.22)",
+              color: "rgba(245,111,13,0.65)", cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              backdropFilter: "blur(10px)", fontFamily: "monospace",
+              fontSize: "0.85rem", fontWeight: 700,
+              transition: "border-color 0.2s",
+            }}
+          >
+            ?
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {open && (
