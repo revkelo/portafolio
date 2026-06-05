@@ -23,7 +23,6 @@ export default function KeyboardShortcuts() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (window.innerWidth < 1024) return; // solo desktop
       const tag = (e.target as HTMLElement).tagName;
       if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return;
 
@@ -79,8 +78,6 @@ export default function KeyboardShortcuts() {
 
   return (
     <>
-      {/* Botón ? — oculto en mobile con wrapper CSS */}
-      <div className="hidden lg:block">
       <motion.button
         whileHover={{ scale: 1.1, borderColor: "rgba(245,111,13,0.5)" }}
         onClick={() => setOpen(v => !v)}
@@ -99,7 +96,6 @@ export default function KeyboardShortcuts() {
       >
         ?
       </motion.button>
-      </div>
 
       <AnimatePresence>
         {open && (
@@ -108,15 +104,16 @@ export default function KeyboardShortcuts() {
               onClick={() => setOpen(false)}
               style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", zIndex: 400, backdropFilter: "blur(4px)" }}
             />
+            {/* Wrapper centrador — evita conflicto transform con Framer Motion */}
+            <div style={{ position: "fixed", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 401, pointerEvents: "none" }}>
             <motion.div
               initial={{ opacity: 0, scale: 0.94, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 12 }}
               transition={{ type: "spring", stiffness: 400, damping: 28 }}
               style={{
-                position: "fixed", top: "50%", left: "50%",
-                transform: "translate(-50%, -50%)",
-                zIndex: 401, width: "min(380px, 92vw)",
+                width: "min(380px, 92vw)",
+                pointerEvents: "auto",
                 background: "rgba(10,10,10,0.98)",
                 border: "1px solid rgba(245,111,13,0.18)",
                 borderRadius: "1.25rem", padding: "1.75rem",
@@ -162,6 +159,7 @@ export default function KeyboardShortcuts() {
                 tip: escribe <kbd style={{ fontFamily: "monospace", padding: "1px 4px", background: "rgba(245,111,13,0.1)", borderRadius: 3, color: "#f56f0d", border: "1px solid rgba(245,111,13,0.2)" }}>revkelo</kbd> para un easter egg 🥚
               </p>
             </motion.div>
+            </div>
           </>
         )}
       </AnimatePresence>
