@@ -198,7 +198,7 @@ export default function Contact() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.15 }}
-              className="flex flex-wrap gap-3"
+              className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:gap-3"
             >
               {channels.map((c, i) => (
                 <motion.a
@@ -212,7 +212,7 @@ export default function Contact() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.2 + i * 0.07 }}
-                  className="flex items-center gap-2 rounded-full border border-orange-primary/40 px-5 py-2.5 text-sm text-orange-primary transition-all hover:bg-orange-primary hover:text-background hover:shadow-[0_0_18px_rgba(245,111,13,0.35)]"
+                  className="flex items-center justify-center gap-2 rounded-full border border-orange-primary/40 px-3 py-2.5 text-sm text-orange-primary transition-all hover:bg-orange-primary hover:text-background hover:shadow-[0_0_18px_rgba(245,111,13,0.35)] sm:px-5"
                   data-cursor-hover
                 >
                   <Icon name={c.icon} />
