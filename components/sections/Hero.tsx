@@ -35,6 +35,13 @@ export default function Hero() {
   const { t } = useLang();
   const metricsRef = useRef<HTMLDivElement>(null);
   const inView = useInView(metricsRef, { once: true, margin: "-40px" });
+  const [showCvToast, setShowCvToast] = useState(false);
+
+  const handleCvClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowCvToast(true);
+    setTimeout(() => setShowCvToast(false), 2800);
+  };
 
   // Roles rotativos: aparece uno, se va, aparece el siguiente (AnimatePresence).
   const roles = t.hero.roles;
@@ -233,16 +240,17 @@ export default function Hero() {
           className="mt-12 flex flex-row flex-wrap items-center justify-center gap-4"
         >
           <a
-            href="#proyectos"
+            href="https://github.com/revkelo"
+            target="_blank"
+            rel="noopener noreferrer"
             className="cta-shine rounded-full bg-orange-primary px-7 py-3 text-center font-medium text-background transition-colors hover:bg-orange-dark"
             data-cursor-hover
           >
             {t.hero.cta1}
           </a>
           <a
-            href="/cv-kevin-gonzalez.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#"
+            onClick={handleCvClick}
             className="cta-shine rounded-full bg-surface border border-orange-primary/60 px-7 py-3 text-center font-medium text-text-primary transition-colors hover:bg-orange-primary hover:text-background hover:border-orange-primary"
             data-cursor-hover
           >
@@ -276,6 +284,35 @@ export default function Hero() {
           className="pulse-dot h-10 w-px rounded-full bg-gradient-to-b from-orange-primary to-transparent"
         />
       </a>
+
+      {/* Toast "Próximamente" para CV */}
+      <AnimatePresence>
+        {showCvToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 24, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.95 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed bottom-8 left-1/2 z-[9999] -translate-x-1/2"
+            style={{ pointerEvents: "none" }}
+          >
+            <div
+              className="flex items-center gap-3 rounded-2xl px-5 py-3.5 text-sm font-medium shadow-2xl"
+              style={{
+                background: "var(--surface)",
+                border: "1px solid rgba(245,111,13,0.35)",
+                color: "var(--text-primary)",
+                backdropFilter: "blur(12px)",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(245,111,13,0.15)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <span style={{ fontSize: "1.1rem" }}>🚧</span>
+              <span>CV <span style={{ color: "#f56f0d", fontWeight: 700 }}>próximamente</span> — en construcción</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
