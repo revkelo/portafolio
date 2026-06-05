@@ -24,7 +24,7 @@ export default function KeyboardShortcuts() {
 
   // Solo activar en desktop — ocultar en touch devices
   useEffect(() => {
-    setIsDesktop(window.innerWidth >= 768 && !('ontouchstart' in window));
+    setIsDesktop(window.innerWidth >= 768);
   }, []);
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export default function KeyboardShortcuts() {
         style={{
           position: "fixed", bottom: "1.5rem", left: "1.5rem", zIndex: 200,
           width: 36, height: 36, borderRadius: "0.5rem",
-          background: "var(--nav-bg-scrolled)",
+          background: "rgba(13,13,13,0.90)",
           border: "1px solid rgba(245,111,13,0.22)",
           color: "rgba(245,111,13,0.65)", cursor: "pointer",
           display: "flex", alignItems: "center", justifyContent: "center",

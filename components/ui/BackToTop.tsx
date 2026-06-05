@@ -8,7 +8,7 @@ export default function BackToTop() {
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
-    setIsDesktop(window.innerWidth >= 768 && !('ontouchstart' in window));
+    setIsDesktop(window.innerWidth >= 768);
     const onScroll = () => setVisible(window.scrollY > 400);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);

@@ -13,7 +13,7 @@ export default function MusicPlayer() {
   const gainRef = useRef<GainNode | null>(null);
 
   useEffect(() => {
-    setIsDesktop(window.innerWidth >= 768 && !('ontouchstart' in window));
+    setIsDesktop(window.innerWidth >= 768);
   }, []);
 
   function start() {
