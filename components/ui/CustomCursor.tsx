@@ -9,7 +9,6 @@ import { useEffect, useRef, useState } from "react";
 
 export default function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
-  const [hovering, setHovering] = useState(false);
 
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
@@ -27,8 +26,6 @@ export default function CustomCursor() {
 
     const move = (e: MouseEvent) => {
       target.current = { x: e.clientX, y: e.clientY };
-      const el = e.target as HTMLElement;
-      setHovering(Boolean(el.closest("a, button, [data-cursor-hover]")));
     };
     window.addEventListener("mousemove", move);
 
@@ -81,8 +78,7 @@ export default function CustomCursor() {
           height: 12,
           borderRadius: '50%',
           background: ORANGE,
-          opacity: hovering ? 0 : 1,
-          transition: 'opacity 0.15s',
+          opacity: 1,
           pointerEvents: 'none',
           boxShadow: '0 0 0 1.5px rgba(0,0,0,0.85)',
         }}
