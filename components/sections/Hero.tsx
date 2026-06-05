@@ -221,7 +221,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.28 }}
-          className="mt-10 grid grid-cols-2 gap-x-6 gap-y-5 sm:flex sm:flex-wrap sm:items-stretch sm:justify-center sm:gap-y-6"
+          className="mt-10 grid grid-cols-2 justify-items-center gap-x-6 gap-y-5 sm:flex sm:flex-wrap sm:items-stretch sm:justify-center sm:gap-y-6"
         >
           {metrics.map((m, i) => (
             <div key={m.label} className="flex items-stretch">

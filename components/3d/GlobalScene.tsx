@@ -963,7 +963,7 @@ export default function GlobalScene() {
     <Canvas
       frameloop="always"
       camera={{ position: [0, 2.2, 6.5], fov: 72 }}
-      dpr={[1, isMobile ? 1 : 1.5]}
+      dpr={[1, isMobile ? 2 : 1.5]}
       gl={{
         alpha: true,
         antialias: !isMobile,
