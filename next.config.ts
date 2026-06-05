@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Permite acceder al dev server desde ngrok y otras herramientas de tunneling
+  turbopack: {
+    root: ".",
+  },
   allowedDevOrigins: [
     "*.ngrok.io",
     "*.ngrok-free.app",
