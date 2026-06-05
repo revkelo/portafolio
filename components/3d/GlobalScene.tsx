@@ -110,7 +110,7 @@ function sectionWeights(p: number) {
 // WAVE SOLID — malla solida naranja semi-transparente que sigue exactamente
 // los mismos vertices que WaveGrid. Da sensacion de ola de fuego/lava.
 // ----------------------------------------------------------------------------
-function WaveSolid({ shared }: { shared: WaveShared }) {
+function WaveSolid({ shared, isDark }: { shared: WaveShared; isDark: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const n = shared.n;
 
@@ -187,7 +187,7 @@ function WaveSolid({ shared }: { shared: WaveShared }) {
       <meshStandardMaterial
         vertexColors
         emissive="#ff6600"
-        emissiveIntensity={1.5}
+        emissiveIntensity={isDark ? 1.5 : 0}
         roughness={0.08}
         metalness={0.15}
         transparent
@@ -829,11 +829,13 @@ function SceneContents({
   progress,
   isMobile,
   starCount,
+  isDark,
 }: {
   mouse: React.RefObject<{ x: number; y: number }>;
   progress: React.RefObject<number>;
   isMobile: boolean;
   starCount: number;
+  isDark: boolean;
 }) {
   const groupRef = useRef<THREE.Group>(null);
 
@@ -908,7 +910,7 @@ function SceneContents({
       <group ref={groupRef} position={[0, -1.8, 0]}>
         <MouseProjector shared={shared} mouse={mouse} />
         {/* Superficie sólida naranja — debajo de los puntos para dar profundidad */}
-        <WaveSolid shared={shared} />
+        <WaveSolid shared={shared} isDark={isDark} />
         <WaveGrid shared={shared} progress={progress} />
         {!isMobile && <WaveMesh shared={shared} />}
         <WaveParticles shared={shared} count={particleCount} />
@@ -920,7 +922,7 @@ function SceneContents({
 // ----------------------------------------------------------------------------
 // Escena raiz: un solo Canvas para todo el sitio.
 // ----------------------------------------------------------------------------
-export default function GlobalScene() {
+export default function GlobalScene({ isDark = true }: { isDark?: boolean }) {
   const mouse = useRef({ x: 0, y: 0 });
   const progress = useRef(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -982,6 +984,7 @@ export default function GlobalScene() {
         progress={progress}
         isMobile={isMobile}
         starCount={starCount}
+        isDark={isDark}
       />
     </Canvas>
   );
