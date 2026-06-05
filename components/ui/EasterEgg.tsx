@@ -59,15 +59,15 @@ export default function EasterEgg() {
             onClick={() => setShow(false)}
             style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 500, backdropFilter: "blur(6px)", cursor: "pointer" }}
           />
+          <div style={{ position: "fixed", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 501, pointerEvents: "none" }}>
           <motion.div
             initial={{ opacity: 0, y: 48, scale: 0.93 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 48, scale: 0.93 }}
             transition={{ type: "spring", stiffness: 380, damping: 26 }}
             style={{
-              position: "fixed", top: "50%", left: "50%",
-              transform: "translate(-50%, -50%)",
-              zIndex: 501, width: "min(520px, 92vw)",
+              pointerEvents: "auto",
+              width: "min(520px, 92vw)",
               background: "#0a0a0a",
               border: "1px solid rgba(245,111,13,0.25)",
               borderRadius: "1.1rem", overflow: "hidden",
@@ -122,6 +122,7 @@ export default function EasterEgg() {
               </span>
             </div>
           </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>
