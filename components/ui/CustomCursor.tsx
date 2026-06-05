@@ -104,25 +104,14 @@ export default function CustomCursor() {
           pointerEvents: 'none',
         }}
       >
-        {hovering ? (
-          <svg
-            width="36" height="36" viewBox="0 0 36 36" fill="none"
-            stroke={ORANGE} strokeWidth="1.5"
-            style={{ filter: "drop-shadow(0 0 1.5px rgba(0,0,0,0.9)) drop-shadow(0 0 3px rgba(0,0,0,0.6))" }}
-          >
-            <circle cx="18" cy="18" r="11" opacity="0.5" />
-            <path d="M18 4v8M18 24v8M4 18h8M24 18h8" />
-          </svg>
-        ) : (
-          <span style={{
-            display: 'block',
-            width: 36,
-            height: 36,
-            borderRadius: '50%',
-            border: `1.5px solid ${ORANGE}`,
-            boxShadow: '0 0 0 1px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(0,0,0,0.4)',
-          }} />
-        )}
+        <span style={{
+          display: 'block',
+          width: 36,
+          height: 36,
+          borderRadius: '50%',
+          border: `1.5px solid ${ORANGE}`,
+          boxShadow: '0 0 0 1px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(0,0,0,0.4)',
+        }} />
       </div>
     </div>
   );
