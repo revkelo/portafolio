@@ -6,18 +6,32 @@ import { motion, AnimatePresence } from "framer-motion";
 const SECRET = "revkelo";
 
 const LINES = [
-  { delay: 0,    text: "$ npm run kevin",                    color: "#f56f0d" },
-  { delay: 350,  text: "> Initializing Kevin Gonzalez...",   color: "#c0b8b0" },
-  { delay: 750,  text: "> ✔  Cloud & DevOps        ONLINE", color: "#4ade80" },
-  { delay: 1050, text: "> ✔  Backend (Python/Java)  ONLINE", color: "#4ade80" },
-  { delay: 1300, text: "> ✔  Full-Stack Dev         ONLINE", color: "#4ade80" },
-  { delay: 1550, text: "> ✔  Data Governance        ONLINE", color: "#4ade80" },
-  { delay: 1900, text: "> ☁️  AWS / Azure: Connected",        color: "#38bdf8" },
-  { delay: 2150, text: "> 🐳  Docker / K8s: Running",         color: "#38bdf8" },
-  { delay: 2400, text: "> 🤖  LangChain / RAG: Active",       color: "#38bdf8" },
-  { delay: 2750, text: "> 📍  Location: Bogotá, Colombia",    color: "#a78bfa" },
-  { delay: 3100, text: "> 📬  kgagudelo@gmail.com",           color: "#a78bfa" },
-  { delay: 3500, text: "SUCCESS  kevin@revkelo ready to ship 🚀", color: "#4ade80" },
+  { delay: 0,    text: "⚠  INTRUSION DETECTED — scanning...",          color: "#ef4444" },
+  { delay: 600,  text: "  [████████████████████] 100%",                  color: "#f56f0d" },
+  { delay: 1100, text: "  visitor.identify() → curious human 👀",        color: "#c0b8b0" },
+  { delay: 1500, text: "  threat_level: NONE  (just a fan, probably)",   color: "#4ade80" },
+  { delay: 2000, text: "",                                                color: "#c0b8b0" },
+  { delay: 2050, text: "$ sudo load-kevin --full",                        color: "#f56f0d" },
+  { delay: 2400, text: "  ██╗  ██╗ ██████╗",                             color: "#f56f0d" },
+  { delay: 2550, text: "  ██║ ██╔╝██╔════╝",                             color: "#f56f0d" },
+  { delay: 2700, text: "  █████╔╝ ██║  ███╗",                            color: "#f56f0d" },
+  { delay: 2850, text: "  ██╔═██╗ ██║   ██║",                            color: "#f56f0d" },
+  { delay: 3000, text: "  ██║  ██╗╚██████╔╝  v2.0.26",                  color: "#f56f0d" },
+  { delay: 3150, text: "  ╚═╝  ╚═╝ ╚═════╝   Cloud & DevOps Engineer",  color: "#fb923c" },
+  { delay: 3500, text: "",                                                color: "#c0b8b0" },
+  { delay: 3550, text: "$ kevin --diagnostics",                           color: "#f56f0d" },
+  { delay: 3850, text: "  ✔  AWS uptime ................ 98%",            color: "#4ade80" },
+  { delay: 4050, text: "  ✔  Coffee intake ............. optimal ☕",     color: "#4ade80" },
+  { delay: 4250, text: "  ✔  Docker containers ......... stable 🐳",      color: "#4ade80" },
+  { delay: 4450, text: "  ✔  Bugs fixed ................ countless ✨",   color: "#4ade80" },
+  { delay: 4650, text: "  ✗  Bugs created .............. [CLASSIFIED] 🤫",color: "#facc15" },
+  { delay: 4900, text: "  ✔  Vibe check ................ immaculate 😎",  color: "#4ade80" },
+  { delay: 5200, text: "",                                                color: "#c0b8b0" },
+  { delay: 5250, text: "  📍  Bogotá, Colombia  🇨🇴",                      color: "#a78bfa" },
+  { delay: 5500, text: "  📬  kgagudelo@gmail.com",                       color: "#a78bfa" },
+  { delay: 5800, text: "",                                                color: "#c0b8b0" },
+  { delay: 5850, text: "  🥚  easter egg desbloqueado — eres de los nuestros.", color: "#f56f0d" },
+  { delay: 6200, text: "  🚀  kevin@revkelo ~ ready to ship", color: "#4ade80" },
 ];
 
 export default function EasterEgg() {
@@ -85,13 +99,13 @@ export default function EasterEgg() {
               <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#ff5f57", flexShrink: 0 }} />
               <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#ffbd2e", flexShrink: 0 }} />
               <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#28c840", flexShrink: 0 }} />
-              <span style={{ marginLeft: "auto", fontSize: "0.68rem", color: "rgba(255,255,255,0.25)", letterSpacing: "0.05em" }}>
-                kevin@revkelo — bash
+              <span style={{ marginLeft: "auto", fontSize: "0.68rem", color: "rgba(245,111,13,0.5)", letterSpacing: "0.05em" }}>
+                kevin@revkelo — zsh — 80×24
               </span>
             </div>
 
             {/* Output */}
-            <div style={{ padding: "1.1rem 1.25rem", minHeight: 240 }}>
+            <div style={{ padding: "1.1rem 1.25rem", minHeight: 320, maxHeight: "60vh", overflowY: "auto" }}>
               {lines.map((line, i) => (
                 <motion.div
                   key={i}
