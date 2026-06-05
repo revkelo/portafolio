@@ -194,24 +194,16 @@ export default function Hero() {
           </AnimatePresence>
         </div>
 
-        {/* Linea horizontal naranja que se traza de 0 a 100% al cargar */}
-        <motion.div
-          aria-hidden
-          initial={{ width: 0 }}
-          animate={{ width: "100%" }}
-          transition={{ delay: 0.8, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 h-0.5 max-w-md mx-auto bg-gradient-to-r from-orange-primary/0 via-orange-primary to-orange-primary/0"
-        />
 
         {/* Barra de terminal con cursor parpadeante */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          className="mt-8 inline-flex max-w-full items-center rounded-lg border border-orange-primary/30 bg-surface/80 px-5 py-3 font-mono text-base text-text-secondary backdrop-blur-sm sm:text-lg mx-auto"
+          className="mt-8 inline-flex w-fit items-center rounded-lg border border-orange-primary/30 bg-surface/80 px-3 py-2.5 font-mono text-xs text-text-secondary backdrop-blur-sm sm:px-5 sm:py-3 sm:text-base mx-auto"
         >
-          <span className="mr-2.5 font-bold text-orange-primary">{">"}</span>
-          <span className="truncate tracking-tight">{t.hero.terminal}</span>
+          <span className="mr-2 font-bold text-orange-primary sm:mr-2.5">{">"}</span>
+          <span className="tracking-tight">{t.hero.terminal}</span>
           <span className="terminal-cursor" aria-hidden />
         </motion.div>
 
@@ -221,25 +213,24 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.28 }}
-          className="mt-10 grid grid-cols-2 justify-items-center gap-x-6 gap-y-5 sm:flex sm:flex-wrap sm:items-stretch sm:justify-center sm:gap-y-6"
+          className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4"
         >
           {metrics.map((m, i) => (
-            <div key={m.label} className="flex items-stretch">
-              {i > 0 && (
-                <span
-                  aria-hidden
-                  className="mr-6 hidden w-px self-stretch bg-orange-primary/40 sm:mr-8 sm:ml-2 sm:block"
-                />
-              )}
-              <div>
-                <p className={`font-display text-3xl font-bold text-orange-primary sm:text-5xl ${m.done ? "metric-flash" : ""}`}>
-                  {m.value}
-                </p>
-                <p className="mt-1 text-xs text-text-secondary sm:text-sm sm:max-w-[8rem]">
-                  {m.label}
-                </p>
-              </div>
-            </div>
+            <motion.div
+              key={m.label}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: 0.28 + i * 0.07 }}
+              className="flex flex-col items-center justify-center rounded-xl border border-orange-primary/25 bg-surface px-3 py-3"
+              style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(245,111,13,0.10)" }}
+            >
+              <p className={`font-display text-2xl font-bold text-orange-primary sm:text-3xl ${m.done ? "metric-flash" : ""}`}>
+                {m.value}
+              </p>
+              <p className="mt-0.5 text-[11px] text-text-secondary/80 sm:text-xs">
+                {m.label}
+              </p>
+            </motion.div>
           ))}
         </motion.div>
 

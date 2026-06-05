@@ -74,7 +74,7 @@ export default function About() {
             </p>
 
             {/* Info pills */}
-            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
+            <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
               {[
                 { icon: "🟢", label: "Disponible" },
                 { icon: "☁️", label: "Cloud & DevOps" },

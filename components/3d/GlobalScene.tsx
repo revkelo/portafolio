@@ -74,7 +74,7 @@ const COLOR_VALLEY = new THREE.Color("#1a0800"); // valle: casi negro cálido
 // Parametros del grid.
 const GRID_DESKTOP = 62; // 62x62 — cubre viewport desktop de punta a punta
 const GRID_MOBILE  = 28; // 28x28 — mobile
-const SPACING      = 0.82; // separacion amplia para cubrir todo el ancho
+const SPACING      = 1.25; // separacion para cubrir viewport de punta a punta con margen
 
 // Rangos de scroll por seccion (progress 0..1). Orden real de la pagina:
 // hero, about, experience, stack, projects, contact.
@@ -91,17 +91,16 @@ const SECTIONS = {
 // Devuelve cuanto "pertenece" el progreso a cada seccion clave para mezclar
 // amplitud / frecuencia / convergencia de forma continua.
 function sectionWeights(p: number) {
-  // Triangular-ish: 1 en el centro del rango, cae a 0 fuera con margen.
   const inRange = (a: number, b: number) => {
-    const m = 0.05; // margen de transicion
+    const m = 0.05;
     if (p <= a - m || p >= b + m) return 0;
     if (p < a) return (p - (a - m)) / m;
     if (p > b) return (b + m - p) / m;
     return 1;
   };
   return {
-    about: inRange(SECTIONS.about[0], SECTIONS.about[1]),
-    stack: inRange(SECTIONS.stack[0], SECTIONS.stack[1]),
+    about:   inRange(SECTIONS.about[0],   SECTIONS.about[1]),
+    stack:   inRange(SECTIONS.stack[0],   SECTIONS.stack[1]),
     contact: inRange(SECTIONS.contact[0], SECTIONS.contact[1]),
   };
 }
@@ -217,7 +216,7 @@ interface WaveShared {
   // Estados interpolados (viven en RAF). Los lee WaveParticles tambien.
   amp: React.RefObject<number>;
   freq: React.RefObject<number>;
-  flat: React.RefObject<number>; // 0..1 convergencia/aplanado (contact)
+  flat: React.RefObject<number>;
   // Proyeccion del cursor al plano Y=0 del mundo (origen del ripple).
   mouseWorld: THREE.Vector3;
   // Intensidad del ripple (sube cuando el cursor esta sobre la ola).
@@ -241,7 +240,7 @@ function waveBase(
     amp *
     (Math.sin(xf * 1.2 + t) *
       Math.cos(zf * 0.8 + t * 0.7) *
-      Math.sin(dist * 0.5 - t * 1.2) *
+      Math.sin(dist * 0.5 - t * 1.6) *
       0.5 +
       Math.sin(xf * 0.7 - t * 1.3) * Math.cos(zf * 1.1 + t * 0.4) * 0.3 +
       Math.sin(xf * 2.1 + t * 0.8) * Math.cos(zf * 0.5 - t * 1.8) * 0.2);
@@ -301,18 +300,16 @@ function WaveGrid({
     const t = clock.elapsedTime;
     const w = sectionWeights(progress.current ?? 0);
 
-    // Targets por seccion.
-    const targetAmp = 1.4 + w.about * 0.5; // about: amplitud sube
-    const targetFreq = 1 + w.stack * 0.9; // stack: frecuencia aumenta
-    const targetFlat = 0; // convergencia en contact desactivada — ola sigue normal
+    const targetAmp  = 1.9 + w.about * 0.6;
+    const targetFreq = 1 + w.stack * 0.9;
+    const targetFlat = 0;
 
-    // Interpolar estados de forma suave.
     const k = Math.min(1, delta * 2.2);
-    shared.amp.current += (targetAmp - shared.amp.current) * k;
+    shared.amp.current  += (targetAmp  - shared.amp.current)  * k;
     shared.freq.current += (targetFreq - shared.freq.current) * k;
     shared.flat.current += (targetFlat - shared.flat.current) * k;
 
-    const amp = shared.amp.current;
+    const amp  = shared.amp.current;
     const freq = shared.freq.current;
     const flat = shared.flat.current;
     const strength = shared.rippleStrength.current ?? 0;
@@ -741,19 +738,19 @@ function CursorOrb({ shared }: { shared: WaveShared }) {
 // Ajustada para la ola: vista desde arriba que deriva lateralmente.
 // ----------------------------------------------------------------------------
 const CAMERA_KEYS: { at: number; pos: [number, number, number] }[] = [
-  { at: 0.00, pos: [-1.5, 2.2, 7.0] },  // hero: arranca izquierda
-  { at: 0.12, pos: [ 4.5, 1.8, 5.6] },  // sweep derecha fuerte
-  { at: 0.22, pos: [ 1.5, 1.4, 5.0] },  // zoom in diagonal
-  { at: 0.35, pos: [-4.5, 2.0, 6.8] },  // sweep izquierda fuerte
-  { at: 0.48, pos: [-1.0, 1.2, 5.2] },  // zoom in izquierda
-  { at: 0.60, pos: [ 3.5, 2.4, 7.2] },  // sube y barre derecha
-  { at: 0.72, pos: [ 0.5, 1.5, 5.4] },  // cierra hacia centro
-  { at: 0.85, pos: [-3.0, 1.8, 6.2] },  // último sweep izquierda
-  { at: 1.00, pos: [ 0.0, 1.8, 6.0] },  // contact: centro
+  { at: 0.00, pos: [ 0.0, 2.5, 7.5] },  // hero: centrado
+  { at: 0.12, pos: [ 2.5, 2.0, 6.0] },  // sweep derecha suave
+  { at: 0.22, pos: [ 0.5, 1.8, 5.5] },  // zoom in diagonal
+  { at: 0.35, pos: [-2.5, 2.2, 7.0] },  // sweep izquierda suave
+  { at: 0.48, pos: [-0.5, 1.6, 5.5] },  // zoom in izquierda
+  { at: 0.60, pos: [ 2.0, 2.6, 7.5] },  // sube y barre derecha
+  { at: 0.72, pos: [ 0.2, 1.8, 5.8] },  // cierra hacia centro
+  { at: 0.85, pos: [-1.5, 2.0, 6.5] },  // último sweep izquierda
+  { at: 1.00, pos: [ 0.0, 2.0, 6.5] },  // contact: centro
 ];
 
 function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
-  const target = useMemo(() => new THREE.Vector3(-1.5, 2.2, 7.0), []);
+  const target = useMemo(() => new THREE.Vector3(0, 2.5, 7.5), []);
 
   useFrame(({ camera }) => {
     const p = THREE.MathUtils.clamp(progress.current ?? 0, 0, 1);
@@ -776,7 +773,7 @@ function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
     );
 
     camera.position.lerp(target, 0.038);
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(0, 1.6, 0);
   });
 
   return null;
@@ -795,9 +792,9 @@ function MouseProjector({
   shared: WaveShared;
   mouse: React.RefObject<{ x: number; y: number }>;
 }) {
-  // Plano Y=0 y raycaster instanciados una sola vez (NO en useFrame).
+  // Plano a la altura de la wave (Y=-4.4 world) para que el ripple coincida con la superficie.
   const plane = useMemo(
-    () => new THREE.Plane(new THREE.Vector3(0, 1, 0), 0),
+    () => new THREE.Plane(new THREE.Vector3(0, 1, 0), 4.4),
     [],
   );
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
@@ -910,7 +907,7 @@ function SceneContents({
       {/* Campo de ola: grid de puntos + malla de lineas + particulas + halo.
           El proyector y el cursor viven dentro del group para compartir la
           inclinacion aplicada por el mouse. */}
-      <group ref={groupRef} position={[0, -1.8, 0]}>
+      <group ref={groupRef} position={[0, -4.4, 0]}>
         <MouseProjector shared={shared} mouse={mouse} />
         {/* Superficie sólida naranja — debajo de los puntos para dar profundidad */}
         <WaveSolid shared={shared} />
@@ -962,7 +959,7 @@ export default function GlobalScene() {
   return (
     <Canvas
       frameloop="always"
-      camera={{ position: [0, 2.2, 6.5], fov: 72 }}
+      camera={{ position: [0, 2.5, 7.5], fov: 72 }}
       dpr={[1, isMobile ? 2 : 1.5]}
       gl={{
         alpha: true,
