@@ -25,7 +25,7 @@ export default function GlobalSceneWrapper() {
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
-      <GlobalScene isDark={theme === "dark"} />
+      <GlobalScene />
       {/* Overlay claro en light mode para suavizar la wave oscura */}
       {theme === "light" && (
         <div

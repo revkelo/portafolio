@@ -73,7 +73,7 @@ const COLOR_VALLEY = new THREE.Color("#1a0800"); // valle: casi negro cálido
 
 // Parametros del grid.
 const GRID_DESKTOP = 62; // 62x62 — cubre viewport desktop de punta a punta
-const GRID_MOBILE  = 24; // 24x24 — mobile (menor carga GPU)
+const GRID_MOBILE  = 28; // 28x28 — mobile
 const SPACING      = 0.82; // separacion amplia para cubrir todo el ancho
 
 // Rangos de scroll por seccion (progress 0..1). Orden real de la pagina:
@@ -110,7 +110,7 @@ function sectionWeights(p: number) {
 // WAVE SOLID — malla solida naranja semi-transparente que sigue exactamente
 // los mismos vertices que WaveGrid. Da sensacion de ola de fuego/lava.
 // ----------------------------------------------------------------------------
-function WaveSolid({ shared, isDark }: { shared: WaveShared; isDark: boolean }) {
+function WaveSolid({ shared }: { shared: WaveShared }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const n = shared.n;
 
@@ -130,10 +130,10 @@ function WaveSolid({ shared, isDark }: { shared: WaveShared; isDark: boolean }) 
     return idx;
   }, [n]);
 
-  const colorLow  = useMemo(() => new THREE.Color('#0d0400'), []);
-  const colorMid  = useMemo(() => new THREE.Color('#ff6800'), []);
-  const colorHigh = useMemo(() => new THREE.Color('#000000'), []);
-  const tmpColor  = useMemo(() => new THREE.Color(), []);
+  // Colores del sólido — contraste profundo: negro → naranja-amarillento → blanco caliente
+  const colorLow  = useMemo(() => new THREE.Color('#0d0400'), []); // negro-naranja
+  const colorMid  = useMemo(() => new THREE.Color('#ff6800'), []); // naranja puro
+  const colorHigh = useMemo(() => new THREE.Color('#000000'), []); // negro en pico
 
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
@@ -147,8 +147,6 @@ function WaveSolid({ shared, isDark }: { shared: WaveShared; isDark: boolean }) 
     return geo;
   }, [shared.positions, indices]);
 
-  const vertexCount = useMemo(() => shared.positions.length / 3, [shared.positions]);
-
   useFrame(() => {
     if (!meshRef.current) return;
     const geo = meshRef.current.geometry;
@@ -157,27 +155,33 @@ function WaveSolid({ shared, isDark }: { shared: WaveShared; isDark: boolean }) 
     (posAttr.array as Float32Array).set(shared.positions);
     posAttr.needsUpdate = true;
 
+    // Calcular gradiente segun altura Y + degradado por X (derecha más vivo)
     const amp = shared.amp.current || 1;
-    for (let i = 0; i < vertexCount; i++) {
-      const x    = shared.positions[i * 3];
-      const y    = shared.positions[i * 3 + 1];
-      const norm = y / amp;
+    const n = shared.positions.length / 3;
+    const tmp = new THREE.Color();
+    for (let i = 0; i < n; i++) {
+      const x = shared.positions[i * 3];
+      const y = shared.positions[i * 3 + 1];
+      // 4 stops: negro → naranja → llama → blanco caliente en picos
+      const norm = (y / amp); // ~-1..1
       if (norm >= 0.55) {
+        // Pico absoluto: naranja → negro
         const tt = Math.min(1, (norm - 0.55) / 0.45);
-        tmpColor.set(
+        tmp.set(
           THREE.MathUtils.lerp(colorMid.r, 0.0, tt),
           THREE.MathUtils.lerp(colorMid.g, 0.0, tt),
           THREE.MathUtils.lerp(colorMid.b, 0.0, tt),
         );
       } else if (norm >= 0) {
-        tmpColor.lerpColors(colorMid, colorHigh, norm / 0.55);
+        tmp.lerpColors(colorMid, colorHigh, norm / 0.55);
       } else if (norm >= -0.55) {
-        tmpColor.lerpColors(colorLow, colorMid, (norm + 0.55) / 0.55);
+        tmp.lerpColors(colorLow, colorMid, (norm + 0.55) / 0.55);
       } else {
-        tmpColor.copy(colorLow);
+        tmp.copy(colorLow);
       }
+      // Degradado por X: izquierda 40%, derecha 100%
       const xBright = 0.40 + ((x / shared.half) * 0.5 + 0.5) * 0.60;
-      colAttr.setXYZ(i, tmpColor.r * xBright, tmpColor.g * xBright, tmpColor.b * xBright);
+      colAttr.setXYZ(i, tmp.r * xBright, tmp.g * xBright, tmp.b * xBright);
     }
     colAttr.needsUpdate = true;
     geo.computeVertexNormals();
@@ -188,7 +192,7 @@ function WaveSolid({ shared, isDark }: { shared: WaveShared; isDark: boolean }) 
       <meshStandardMaterial
         vertexColors
         emissive="#ff6600"
-        emissiveIntensity={isDark ? 1.5 : 0}
+        emissiveIntensity={1.5}
         roughness={0.08}
         metalness={0.15}
         transparent
@@ -830,13 +834,11 @@ function SceneContents({
   progress,
   isMobile,
   starCount,
-  isDark,
 }: {
   mouse: React.RefObject<{ x: number; y: number }>;
   progress: React.RefObject<number>;
   isMobile: boolean;
   starCount: number;
-  isDark: boolean;
 }) {
   const groupRef = useRef<THREE.Group>(null);
 
@@ -874,7 +876,7 @@ function SceneContents({
     };
   }, [isMobile, mouseWorld]);
 
-  const particleCount = isMobile ? 18 : 70;
+  const particleCount = isMobile ? 30 : 70;
 
   // Reaccion al mouse: el plano de la ola se inclina ligeramente.
   useFrame(() => {
@@ -911,9 +913,9 @@ function SceneContents({
       <group ref={groupRef} position={[0, -1.8, 0]}>
         <MouseProjector shared={shared} mouse={mouse} />
         {/* Superficie sólida naranja — debajo de los puntos para dar profundidad */}
-        <WaveSolid shared={shared} isDark={isDark} />
+        <WaveSolid shared={shared} />
         <WaveGrid shared={shared} progress={progress} />
-        {!isMobile && <WaveMesh shared={shared} />}
+        <WaveMesh shared={shared} />
         <WaveParticles shared={shared} count={particleCount} />
       </group>
     </>
@@ -923,7 +925,7 @@ function SceneContents({
 // ----------------------------------------------------------------------------
 // Escena raiz: un solo Canvas para todo el sitio.
 // ----------------------------------------------------------------------------
-export default function GlobalScene({ isDark = true }: { isDark?: boolean }) {
+export default function GlobalScene() {
   const mouse = useRef({ x: 0, y: 0 });
   const progress = useRef(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -961,7 +963,7 @@ export default function GlobalScene({ isDark = true }: { isDark?: boolean }) {
     <Canvas
       frameloop="always"
       camera={{ position: [0, 2.2, 6.5], fov: 72 }}
-      dpr={[1, 1.5]}
+      dpr={[1, isMobile ? 2 : 1.5]}
       gl={{
         alpha: true,
         antialias: !isMobile,
@@ -985,7 +987,6 @@ export default function GlobalScene({ isDark = true }: { isDark?: boolean }) {
         progress={progress}
         isMobile={isMobile}
         starCount={starCount}
-        isDark={isDark}
       />
     </Canvas>
   );

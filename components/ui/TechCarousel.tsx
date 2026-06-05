@@ -45,7 +45,7 @@ function TechItem({ name, icon }: { name: string; icon: string }) {
     <motion.div
       whileHover={{ scale: 1.08, y: -2 }}
       transition={{ type: "spring", stiffness: 400, damping: 20 }}
-      className="group relative flex shrink-0 cursor-default items-center gap-2.5 rounded-full border border-border bg-surface px-4 py-2.5"
+      className="group relative flex shrink-0 cursor-default items-center gap-2.5 rounded-full border border-border bg-surface/60 px-4 py-2.5 backdrop-blur-sm"
       data-cursor-hover
     >
       {/* Glow naranja al hover */}
