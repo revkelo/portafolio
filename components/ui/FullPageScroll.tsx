@@ -46,6 +46,16 @@ export default function FullPageScroll({ children }: { children: React.ReactNode
     []
   );
 
+  // Listener para navegación programática desde otros componentes (ej. CTAs del hero).
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { index } = (e as CustomEvent<{ index: number }>).detail;
+      go(index);
+    };
+    window.addEventListener("navigate-section", handler);
+    return () => window.removeEventListener("navigate-section", handler);
+  }, [go]);
+
   useEffect(() => {
     // Devuelve true si hay que dejar pasar el scroll al interior de la sección.
     const shouldPassThrough = (deltaY: number): boolean => {

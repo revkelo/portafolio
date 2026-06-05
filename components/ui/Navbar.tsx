@@ -152,13 +152,13 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <ThemeToggle className="hidden sm:flex" />
           <LangToggle className="hidden sm:flex" />
-          <a
-            href="#contacto"
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent("navigate-section", { detail: { index: 5 } }))}
             className="hidden rounded-full border border-orange-primary/40 px-4 py-1.5 text-sm text-orange-primary transition-colors hover:bg-orange-primary hover:text-background md:inline-block"
             data-cursor-hover
           >
             {t.nav.cta}
-          </a>
+          </button>
 
           {/* Hamburger movil */}
           <button
