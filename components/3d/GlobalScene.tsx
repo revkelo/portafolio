@@ -180,6 +180,7 @@ function WaveSolid({ shared, isDark }: { shared: WaveShared; isDark: boolean }) 
       colAttr.setXYZ(i, tmpColor.r * xBright, tmpColor.g * xBright, tmpColor.b * xBright);
     }
     colAttr.needsUpdate = true;
+    geo.computeVertexNormals();
   });
 
   return (
