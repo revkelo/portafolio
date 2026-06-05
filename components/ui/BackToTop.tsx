@@ -13,7 +13,6 @@ export default function BackToTop() {
   }, []);
 
   return (
-    <div className="hidden lg:block">
     <AnimatePresence>
       {visible && (
         <motion.button
@@ -43,6 +42,5 @@ export default function BackToTop() {
         </motion.button>
       )}
     </AnimatePresence>
-    </div>
   );
 }
