@@ -843,7 +843,7 @@ function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
     );
 
     camera.position.lerp(target, 0.038);
-    camera.lookAt(0, 1.6, 0);
+    camera.lookAt(0, 3.1, 0);
   });
 
   return null;

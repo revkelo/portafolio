@@ -117,22 +117,22 @@ export default function Navbar() {
             : "none",
         }}
       >
-        <motion.a
-          href="#hero"
+        <motion.button
+          onClick={() => window.dispatchEvent(new CustomEvent("navigate-section", { detail: { index: 0 } }))}
           whileHover={{ scale: 1.05 }}
           className="group flex items-center font-display text-2xl font-bold tracking-tight text-orange-primary"
           data-cursor-hover
         >
           KG
           <span className="ml-0.5 mt-2 h-1.5 w-1.5 rounded-full bg-orange-primary pulse-dot" />
-        </motion.a>
+        </motion.button>
 
         {/* Links desktop */}
         <ul className="hidden items-center gap-8 md:flex">
-          {sections.map((s) => (
+          {sections.map((s, i) => (
             <li key={s.id}>
-              <motion.a
-                href={`#${s.id}`}
+              <motion.button
+                onClick={() => window.dispatchEvent(new CustomEvent("navigate-section", { detail: { index: i } }))}
                 whileHover={{ y: -2 }}
                 className="relative inline-block text-sm text-text-secondary transition-colors hover:text-orange-primary"
                 data-cursor-hover
@@ -144,7 +144,7 @@ export default function Navbar() {
                     className="absolute -bottom-1.5 left-0 h-0.5 w-full bg-orange-primary"
                   />
                 )}
-              </motion.a>
+              </motion.button>
             </li>
           ))}
         </ul>
@@ -205,19 +205,21 @@ export default function Navbar() {
                 </button>
               </div>
 
-              {sections.map((s) => (
-                <a
+              {sections.map((s, i) => (
+                <button
                   key={s.id}
-                  href={`#${s.id}`}
-                  onClick={() => setOpen(false)}
-                  className={`border-b border-border py-3 font-display text-lg transition-colors ${
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent("navigate-section", { detail: { index: i } }));
+                    setOpen(false);
+                  }}
+                  className={`border-b border-border py-3 text-left font-display text-lg transition-colors w-full ${
                     active === s.id
                       ? "text-orange-primary"
                       : "text-text-primary hover:text-orange-primary"
                   }`}
                 >
                   {t.nav[s.key]}
-                </a>
+                </button>
               ))}
 
               <div className="mt-6 flex items-center gap-3">
