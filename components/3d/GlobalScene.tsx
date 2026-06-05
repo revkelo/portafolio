@@ -193,7 +193,7 @@ function WaveSolid({ shared, isDark }: { shared: WaveShared; isDark: boolean }) 
         metalness={0.15}
         transparent
         opacity={0.82}
-        side={THREE.FrontSide}
+        side={THREE.DoubleSide}
         toneMapped={false}
       />
     </mesh>
