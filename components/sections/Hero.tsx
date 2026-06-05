@@ -56,7 +56,7 @@ export default function Hero() {
     { value: `${years.value}+`,   done: years.done,    label: t.hero.metrics.years   },
     { value: `${repos.value}+`,   done: repos.done,    label: t.hero.metrics.repos   },
     { value: `${projects.value}+`,done: projects.done, label: t.hero.metrics.countries},
-    { value: `${uptime.value}%`,  done: uptime.done,   label: "uptime achieved"       },
+    { value: `${uptime.value}%`,  done: uptime.done,   label: t.hero.metrics.uptime   },
   ];
 
   // Parallax con useScroll — el contenido sube más lento que el scroll
@@ -248,7 +248,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.36 }}
-          className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center"
+          className="mt-12 flex flex-row flex-wrap items-center justify-center gap-4"
         >
           <a
             href="#proyectos"

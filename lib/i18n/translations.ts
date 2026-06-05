@@ -32,6 +32,7 @@ export const translations = {
         years: "años exp.",
         repos: "repositorios",
         countries: "proyectos",
+        uptime: "uptime logrado",
       },
     },
     about: {
@@ -161,6 +162,7 @@ export const translations = {
         years: "yrs exp.",
         repos: "repositories",
         countries: "projects",
+        uptime: "uptime achieved",
       },
     },
     about: {
