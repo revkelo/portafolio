@@ -31,7 +31,7 @@ export default function EasterEgg() {
       if (["INPUT", "TEXTAREA"].includes(tag)) return;
       if (e.key === "Escape") { setShow(false); return; }
 
-      const next = (typed + e.key).slice(-SECRET.length);
+      const next = (typed + e.key.toLowerCase()).slice(-SECRET.length);
       setTyped(next);
       if (next === SECRET) {
         setShow(true);
