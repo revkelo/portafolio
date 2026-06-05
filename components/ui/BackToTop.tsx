@@ -13,7 +13,7 @@ export default function BackToTop() {
   }, []);
 
   return (
-    <div className="hidden md:block">
+    <div className="hidden lg:block">
     <AnimatePresence>
       {visible && (
         <motion.button

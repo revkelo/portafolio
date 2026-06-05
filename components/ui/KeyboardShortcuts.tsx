@@ -23,6 +23,7 @@ export default function KeyboardShortcuts() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (window.innerWidth < 1024) return; // solo desktop
       const tag = (e.target as HTMLElement).tagName;
       if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return;
 
@@ -79,7 +80,7 @@ export default function KeyboardShortcuts() {
   return (
     <>
       {/* Botón ? — oculto en mobile con wrapper CSS */}
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
       <motion.button
         whileHover={{ scale: 1.1, borderColor: "rgba(245,111,13,0.5)" }}
         onClick={() => setOpen(v => !v)}
