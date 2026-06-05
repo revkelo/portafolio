@@ -97,7 +97,7 @@ export default function Hero() {
       />
 
 
-      <motion.div style={{ y: yText, opacity }} className="relative z-10 mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 sm:py-28 lg:px-8">
+      <motion.div style={{ y: yText, opacity }} className="relative z-10 mx-auto w-full max-w-4xl px-4 py-24 text-center sm:px-6 sm:py-28 lg:px-8">
         {/* Open to work badge */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -200,7 +200,7 @@ export default function Hero() {
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
           transition={{ delay: 0.8, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 h-0.5 max-w-md bg-gradient-to-r from-orange-primary to-orange-primary/0"
+          className="mt-6 h-0.5 max-w-md mx-auto bg-gradient-to-r from-orange-primary/0 via-orange-primary to-orange-primary/0"
         />
 
         {/* Barra de terminal con cursor parpadeante */}
@@ -208,7 +208,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          className="mt-8 inline-flex max-w-full items-center rounded-lg border border-orange-primary/30 bg-surface/80 px-5 py-3 font-mono text-base text-text-secondary backdrop-blur-sm sm:text-lg"
+          className="mt-8 inline-flex max-w-full items-center rounded-lg border border-orange-primary/30 bg-surface/80 px-5 py-3 font-mono text-base text-text-secondary backdrop-blur-sm sm:text-lg mx-auto"
         >
           <span className="mr-2.5 font-bold text-orange-primary">{">"}</span>
           <span className="truncate tracking-tight">{t.hero.terminal}</span>
@@ -221,7 +221,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.28 }}
-          className="mt-10 grid grid-cols-2 gap-x-6 gap-y-5 sm:flex sm:flex-wrap sm:items-stretch sm:gap-y-6"
+          className="mt-10 grid grid-cols-2 gap-x-6 gap-y-5 sm:flex sm:flex-wrap sm:items-stretch sm:justify-center sm:gap-y-6"
         >
           {metrics.map((m, i) => (
             <div key={m.label} className="flex items-stretch">
@@ -248,7 +248,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.36 }}
-          className="mt-12 flex flex-col gap-4 sm:flex-row sm:flex-wrap"
+          className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center"
         >
           <a
             href="#proyectos"
