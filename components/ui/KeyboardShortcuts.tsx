@@ -17,15 +17,9 @@ function scrollTo(id: string) {
 }
 
 export default function KeyboardShortcuts() {
-  const [open, setOpen]      = useState(false);
-  const [gMode, setGMode]    = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [open, setOpen]   = useState(false);
+  const [gMode, setGMode] = useState(false);
   const gTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Solo activar en desktop — ocultar en touch devices
-  useEffect(() => {
-    setIsDesktop(window.innerWidth >= 768);
-  }, []);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -82,16 +76,14 @@ export default function KeyboardShortcuts() {
     { keys: ["Esc"], desc: "Cerrar paneles" },
   ];
 
-  if (!isDesktop) return null;
-
   return (
     <>
-      {/* Botón ? */}
+      {/* Botón ? — oculto en mobile con wrapper CSS */}
+      <div className="hidden md:block">
       <motion.button
         whileHover={{ scale: 1.1, borderColor: "rgba(245,111,13,0.5)" }}
         onClick={() => setOpen(v => !v)}
         aria-label="Atajos de teclado"
-        className="hidden sm:flex"
         style={{
           position: "fixed", bottom: "1.5rem", left: "1.5rem", zIndex: 200,
           width: 36, height: 36, borderRadius: "0.5rem",
@@ -106,6 +98,7 @@ export default function KeyboardShortcuts() {
       >
         ?
       </motion.button>
+      </div>
 
       <AnimatePresence>
         {open && (

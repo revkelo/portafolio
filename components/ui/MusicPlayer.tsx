@@ -7,14 +7,9 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 export default function MusicPlayer() {
-  const [playing, setPlaying]    = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [playing, setPlaying] = useState(false);
   const ctxRef  = useRef<AudioContext | null>(null);
   const gainRef = useRef<GainNode | null>(null);
-
-  useEffect(() => {
-    setIsDesktop(window.innerWidth >= 768);
-  }, []);
 
   function start() {
     const ctx    = new AudioContext();
@@ -88,9 +83,8 @@ export default function MusicPlayer() {
 
   useEffect(() => () => { if (playing) stop(); }, []);
 
-  if (!isDesktop) return null;
-
   return (
+    <div className="hidden md:block">
     <motion.button
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
@@ -125,5 +119,6 @@ export default function MusicPlayer() {
         </svg>
       )}
     </motion.button>
+    </div>
   );
 }

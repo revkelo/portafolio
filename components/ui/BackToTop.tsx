@@ -4,19 +4,16 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function BackToTop() {
-  const [visible, setVisible]    = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setIsDesktop(window.innerWidth >= 768);
     const onScroll = () => setVisible(window.scrollY > 400);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (!isDesktop) return null;
-
   return (
+    <div className="hidden md:block">
     <AnimatePresence>
       {visible && (
         <motion.button
@@ -46,5 +43,6 @@ export default function BackToTop() {
         </motion.button>
       )}
     </AnimatePresence>
+    </div>
   );
 }

@@ -175,7 +175,7 @@ export default function Hero() {
         </h1>
 
         {/* Roles rotativos: uno aparece, se va y entra el siguiente */}
-        <div className="mt-5 flex h-8 items-center sm:h-9">
+        <div className="mt-5 flex h-8 items-center justify-center sm:h-9">
           <span
             aria-hidden
             className="mr-3 h-5 w-1 rounded-full bg-orange-primary sm:h-6"
