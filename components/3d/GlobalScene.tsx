@@ -73,7 +73,7 @@ const COLOR_VALLEY = new THREE.Color("#1a0800"); // valle: casi negro cálido
 
 // Parametros del grid.
 const GRID_DESKTOP = 62; // 62x62 — cubre viewport desktop de punta a punta
-const GRID_MOBILE  = 28; // 28x28 — mobile
+const GRID_MOBILE  = 24; // 24x24 — mobile (menor carga GPU)
 const SPACING      = 1.25; // separacion para cubrir viewport de punta a punta con margen
 
 // Rangos de scroll por seccion (progress 0..1). Orden real de la pagina:
@@ -129,10 +129,11 @@ function WaveSolid({ shared }: { shared: WaveShared }) {
     return idx;
   }, [n]);
 
-  // Colores del sólido — contraste profundo: negro → naranja-amarillento → blanco caliente
-  const colorLow  = useMemo(() => new THREE.Color('#0d0400'), []); // negro-naranja
-  const colorMid  = useMemo(() => new THREE.Color('#ff6800'), []); // naranja puro
-  const colorHigh = useMemo(() => new THREE.Color('#000000'), []); // negro en pico
+  const colorLow  = useMemo(() => new THREE.Color('#0d0400'), []);
+  const colorMid  = useMemo(() => new THREE.Color('#ff6800'), []);
+  const colorHigh = useMemo(() => new THREE.Color('#000000'), []);
+  const tmpColor  = useMemo(() => new THREE.Color(), []);
+  const vertexCount = useMemo(() => shared.positions.length / 3, [shared.positions]);
 
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
@@ -154,33 +155,27 @@ function WaveSolid({ shared }: { shared: WaveShared }) {
     (posAttr.array as Float32Array).set(shared.positions);
     posAttr.needsUpdate = true;
 
-    // Calcular gradiente segun altura Y + degradado por X (derecha más vivo)
     const amp = shared.amp.current || 1;
-    const n = shared.positions.length / 3;
-    const tmp = new THREE.Color();
-    for (let i = 0; i < n; i++) {
-      const x = shared.positions[i * 3];
-      const y = shared.positions[i * 3 + 1];
-      // 4 stops: negro → naranja → llama → blanco caliente en picos
-      const norm = (y / amp); // ~-1..1
+    for (let i = 0; i < vertexCount; i++) {
+      const x    = shared.positions[i * 3];
+      const y    = shared.positions[i * 3 + 1];
+      const norm = y / amp;
       if (norm >= 0.55) {
-        // Pico absoluto: naranja → negro
         const tt = Math.min(1, (norm - 0.55) / 0.45);
-        tmp.set(
+        tmpColor.set(
           THREE.MathUtils.lerp(colorMid.r, 0.0, tt),
           THREE.MathUtils.lerp(colorMid.g, 0.0, tt),
           THREE.MathUtils.lerp(colorMid.b, 0.0, tt),
         );
       } else if (norm >= 0) {
-        tmp.lerpColors(colorMid, colorHigh, norm / 0.55);
+        tmpColor.lerpColors(colorMid, colorHigh, norm / 0.55);
       } else if (norm >= -0.55) {
-        tmp.lerpColors(colorLow, colorMid, (norm + 0.55) / 0.55);
+        tmpColor.lerpColors(colorLow, colorMid, (norm + 0.55) / 0.55);
       } else {
-        tmp.copy(colorLow);
+        tmpColor.copy(colorLow);
       }
-      // Degradado por X: izquierda 40%, derecha 100%
       const xBright = 0.40 + ((x / shared.half) * 0.5 + 0.5) * 0.60;
-      colAttr.setXYZ(i, tmp.r * xBright, tmp.g * xBright, tmp.b * xBright);
+      colAttr.setXYZ(i, tmpColor.r * xBright, tmpColor.g * xBright, tmpColor.b * xBright);
     }
     colAttr.needsUpdate = true;
     geo.computeVertexNormals();
@@ -948,7 +943,7 @@ function SceneContents({
     };
   }, [isMobile, mouseWorld]);
 
-  const particleCount = isMobile ? 30 : 70;
+  const particleCount = isMobile ? 18 : 70;
 
   // Reaccion al mouse: el plano de la ola se inclina ligeramente.
   useFrame(() => {
@@ -988,7 +983,7 @@ function SceneContents({
         {/* Superficie sólida naranja — debajo de los puntos para dar profundidad */}
         <WaveSolid shared={shared} />
         <WaveGrid shared={shared} progress={progress} />
-        <WaveMesh shared={shared} />
+        {!isMobile && <WaveMesh shared={shared} />}
         <WaveParticles shared={shared} count={particleCount} />
       </group>
     </>
@@ -1036,7 +1031,7 @@ export default function GlobalScene() {
     <Canvas
       frameloop="always"
       camera={{ position: [0, 4.2, 8.5], fov: 72 }}
-      dpr={[1, isMobile ? 2 : 1.5]}
+      dpr={[1, 1.5]}
       gl={{
         alpha: true,
         antialias: !isMobile,
