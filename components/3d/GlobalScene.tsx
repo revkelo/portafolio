@@ -46,6 +46,7 @@ import * as THREE from "three";
 // Paleta del Wave Field.
 const ORANGE = "#ff6600";
 const ORANGE_DARK = "#cc3300";
+const MESH_LINE = "#ffd580"; // oro cálido — contrasta sobre el wave oscuro
 
 // Hook: textura circular para que Points se vean como bolitas, no cuadrados.
 function useCircleTexture() {
@@ -71,9 +72,9 @@ const COLOR_BASE   = new THREE.Color("#ff6800"); // medio: naranja puro
 const COLOR_VALLEY = new THREE.Color("#1a0800"); // valle: casi negro cálido
 
 // Parametros del grid.
-const GRID_DESKTOP = 52; // 52x52 — cubre todo el viewport desktop
-const GRID_MOBILE  = 26; // 26x26 — mobile
-const SPACING      = 0.48; // separacion entre puntos
+const GRID_DESKTOP = 62; // 62x62 — cubre viewport desktop de punta a punta
+const GRID_MOBILE  = 28; // 28x28 — mobile
+const SPACING      = 0.82; // separacion amplia para cubrir todo el ancho
 
 // Rangos de scroll por seccion (progress 0..1). Orden real de la pagina:
 // hero, about, experience, stack, projects, contact.
@@ -468,9 +469,9 @@ function WaveMesh({ shared }: { shared: WaveShared }) {
         <bufferAttribute attach="attributes-position" args={[segPositions, 3]} />
       </bufferGeometry>
       <lineBasicMaterial
-        color={ORANGE}
+        color={MESH_LINE}
         transparent
-        opacity={0.22}
+        opacity={0.55}
         toneMapped={false}
       />
     </lineSegments>
@@ -909,7 +910,7 @@ function SceneContents({
       {/* Campo de ola: grid de puntos + malla de lineas + particulas + halo.
           El proyector y el cursor viven dentro del group para compartir la
           inclinacion aplicada por el mouse. */}
-      <group ref={groupRef}>
+      <group ref={groupRef} position={[0, -1.8, 0]}>
         <MouseProjector shared={shared} mouse={mouse} />
         {/* Superficie sólida naranja — debajo de los puntos para dar profundidad */}
         <WaveSolid shared={shared} />
