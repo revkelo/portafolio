@@ -7,6 +7,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView, useScroll, useTransform, useSpring } from "framer-motion";
 import { useLang } from "@/lib/i18n/LangContext";
+import HeroParticles from "@/components/ui/HeroParticles";
 
 // Hook simple para contar de 0 a `target` cuando el elemento entra en viewport.
 // Devuelve tambien `done` para disparar un flash naranja al terminar.
@@ -85,6 +86,9 @@ export default function Hero() {
         className="pointer-events-none absolute inset-0 z-0 transition-colors duration-300"
         style={{ background: "var(--hero-overlay)" }}
       />
+
+      {/* Particle network — anime.js orbital particles with connection lines */}
+      <HeroParticles />
 
       {/* Lineas diagonales naranjas sutiles (banner original de Kevin) */}
       <div aria-hidden className="diagonal-lines pointer-events-none absolute inset-0 z-0" />

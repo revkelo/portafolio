@@ -1,6 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { animate } from "animejs";
+import { scrambleText } from "animejs/text";
 
 interface SectionTitleProps {
   number: string;
@@ -12,8 +15,35 @@ interface SectionTitleProps {
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function SectionTitle({ number, label, title, subtitle }: SectionTitleProps) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const hasScrambled = useRef(false);
+  const isInView = useInView(wrapperRef, { once: true, margin: "-60px" });
+
+  useEffect(() => {
+    if (!isInView || hasScrambled.current || !titleRef.current) return;
+    hasScrambled.current = true;
+
+    // Small delay so Framer Motion slide-up starts before scramble kicks in
+    const id = setTimeout(() => {
+      animate(titleRef.current!, {
+        innerHTML: scrambleText({
+          chars: "uppercase",
+          from: "left",
+          cursor: "_",
+          duration: 850,
+          perturbation: 0.3,
+        }) as unknown as string,
+        ease: "linear",
+      });
+    }, 200);
+
+    return () => clearTimeout(id);
+  }, [isInView]);
+
   return (
     <motion.div
+      ref={wrapperRef}
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: "-60px" }}
@@ -29,7 +59,7 @@ export default function SectionTitle({ number, label, title, subtitle }: Section
         {number} <span className="text-text-secondary/60">/</span> {label}
       </motion.p>
 
-      {/* Barra + título con clip-path reveal */}
+      {/* Barra + título con clip-path reveal + scramble */}
       <div className="flex items-center gap-4">
         <motion.span
           aria-hidden
@@ -41,6 +71,7 @@ export default function SectionTitle({ number, label, title, subtitle }: Section
 
         <div style={{ overflow: "hidden" }}>
           <motion.h2
+            ref={titleRef}
             variants={{ hidden: { y: "100%", opacity: 0 }, show: { y: "0%", opacity: 1 } }}
             transition={{ duration: 0.65, ease: EASE }}
             className="font-display text-4xl font-bold tracking-tight text-text-primary md:text-5xl lg:text-6xl"
