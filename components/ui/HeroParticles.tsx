@@ -43,14 +43,13 @@ export default function HeroParticles() {
     };
     applySize();
 
-    // Responsive config — bigger / more visible on mobile
     const mobile = isMobileViewport();
-    const COUNT        = mobile ? 60  : 55;
+    const COUNT        = 60;
     const CONNECT_DIST = mobile ? 110 : 130;
-    const LINE_WIDTH   = mobile ? 1.6 : 1.1;
-    const LINE_ALPHA   = mobile ? 0.28 : 0.18;
-    const DOT_SCALE    = mobile ? 4   : 3;   // radius multiplier for glow
-    const RADIUS_MAX   = mobile ? 2.8 : 2.0; // max base radius
+    const LINE_WIDTH   = 1.6;
+    const LINE_ALPHA   = 0.28;
+    const DOT_SCALE    = 4;
+    const RADIUS_MAX   = 2.8;
 
     const lw = () => canvas.offsetWidth;
     const lh = () => canvas.offsetHeight;
@@ -74,9 +73,7 @@ export default function HeroParticles() {
 
     const startAnims = (ps: Particle[]) => {
       ps.forEach((p, i) => {
-        const hi = mobile
-          ? Math.random() * 0.55 + 0.18   // brighter on mobile
-          : Math.random() * 0.45 + 0.08;
+        const hi = Math.random() * 0.55 + 0.18;
         const lo = hi * 0.22;
         animate(p as unknown as Record<string, unknown>, {
           opacity: [0, hi],
