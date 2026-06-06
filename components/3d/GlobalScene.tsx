@@ -42,6 +42,9 @@ import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 import * as THREE from "three";
+import { LineSegments2 } from "three/addons/lines/LineSegments2.js";
+import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js";
+import { LineMaterial } from "three/addons/lines/LineMaterial.js";
 
 // Paleta del Wave Field.
 const ORANGE = "#ff6600";
@@ -407,69 +410,59 @@ function WaveGrid({
 // vuelca cada par adyacente en su propio buffer de lineas.
 // ----------------------------------------------------------------------------
 function WaveMesh({ shared }: { shared: WaveShared }) {
-  const lineRef = useRef<THREE.LineSegments>(null);
+  const { size } = useThree();
   const n = shared.n;
 
-  // Buffer de lineas: por cada celda, una arista horizontal y una vertical.
-  // Cantidad de segmentos = horizontales + verticales.
+  // Float32Array en formato [S0x,S0y,S0z, E0x,E0y,E0z, S1x,...] — pares start/end.
+  // LineSegmentsGeometry.setPositions lo usa como buffer interno directamente.
   const segPositions = useMemo(() => {
     const horiz = n * (n - 1);
-    const vert = (n - 1) * n;
-    return new Float32Array((horiz + vert) * 2 * 3); // 2 vertices * 3 comps
+    const vert  = (n - 1) * n;
+    return new Float32Array((horiz + vert) * 2 * 3);
   }, [n]);
+
+  // LineMaterial soporta linewidth real en px (lineBasicMaterial siempre dibuja a 1px en WebGL).
+  const objects = useMemo(() => {
+    const geo  = new LineSegmentsGeometry();
+    const mat  = new LineMaterial({ color: MESH_LINE, linewidth: 2.5, transparent: true, opacity: 0.55, depthWrite: false });
+    mat.fog        = false;
+    mat.toneMapped = false;
+    const line = new LineSegments2(geo, mat);
+    line.frustumCulled = false;
+    return { geo, mat, line };
+  }, [n]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    objects.geo.setPositions(segPositions); // segPositions pasa a ser el buffer interno
+  }, [objects, segPositions]);
+
+  useEffect(() => {
+    objects.mat.resolution.set(size.width, size.height);
+  }, [size, objects.mat]);
 
   useFrame(() => {
     const src = shared.positions;
     const dst = segPositions;
     let s = 0;
-    // Aristas horizontales: (i, j) -> (i, j+1).
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n - 1; j++) {
-        const a = (i * n + j) * 3;
-        const b = (i * n + (j + 1)) * 3;
-        dst[s++] = src[a];
-        dst[s++] = src[a + 1];
-        dst[s++] = src[a + 2];
-        dst[s++] = src[b];
-        dst[s++] = src[b + 1];
-        dst[s++] = src[b + 2];
+        const a = (i * n + j) * 3, b = (i * n + (j + 1)) * 3;
+        dst[s++] = src[a]; dst[s++] = src[a+1]; dst[s++] = src[a+2];
+        dst[s++] = src[b]; dst[s++] = src[b+1]; dst[s++] = src[b+2];
       }
     }
-    // Aristas verticales: (i, j) -> (i+1, j).
     for (let i = 0; i < n - 1; i++) {
       for (let j = 0; j < n; j++) {
-        const a = (i * n + j) * 3;
-        const b = ((i + 1) * n + j) * 3;
-        dst[s++] = src[a];
-        dst[s++] = src[a + 1];
-        dst[s++] = src[a + 2];
-        dst[s++] = src[b];
-        dst[s++] = src[b + 1];
-        dst[s++] = src[b + 2];
+        const a = (i * n + j) * 3, b = ((i + 1) * n + j) * 3;
+        dst[s++] = src[a]; dst[s++] = src[a+1]; dst[s++] = src[a+2];
+        dst[s++] = src[b]; dst[s++] = src[b+1]; dst[s++] = src[b+2];
       }
     }
-    const geo = lineRef.current?.geometry;
-    if (geo) {
-      const attr = geo.getAttribute("position") as THREE.BufferAttribute;
-      attr.needsUpdate = true;
-    }
+    const attr = objects.geo.attributes["instanceStart"] as THREE.InterleavedBufferAttribute | undefined;
+    if (attr) attr.data.needsUpdate = true;
   });
 
-  return (
-    <lineSegments ref={lineRef}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[segPositions, 3]} />
-      </bufferGeometry>
-      <lineBasicMaterial
-        color={MESH_LINE}
-        transparent
-        opacity={0.55}
-        depthWrite={false}
-        fog={false}
-        toneMapped={false}
-      />
-    </lineSegments>
-  );
+  return <primitive object={objects.line} />;
 }
 
 // ----------------------------------------------------------------------------
@@ -822,10 +815,12 @@ const CAMERA_KEYS: { at: number; pos: [number, number, number] }[] = [
 ];
 
 function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
-  const target = useMemo(() => new THREE.Vector3(0, 4.2, 8.5), []);
+  const target   = useMemo(() => new THREE.Vector3(0, 4.2, 8.5), []);
+  const smoothed = useRef(0);
 
   useFrame(({ camera }) => {
-    const p = THREE.MathUtils.clamp(progress.current ?? 0, 0, 1);
+    smoothed.current += ((progress.current ?? 0) - smoothed.current) * 0.05;
+    const p = THREE.MathUtils.clamp(smoothed.current, 0, 1);
 
     let a = CAMERA_KEYS[0];
     let b = CAMERA_KEYS[CAMERA_KEYS.length - 1];
@@ -844,7 +839,7 @@ function ScrollCamera({ progress }: { progress: React.RefObject<number> }) {
       THREE.MathUtils.lerp(a.pos[2], b.pos[2], local),
     );
 
-    camera.position.lerp(target, 0.038);
+    camera.position.lerp(target, 0.09);
     camera.lookAt(0, 3.1, 0);
   });
 
@@ -1036,7 +1031,7 @@ export default function GlobalScene() {
       dpr={[1, 1.5]}
       gl={{
         alpha: true,
-        antialias: !isMobile,
+        antialias: true,
         powerPreference: "high-performance",
         failIfMajorPerformanceCaveat: false,
         stencil: false,
