@@ -46,7 +46,7 @@ import * as THREE from "three";
 // Paleta del Wave Field.
 const ORANGE = "#ff6600";
 const ORANGE_DARK = "#cc3300";
-const MESH_LINE = "#ffd580"; // oro cálido — contrasta sobre el wave oscuro
+const MESH_LINE = "#ffffff";
 
 // Hook: textura circular para que Points se vean como bolitas, no cuadrados.
 function useCircleTexture() {
@@ -464,6 +464,8 @@ function WaveMesh({ shared }: { shared: WaveShared }) {
         color={MESH_LINE}
         transparent
         opacity={0.55}
+        depthWrite={false}
+        fog={false}
         toneMapped={false}
       />
     </lineSegments>
@@ -983,7 +985,7 @@ function SceneContents({
         {/* Superficie sólida naranja — debajo de los puntos para dar profundidad */}
         <WaveSolid shared={shared} />
         <WaveGrid shared={shared} progress={progress} />
-        {!isMobile && <WaveMesh shared={shared} />}
+        <WaveMesh shared={shared} />
         <WaveParticles shared={shared} count={particleCount} />
       </group>
     </>
