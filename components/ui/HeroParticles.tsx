@@ -15,10 +15,12 @@ interface Particle {
   orbitRadius: number;
 }
 
-const COUNT = 55;
-const CONNECT_DIST = 130;
 const R = "245,111,13";
 const LINE = "255,255,255";
+
+function isMobileViewport() {
+  return typeof window !== "undefined" && window.innerWidth < 768;
+}
 
 export default function HeroParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -32,79 +34,95 @@ export default function HeroParticles() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+    // DPR-aware resize: canvas renders at physical pixels, ctx draws in CSS pixels
+    const applySize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvas.offsetWidth * dpr;
+      canvas.height = canvas.offsetHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
-    resize();
-    window.addEventListener("resize", resize);
+    applySize();
 
-    const particles: Particle[] = Array.from({ length: COUNT }, () => {
-      const bx = Math.random() * canvas.width;
-      const by = Math.random() * canvas.height;
-      return {
-        x: bx,
-        y: by,
-        baseX: bx,
-        baseY: by,
-        radius: Math.random() * 2 + 0.5,
-        opacity: 0,
-        angle: Math.random() * Math.PI * 2,
-        angleSpeed: (Math.random() - 0.5) * 0.006,
-        orbitRadius: Math.random() * 50 + 15,
-      };
-    });
+    // Responsive config — bigger / more visible on mobile
+    const mobile = isMobileViewport();
+    const COUNT        = mobile ? 60  : 55;
+    const CONNECT_DIST = mobile ? 110 : 130;
+    const LINE_WIDTH   = mobile ? 1.6 : 1.1;
+    const LINE_ALPHA   = mobile ? 0.28 : 0.18;
+    const DOT_SCALE    = mobile ? 4   : 3;   // radius multiplier for glow
+    const RADIUS_MAX   = mobile ? 2.8 : 2.0; // max base radius
+
+    const lw = () => canvas.offsetWidth;
+    const lh = () => canvas.offsetHeight;
+
+    const makeParticles = (): Particle[] =>
+      Array.from({ length: COUNT }, () => {
+        const bx = Math.random() * lw();
+        const by = Math.random() * lh();
+        return {
+          x: bx, y: by, baseX: bx, baseY: by,
+          radius: Math.random() * RADIUS_MAX + 0.8,
+          opacity: 0,
+          angle: Math.random() * Math.PI * 2,
+          angleSpeed: (Math.random() - 0.5) * 0.006,
+          orbitRadius: Math.random() * 50 + 15,
+        };
+      });
+
+    let particles = makeParticles();
     particlesRef.current = particles;
 
-    // Anime.js: per-particle fade-in then breathing loop
-    particles.forEach((p, i) => {
-      const hi = Math.random() * 0.45 + 0.08;
-      const lo = hi * 0.22;
-      // Fade in with stagger, then breathe indefinitely
-      animate(p as unknown as Record<string, unknown>, {
-        opacity: [0, hi],
-        duration: 900,
-        delay: i * 18,
-        ease: "outSine",
-        onComplete: () => {
-          animate(p as unknown as Record<string, unknown>, {
-            opacity: [hi, lo],
-            duration: 2400 + Math.random() * 2600,
-            direction: "alternate",
-            loop: true,
-            ease: "inOutSine",
-          });
-        },
+    const startAnims = (ps: Particle[]) => {
+      ps.forEach((p, i) => {
+        const hi = mobile
+          ? Math.random() * 0.55 + 0.18   // brighter on mobile
+          : Math.random() * 0.45 + 0.08;
+        const lo = hi * 0.22;
+        animate(p as unknown as Record<string, unknown>, {
+          opacity: [0, hi],
+          duration: 900,
+          delay: i * 16,
+          ease: "outSine",
+          onComplete: () => {
+            animate(p as unknown as Record<string, unknown>, {
+              opacity: [hi, lo],
+              duration: 2400 + Math.random() * 2600,
+              direction: "alternate",
+              loop: true,
+              ease: "inOutSine",
+            });
+          },
+        });
       });
-    });
+    };
+    startAnims(particles);
 
     const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, lw(), lh());
 
       for (const p of particles) {
-        // Slow orbital motion
         p.angle += p.angleSpeed;
         const tx = p.baseX + Math.cos(p.angle) * p.orbitRadius;
         const ty = p.baseY + Math.sin(p.angle) * p.orbitRadius;
         p.x += (tx - p.x) * 0.018;
         p.y += (ty - p.y) * 0.018;
 
-        // Soft mouse repulsion
+        // Mouse repulsion (desktop only — mouse doesn't exist on touch)
         const dx = p.x - mouseRef.current.x;
         const dy = p.y - mouseRef.current.y;
         const d = Math.sqrt(dx * dx + dy * dy);
         if (d < 90 && d > 0) {
-          const force = (1 - d / 90) * 2.2;
-          p.x += (dx / d) * force;
-          p.y += (dy / d) * force;
+          p.x += (dx / d) * (1 - d / 90) * 2.2;
+          p.y += (dy / d) * (1 - d / 90) * 2.2;
         }
 
         // Glow dot
-        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 3);
+        const gr = p.radius * DOT_SCALE;
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, gr);
         g.addColorStop(0, `rgba(${R},${p.opacity})`);
         g.addColorStop(1, `rgba(${R},0)`);
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius * 3, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, gr, 0, Math.PI * 2);
         ctx.fillStyle = g;
         ctx.fill();
       }
@@ -114,14 +132,14 @@ export default function HeroParticles() {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < CONNECT_DIST) {
-            const alpha = (1 - d / CONNECT_DIST) * 0.18;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < CONNECT_DIST) {
+            const alpha = (1 - dist / CONNECT_DIST) * LINE_ALPHA;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.strokeStyle = `rgba(${LINE},${alpha})`;
-            ctx.lineWidth = 1.1;
+            ctx.lineWidth = LINE_WIDTH;
             ctx.stroke();
           }
         }
@@ -132,15 +150,26 @@ export default function HeroParticles() {
 
     rafRef.current = requestAnimationFrame(draw);
 
+    const onResize = () => {
+      applySize();
+      // Re-scatter particles so they fill the new dimensions
+      particles.forEach((p) => {
+        p.baseX = Math.random() * lw();
+        p.baseY = Math.random() * lh();
+      });
+    };
+
     const onMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     };
+
+    window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouseMove);
 
     return () => {
       cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", onResize);
       window.removeEventListener("mousemove", onMouseMove);
     };
   }, []);
