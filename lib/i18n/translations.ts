@@ -95,7 +95,7 @@ export const translations = {
           period: "Ene 2025 – Nov 2025",
           type: "Bogotá",
           bullets: [
-            "SOM3D: pipeline DICOM → modelo 3D médico",
+            "SOM3D para 3Dvinci Studios: pipeline DICOM → modelo 3D médico",
             "AWS EC2/S3/RDS, FastAPI, Docker y Three.js",
           ],
         },
@@ -225,7 +225,7 @@ export const translations = {
           period: "Jan 2025 – Nov 2025",
           type: "Bogotá",
           bullets: [
-            "SOM3D: DICOM → 3D medical model pipeline",
+            "SOM3D for 3Dvinci Studios: DICOM → 3D medical model pipeline",
             "AWS EC2/S3/RDS, FastAPI, Docker and Three.js",
           ],
         },
