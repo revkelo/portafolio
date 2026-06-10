@@ -71,6 +71,7 @@ export const translations = {
           period: "Feb 2026 – presente",
           type: "Híbrido, Bogotá",
           bullets: [
+            "🏆 Top 10 mejores practicantes de ingeniería de la universidad, entre 180 postulados de distintas empresas",
             "Reglas de calidad con Great Expectations + Databricks",
             "DAMA-DMBOK: políticas, flujos y dashboards en Power BI",
             "Automatizó el 100% de las pruebas de calidad de datos",
@@ -200,6 +201,7 @@ export const translations = {
           period: "Feb 2026 – present",
           type: "Hybrid, Bogotá",
           bullets: [
+            "🏆 Top 10 best engineering interns university-wide, out of 180 applicants from different companies",
             "Data quality rules with Great Expectations + Databricks",
             "DAMA-DMBOK: policies, workflows and Power BI dashboards",
             "Automated 100% of data quality testing",
