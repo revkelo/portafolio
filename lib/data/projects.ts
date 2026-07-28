@@ -23,6 +23,19 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: "parla",
+    title: "Parla",
+    description:
+      "Intérprete médico en vivo español⇄inglés — transcripción en streaming con Deepgram, interpretación con IA que respeta registro y acrónimos clínicos, historial de consultas y cobro por uso.",
+    description_en:
+      "Live Spanish⇄English medical interpreter — Deepgram streaming transcription, AI interpretation that preserves register and clinical acronyms, session history and usage-based billing.",
+    tags: ["Next.js", "TypeScript", "Deepgram", "Supabase", "Stripe"],
+    github: "https://github.com/revkelo/parla",
+    demo: "https://parla.kgstudio.top",
+    status: "completed",
+    featured: true,
+  },
+  {
     id: "monetiq",
     title: "MonetIQ",
     description:
