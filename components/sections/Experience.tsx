@@ -6,7 +6,8 @@ import { useLang } from "@/lib/i18n/LangContext";
 
 // Identidad visual por empresa
 const PALETTE = [
-  { color: "#3b82f6", dim: "rgba(59,130,246,0.10)",  glow: "rgba(59,130,246,0.22)",  border: "rgba(59,130,246,0.20)"  }, // Corona – azul
+  { color: "#3b82f6", dim: "rgba(59,130,246,0.10)",  glow: "rgba(59,130,246,0.22)",  border: "rgba(59,130,246,0.20)"  }, // Corona analista – azul
+  { color: "#38bdf8", dim: "rgba(56,189,248,0.10)",  glow: "rgba(56,189,248,0.20)",  border: "rgba(56,189,248,0.18)"  }, // Corona práctica – azul claro
   { color: "#f56f0d", dim: "rgba(245,111,13,0.12)",  glow: "rgba(245,111,13,0.22)",  border: "rgba(245,111,13,0.2)"   }, // PI – naranja
   { color: "#22c55e", dim: "rgba(34,197,94,0.10)",   glow: "rgba(34,197,94,0.20)",   border: "rgba(34,197,94,0.18)"   }, // UEB – verde
 ];
@@ -74,7 +75,7 @@ export default function Experience() {
 
               return (
                 <motion.div
-                  key={item.company}
+                  key={`${item.company}-${item.period}`}
                   initial={{ opacity: 0, x: -28 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-50px" }}

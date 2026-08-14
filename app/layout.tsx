@@ -172,6 +172,11 @@ export default function RootLayout({
                   "Data Governance", "DAMA-DMBOK", "Databricks", "Docker",
                   "PostgreSQL", "Supabase", "GraphQL"
                 ],
+                "worksFor": {
+                  "@type": "Organization",
+                  "name": "Organización Corona",
+                  "url": "https://www.corona.co/"
+                },
                 "hasOccupation": {
                   "@type": "Occupation",
                   "name": "Cloud & DevOps Engineer",

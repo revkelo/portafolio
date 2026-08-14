@@ -67,11 +67,24 @@ export const translations = {
       items: [
         {
           company: "Corona",
+          role: "Analista de Gobierno de Datos",
+          period: "Ago 2026 – presente",
+          type: "Remoto, Bogotá",
+          bullets: [
+            "ABAC en Unity Catalog (RLS, CLS, OLS) con governed tags y funciones dinámicas",
+            "Sincronización de usuarios y grupos automatizada en Python (Databricks SDK, SCIM API) sobre Jobs",
+            "Validación de tablas Delta con Great Expectations y monitoreo continuo en Power BI",
+            "Roles RLS y modelos de compartición en Power BI para el consumidor final",
+            "Arquitectura Medallion sobre Azure · Databricks · Power BI",
+          ],
+        },
+        {
+          company: "Corona",
           role: "Practicante Gobierno de Datos",
-          period: "Feb 2026 – presente",
+          period: "Feb 2026 – Ago 2026",
           type: "Híbrido, Bogotá",
           bullets: [
-            "🏆 Top 10 mejores practicantes de ingeniería de la universidad, entre 180 postulados de distintas empresas",
+            "🏆 Ganador a Mejor Practicante, entre 180 postulados de distintas empresas",
             "Reglas de calidad con Great Expectations + Databricks",
             "DAMA-DMBOK: políticas, flujos y dashboards en Power BI",
             "Automatizó el 100% de las pruebas de calidad de datos",
@@ -197,11 +210,24 @@ export const translations = {
       items: [
         {
           company: "Corona",
+          role: "Data Governance Analyst",
+          period: "Aug 2026 – present",
+          type: "Remote, Bogotá",
+          bullets: [
+            "ABAC in Unity Catalog (RLS, CLS, OLS) with governed tags and dynamic functions",
+            "Automated user and group sync in Python (Databricks SDK, SCIM API) orchestrated with Jobs",
+            "Delta table validation with Great Expectations and continuous monitoring in Power BI",
+            "RLS roles and sharing models in Power BI for the end consumer",
+            "Medallion architecture on Azure · Databricks · Power BI",
+          ],
+        },
+        {
+          company: "Corona",
           role: "Data Governance Intern",
-          period: "Feb 2026 – present",
+          period: "Feb 2026 – Aug 2026",
           type: "Hybrid, Bogotá",
           bullets: [
-            "🏆 Top 10 best engineering interns university-wide, out of 180 applicants from different companies",
+            "🏆 Best Intern award, out of 180 applicants from different companies",
             "Data quality rules with Great Expectations + Databricks",
             "DAMA-DMBOK: policies, workflows and Power BI dashboards",
             "Automated 100% of data quality testing",
