@@ -36,7 +36,14 @@ export const viewport: Viewport = {
   ],
 };
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://revkelo.dev";
+/*
+ * El dominio del sitio. Por defecto es el real, no un marcador de posicion:
+ * todo lo de abajo -canonical, Open Graph, sitemap, el @id del grafo- se
+ * construye a partir de esta constante, asi que si apunta a un dominio que no
+ * existe, el canonical le dice a Google que la pagina de verdad es una copia
+ * de otra que no responde, y la de verdad deja de indexarse.
+ */
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://portafolio.kgstudio.top";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -153,17 +160,25 @@ export default function RootLayout({
               {
                 "@context": "https://schema.org",
                 "@type": "Person",
-                "@id": "https://revkelo.dev/#person",
+                "@id": `${SITE_URL}/#person`,
                 "name": "Kevin Gonzalez",
-                "alternateName": "revkelo",
+                "alternateName": ["kagonzalezdev", "revkelo"],
                 "jobTitle": "Cloud & DevOps Engineer",
                 "description": "Ingeniero de Sistemas de la Universidad El Bosque. Cloud & DevOps Engineer, Full-Stack Developer y especialista en Data Governance desde Bogotá, Colombia. Disponible para proyectos freelance y oportunidades full-time.",
-                "url": "https://revkelo.dev",
-                "image": "https://revkelo.dev/photo.jpg",
+                "url": SITE_URL,
+                "image": `${SITE_URL}/photo.jpg`,
                 "email": "kgagudelo@gmail.com",
+                /*
+                 * `sameAs` es como se le dice a Google que estos perfiles y esta
+                 * pagina son la misma persona. El hub va primero porque es la
+                 * fuente de verdad de la identidad en la zona: el resto de sitios
+                 * citan su `@id` en vez de volver a describirla.
+                 */
                 "sameAs": [
+                  "https://kgstudio.top/",
                   "https://github.com/revkelo",
-                  "https://linkedin.com/in/kagonzalezdev"
+                  "https://www.linkedin.com/in/kagonzalezdev",
+                  "https://www.tiktok.com/@kagonzalezdev"
                 ],
                 "knowsAbout": [
                   "Cloud Computing", "DevOps", "AWS", "Azure", "Kubernetes",
@@ -199,31 +214,31 @@ export default function RootLayout({
               {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
-                "@id": "https://revkelo.dev/#website",
-                "url": "https://revkelo.dev",
+                "@id": `${SITE_URL}/#website`,
+                "url": SITE_URL,
                 "name": "Kevin Gonzalez Portfolio",
                 "description": "Portafolio profesional de Kevin Gonzalez - Cloud & DevOps Engineer, Full-Stack Developer.",
-                "author": { "@id": "https://revkelo.dev/#person" },
+                "author": { "@id": `${SITE_URL}/#person` },
                 "inLanguage": ["es-CO", "en-US"],
                 "potentialAction": {
                   "@type": "SearchAction",
-                  "target": "https://revkelo.dev/?q={search_term_string}",
+                  "target": `${SITE_URL}/?q={search_term_string}`,
                   "query-input": "required name=search_term_string"
                 }
               },
               {
                 "@context": "https://schema.org",
                 "@type": "WebPage",
-                "@id": "https://revkelo.dev/#webpage",
-                "url": "https://revkelo.dev",
+                "@id": `${SITE_URL}/#webpage`,
+                "url": SITE_URL,
                 "name": "Kevin Gonzalez - Cloud & DevOps Engineer · Full-Stack Developer",
-                "isPartOf": { "@id": "https://revkelo.dev/#website" },
-                "about": { "@id": "https://revkelo.dev/#person" },
+                "isPartOf": { "@id": `${SITE_URL}/#website` },
+                "about": { "@id": `${SITE_URL}/#person` },
                 "description": "Portafolio de Kevin Gonzalez. Cloud & DevOps Engineer, Full-Stack Developer y Data Governance desde Bogotá, Colombia.",
                 "breadcrumb": {
                   "@type": "BreadcrumbList",
                   "itemListElement": [
-                    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://revkelo.dev" }
+                    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": SITE_URL }
                   ]
                 }
               }

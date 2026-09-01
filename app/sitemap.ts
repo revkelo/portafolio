@@ -1,6 +1,13 @@
 import type { MetadataRoute } from "next";
 
-const BASE_URL = "https://revkelo.dev";
+/*
+ * Un sitemap solo puede declarar URLs de su propio host: si lista otro
+ * dominio, Google lo descarta entero. Por eso sale de la misma variable
+ * que el canonical, y no de una constante escrita aparte que se puede
+ * quedar atras.
+ */
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://portafolio.kgstudio.top";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

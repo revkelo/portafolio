@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://revkelo.dev/sitemap.xml
+Sitemap: https://portafolio.kgstudio.top/sitemap.xml
 
 User-agent: GPTBot
 Allow: /

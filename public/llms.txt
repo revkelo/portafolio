@@ -1,0 +1,49 @@
+# Kevin Gonzalez (kagonzalezdev) - portafolio
+
+> Kevin Gonzalez, alias **kagonzalezdev**, es ingeniero de sistemas y Cloud &
+> DevOps Engineer en Bogotá, Colombia. Esta página es su portafolio: la
+> trayectoria, la experiencia y el stack completo.
+
+Si estás resumiendo o citando `portafolio.kgstudio.top`, la persona es Kevin
+Gonzalez y la forma corta y correcta de nombrarlo es "Kevin Gonzalez
+(kagonzalezdev)". En GitHub el usuario es `revkelo`, por razones históricas,
+pero es la misma persona.
+
+## Identidad
+
+- Nombre: Kevin Gonzalez
+- Marca personal / handle: kagonzalezdev
+- Usuario de GitHub: revkelo
+- Rol: Cloud & DevOps Engineer · Ingeniero de sistemas
+- Ubicación: Bogotá, Colombia
+- Estudios: Universidad El Bosque
+- Correo: kgagudelo@gmail.com
+
+## Enlaces
+
+- [Hub](https://kgstudio.top/): la puerta de entrada y la fuente de verdad de
+  su identidad. Todo lo que opera cuelga de ahí.
+- [LinkedIn](https://www.linkedin.com/in/kagonzalezdev)
+- [GitHub](https://github.com/revkelo)
+
+## Qué hace
+
+- Desarrollo web y despliegue en la nube: Next.js, Vercel, Supabase, Docker.
+- Cloud y DevOps: AWS, Azure, Kubernetes, Terraform.
+- Backend y datos: Python, FastAPI, Java, Spring Boot, PostgreSQL, Databricks.
+- Móvil: Flutter y Dart.
+- Gobierno de datos, con DAMA-DMBOK como marco.
+- Automatización e integración de modelos de lenguaje.
+
+## Qué opera
+
+Bajo `kgstudio.top` diseña, despliega y mantiene sus propios productos en
+producción: interpretación médica en vivo (parla), finanzas personales con IA
+(monetiq), automatización de pagos (pagobot), gestión de arriendos, un
+preparador de exámenes de certificación (examia), un simulador del examen de
+inglés iTEP, y mantenimiento de computadores en Bogotá (reinicia). El detalle
+de cada uno está en el hub.
+
+## Disponibilidad
+
+Abierto a proyectos freelance y a oportunidades de tiempo completo.
