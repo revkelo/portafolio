@@ -29,7 +29,7 @@ export default function About() {
         {/* ── Fila 1: foto | bio + código ── */}
         <div className="grid grid-cols-1 gap-10 md:grid-cols-[280px_1fr] md:items-stretch md:gap-14">
 
-          {/* Foto — igual que antes */}
+          {/* Foto - igual que antes */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -61,7 +61,7 @@ export default function About() {
             </div>
           </motion.div>
 
-          {/* Bio + código — justify-between llena la altura de la foto */}
+          {/* Bio + código - justify-between llena la altura de la foto */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -80,7 +80,7 @@ export default function About() {
                 { icon: "☁️", label: "Cloud & DevOps" },
                 { icon: "📊", label: "Data Governance" },
                 { icon: "📍", label: "Bogotá, Colombia" },
-                { icon: "🎓", label: "Ing. Sistemas — UEB" },
+                { icon: "🎓", label: "Ing. Sistemas - UEB" },
               ].map((pill) => (
                 <span
                   key={pill.label}
@@ -127,7 +127,7 @@ export default function About() {
           </motion.div>
         </div>
 
-        {/* ── Fila 2: highlight cards — fila completa ── */}
+        {/* ── Fila 2: highlight cards - fila completa ── */}
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
           {t.about.highlights.map((item, i) => (
             <motion.div

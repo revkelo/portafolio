@@ -41,7 +41,7 @@
     at GlobalSceneWrapper (components/3d/GlobalSceneWrapper.tsx:52:7)
     at RootLayout (app\layout.tsx:76:9)
   803 |         <MouseProjector shared={shared} mouse={mouse} />
-  804 |         {/* Superficie sólida naranja — debajo de los puntos para dar profundidad */}
+  804 |         {/* Superficie sólida naranja - debajo de los puntos para dar profundidad */}
 > 805 |         <WaveSolid shared={shared} />
       |          ^
   806 |         <WaveGrid shared={shared} progress={progress} />
@@ -54,7 +54,7 @@
     at GlobalSceneWrapper (components/3d/GlobalSceneWrapper.tsx:52:7)
     at RootLayout (app\layout.tsx:76:9)
   803 |         <MouseProjector shared={shared} mouse={mouse} />
-  804 |         {/* Superficie sólida naranja — debajo de los puntos para dar profundidad */}
+  804 |         {/* Superficie sólida naranja - debajo de los puntos para dar profundidad */}
 > 805 |         <WaveSolid shared={shared} />
       |          ^
   806 |         <WaveGrid shared={shared} progress={progress} />
@@ -66,7 +66,7 @@
     at GlobalSceneWrapper (components/3d/GlobalSceneWrapper.tsx:52:7)
     at RootLayout (app\layout.tsx:76:9)
   803 |         <MouseProjector shared={shared} mouse={mouse} />
-  804 |         {/* Superficie sólida naranja — debajo de los puntos para dar profundidad */}
+  804 |         {/* Superficie sólida naranja - debajo de los puntos para dar profundidad */}
 > 805 |         <WaveSolid shared={shared} />
       |          ^
   806 |         <WaveGrid shared={shared} progress={progress} />

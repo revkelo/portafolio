@@ -1,6 +1,6 @@
 "use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
 // Navbar sticky con blur. Logo "KG" con punto naranja animado, links con
 // indicador de seccion activa, toggle ES|EN y drawer lateral en movil.
 
@@ -87,13 +87,13 @@ export default function Navbar() {
       onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(245,111,13,0.35)"; (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)"; }}
     >
       {theme === "dark" ? (
-        /* Sol — pasar a claro */
+        /* Sol - pasar a claro */
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <circle cx="12" cy="12" r="4"/>
           <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M22 12h-2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
         </svg>
       ) : (
-        /* Luna — pasar a oscuro */
+        /* Luna - pasar a oscuro */
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>

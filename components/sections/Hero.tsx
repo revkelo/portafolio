@@ -1,6 +1,6 @@
 "use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
 // Hero: grid de puntos animado + glow naranja, nombre con efecto glitch,
 // contadores animados, barra de terminal con cursor parpadeante y scroll indicator.
 
@@ -67,7 +67,7 @@ export default function Hero() {
     { value: `${uptime.value}%`,  done: uptime.done,   label: t.hero.metrics.uptime   },
   ];
 
-  // Parallax con useScroll — el contenido sube más lento que el scroll
+  // Parallax con useScroll - el contenido sube más lento que el scroll
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const yText    = useSpring(useTransform(scrollYProgress, [0, 1], [0, -80]),  { stiffness: 80, damping: 20 });
@@ -87,7 +87,7 @@ export default function Hero() {
         style={{ background: "var(--hero-overlay)" }}
       />
 
-      {/* Particle network — anime.js orbital particles with connection lines */}
+      {/* Particle network - anime.js orbital particles with connection lines */}
       <HeroParticles />
 
       {/* Lineas diagonales naranjas sutiles (banner original de Kevin) */}
@@ -209,7 +209,7 @@ export default function Hero() {
           <span className="terminal-cursor" aria-hidden />
         </motion.div>
 
-        {/* Contadores — 2x2 en mobile, fila en desktop */}
+        {/* Contadores - 2x2 en mobile, fila en desktop */}
         <motion.div
           ref={metricsRef}
           initial={{ opacity: 0, y: 24 }}
@@ -312,7 +312,7 @@ export default function Hero() {
               }}
             >
               <span style={{ fontSize: "1.1rem" }}>🚧</span>
-              <span>CV <span style={{ color: "#f56f0d", fontWeight: 700 }}>próximamente</span> — en construcción</span>
+              <span>CV <span style={{ color: "#f56f0d", fontWeight: 700 }}>próximamente</span> - en construcción</span>
             </div>
           </motion.div>
         )}

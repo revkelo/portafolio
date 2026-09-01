@@ -1,7 +1,7 @@
 "use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
-// TechCarousel: carrusel infinito de tecnologias — 2 filas en sentidos opuestos.
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
+// TechCarousel: carrusel infinito de tecnologias - 2 filas en sentidos opuestos.
 // - Loop via translateX(-50%) sobre lista duplicada 2x
 // - Pausa al hover sobre cualquier item
 // - Glow naranja en hover + scale

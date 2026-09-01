@@ -104,7 +104,7 @@ export default function HeroParticles() {
         p.x += (tx - p.x) * 0.018;
         p.y += (ty - p.y) * 0.018;
 
-        // Mouse repulsion (desktop only — mouse doesn't exist on touch)
+        // Mouse repulsion (desktop only - mouse doesn't exist on touch)
         const dx = p.x - mouseRef.current.x;
         const dy = p.y - mouseRef.current.y;
         const d = Math.sqrt(dx * dx + dy * dy);

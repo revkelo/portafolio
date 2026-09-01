@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const SECRET = "revkelo";
 
 const LINES = [
-  { delay: 0,    text: "⚠  INTRUSION DETECTED — scanning...",          color: "#ef4444" },
+  { delay: 0,    text: "⚠  INTRUSION DETECTED - scanning...",          color: "#ef4444" },
   { delay: 600,  text: "  [████████████████████] 100%",                  color: "#f56f0d" },
   { delay: 1100, text: "  visitor.identify() → curious human 👀",        color: "#c0b8b0" },
   { delay: 1500, text: "  threat_level: NONE  (just a fan, probably)",   color: "#4ade80" },
@@ -30,7 +30,7 @@ const LINES = [
   { delay: 5250, text: "  📍  Bogotá, Colombia  🇨🇴",                      color: "#a78bfa" },
   { delay: 5500, text: "  📬  kgagudelo@gmail.com",                       color: "#a78bfa" },
   { delay: 5800, text: "",                                                color: "#c0b8b0" },
-  { delay: 5850, text: "  🥚  easter egg desbloqueado — eres de los nuestros.", color: "#f56f0d" },
+  { delay: 5850, text: "  🥚  easter egg desbloqueado - eres de los nuestros.", color: "#f56f0d" },
   { delay: 6200, text: "  🚀  kevin@revkelo ~ ready to ship", color: "#4ade80" },
 ];
 
@@ -100,7 +100,7 @@ export default function EasterEgg() {
               <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#ffbd2e", flexShrink: 0 }} />
               <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#28c840", flexShrink: 0 }} />
               <span style={{ marginLeft: "auto", fontSize: "0.68rem", color: "rgba(245,111,13,0.5)", letterSpacing: "0.05em" }}>
-                kevin@revkelo — zsh — 80×24
+                kevin@revkelo - zsh - 80×24
               </span>
             </div>
 

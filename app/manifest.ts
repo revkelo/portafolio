@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Kevin Gonzalez — Cloud & DevOps Engineer",
+    name: "Kevin Gonzalez - Cloud & DevOps Engineer",
     short_name: "KG Portfolio",
     description: "Portafolio de Kevin Gonzalez. Cloud & DevOps Engineer, Full-Stack Developer y Data Governance desde Bogotá, Colombia.",
     start_url: "/",

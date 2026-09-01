@@ -31,7 +31,7 @@ export default function PageLoader() {
     const cells = Array.from(gridRef.current.children);
     const tl = createTimeline({ autoplay: true });
 
-    // 1 — Grid floods in from center outward
+    // 1 - Grid floods in from center outward
     tl.add(
       cells,
       {
@@ -44,14 +44,14 @@ export default function PageLoader() {
       0,
     );
 
-    // 2 — Content block slides up and fades in
+    // 2 - Content block slides up and fades in
     tl.add(
       contentRef.current,
       { opacity: [0, 1], y: [22, 0], duration: 300, ease: "outExpo" },
       380,
     );
 
-    // 3 — "KG" scramble reveal from center
+    // 3 - "KG" scramble reveal from center
     tl.add(
       nameRef.current,
       {
@@ -66,7 +66,7 @@ export default function PageLoader() {
       500,
     );
 
-    // 4 — Subtitle scramble from random
+    // 4 - Subtitle scramble from random
     tl.add(
       subRef.current,
       {
@@ -81,14 +81,14 @@ export default function PageLoader() {
       600,
     );
 
-    // 5 — Progress bar elastic fill
+    // 5 - Progress bar elastic fill
     tl.add(
       barFillRef.current,
       { width: ["0%", "100%"], duration: 750, ease: "outExpo" },
       850,
     );
 
-    // 6 — Grid pixelated dissolve (random order, each cell shrinks)
+    // 6 - Grid pixelated dissolve (random order, each cell shrinks)
     tl.add(
       cells,
       {
@@ -102,7 +102,7 @@ export default function PageLoader() {
       1750,
     );
 
-    // 7 — Full container fades out
+    // 7 - Full container fades out
     tl.add(
       containerRef.current,
       {

@@ -25,8 +25,8 @@ function icon(slug: string) {
 }
 
 // Layout desktop (3 cols):
-//  Fila 1: [Cloud & DevOps — 2 cols] [Backend — 1 col]
-//  Fila 2: [Frontend — 1 col] [Data & IA — 1 col] [Databases — 1 col]
+//  Fila 1: [Cloud & DevOps - 2 cols] [Backend - 1 col]
+//  Fila 2: [Frontend - 1 col] [Data & IA - 1 col] [Databases - 1 col]
 const categories = [
   {
     key: "cloud",

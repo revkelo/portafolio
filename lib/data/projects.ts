@@ -1,4 +1,4 @@
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
 // Paleta: #0D0D0D fondo | #F06400 naranja | #FFFFFF texto
 // Stack: Next.js 16 + TypeScript + Tailwind + Framer Motion + Lenis
 //
@@ -26,9 +26,9 @@ export const projects: Project[] = [
     id: "parla",
     title: "Parla",
     description:
-      "Intérprete médico en vivo español⇄inglés — transcripción en streaming con Deepgram, interpretación con IA que respeta registro y acrónimos clínicos, historial de consultas y cobro por uso.",
+      "Intérprete médico en vivo español⇄inglés - transcripción en streaming con Deepgram, interpretación con IA que respeta registro y acrónimos clínicos, historial de consultas y cobro por uso.",
     description_en:
-      "Live Spanish⇄English medical interpreter — Deepgram streaming transcription, AI interpretation that preserves register and clinical acronyms, session history and usage-based billing.",
+      "Live Spanish⇄English medical interpreter - Deepgram streaming transcription, AI interpretation that preserves register and clinical acronyms, session history and usage-based billing.",
     tags: ["Next.js", "TypeScript", "Deepgram", "Supabase", "Stripe"],
     github: "https://github.com/revkelo/parla",
     demo: "https://parla.kgstudio.top",
@@ -39,9 +39,9 @@ export const projects: Project[] = [
     id: "monetiq",
     title: "MonetIQ",
     description:
-      "App móvil de finanzas personales con IA — análisis inteligente de gastos, WhatsApp webhook y recomendaciones automáticas.",
+      "App móvil de finanzas personales con IA - análisis inteligente de gastos, WhatsApp webhook y recomendaciones automáticas.",
     description_en:
-      "AI-powered personal finance mobile app — smart spending analysis, WhatsApp webhook and automatic recommendations.",
+      "AI-powered personal finance mobile app - smart spending analysis, WhatsApp webhook and automatic recommendations.",
     tags: ["Flutter", "Next.js", "Supabase", "TypeScript", "AI"],
     github: null, // privado
     demo: null,
@@ -117,9 +117,9 @@ export const projects: Project[] = [
     id: "sap-data-quality",
     title: "SAP Data Quality",
     description:
-      "Pipeline de calidad de datos con Great Expectations sobre exportaciones SAP Excel — validaciones programáticas, reporte HTML automático.",
+      "Pipeline de calidad de datos con Great Expectations sobre exportaciones SAP Excel - validaciones programáticas, reporte HTML automático.",
     description_en:
-      "Data quality pipeline with Great Expectations on SAP Excel exports — programmatic validations and automatic HTML reports.",
+      "Data quality pipeline with Great Expectations on SAP Excel exports - programmatic validations and automatic HTML reports.",
     tags: ["Python", "Great Expectations", "PySpark", "Databricks"],
     github: "https://github.com/revkelo/sap-data-quality-greatexpectations",
     demo: null,
@@ -130,9 +130,9 @@ export const projects: Project[] = [
     id: "nginx-load-balancer",
     title: "NGINX Load Balancer",
     description:
-      "Balanceador de carga NGINX con múltiples instancias Spring Boot — configuración upstream, sticky sessions y health checks.",
+      "Balanceador de carga NGINX con múltiples instancias Spring Boot - configuración upstream, sticky sessions y health checks.",
     description_en:
-      "NGINX load balancer with multiple Spring Boot instances — upstream config, sticky sessions and health checks.",
+      "NGINX load balancer with multiple Spring Boot instances - upstream config, sticky sessions and health checks.",
     tags: ["NGINX", "Spring Boot", "Docker", "Java"],
     github: "https://github.com/revkelo/nginx-load-balancer-springboot",
     demo: null,
@@ -143,9 +143,9 @@ export const projects: Project[] = [
     id: "itep-simulator",
     title: "iTEP B1 Simulator",
     description:
-      "Simulador del examen iTEP para práctica offline — motor de quiz con temporizador, puntuación y retroalimentación por sección.",
+      "Simulador del examen iTEP para práctica offline - motor de quiz con temporizador, puntuación y retroalimentación por sección.",
     description_en:
-      "iTEP B1 exam simulator for offline practice — quiz engine with timer, scoring, and section-by-section feedback.",
+      "iTEP B1 exam simulator for offline practice - quiz engine with timer, scoring, and section-by-section feedback.",
     tags: ["JavaScript", "HTML", "CSS"],
     github: "https://github.com/revkelo/itep-b1-simulator",
     demo: null,

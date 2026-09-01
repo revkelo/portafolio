@@ -1,6 +1,6 @@
 "use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
 // GlobalSceneWrapper: carga GlobalScene via dynamic(ssr:false) y la fija detras
 // de todo el contenido 2D. Va como primer hijo del body en app/layout.tsx.
 

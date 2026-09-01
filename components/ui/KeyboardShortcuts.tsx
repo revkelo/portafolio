@@ -118,7 +118,7 @@ export default function KeyboardShortcuts() {
               onClick={() => setOpen(false)}
               style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", zIndex: 400, backdropFilter: "blur(4px)" }}
             />
-            {/* Wrapper centrador — evita conflicto transform con Framer Motion */}
+            {/* Wrapper centrador - evita conflicto transform con Framer Motion */}
             <div style={{ position: "fixed", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 401, pointerEvents: "none" }}>
             <motion.div
               initial={{ opacity: 0, scale: 0.94, y: 12 }}
@@ -141,7 +141,7 @@ export default function KeyboardShortcuts() {
                   </h2>
                   {gMode && (
                     <p style={{ fontSize: "0.7rem", color: "#f56f0d", margin: "4px 0 0" }}>
-                      g presionado — escribe una letra...
+                      g presionado - escribe una letra...
                     </p>
                   )}
                 </div>

@@ -1,7 +1,7 @@
 "use client";
 
 // Música ambient con Web Audio API.
-// Acorde Am7 en ondas seno suaves con breathing lento — sonido orgánico, no áspero.
+// Acorde Am7 en ondas seno suaves con breathing lento - sonido orgánico, no áspero.
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,7 +25,7 @@ export default function MusicPlayer() {
     master.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 3);
     master.connect(ctx.destination);
 
-    // Am7: A C E G — suaves, musicales
+    // Am7: A C E G - suaves, musicales
     const freqs: [number, number][] = [
       [110,  0.35],  // A2
       [130.8,0.22],  // C3
@@ -53,7 +53,7 @@ export default function MusicPlayer() {
       osc.frequency.value = freq;
       gain.gain.value = vol * 0.06;
 
-      // "Breathing" — cada voz respira a ritmo diferente
+      // "Breathing" - cada voz respira a ritmo diferente
       const breathe     = ctx.createOscillator();
       const breatheGain = ctx.createGain();
       breathe.frequency.value  = 0.05 + i * 0.015;

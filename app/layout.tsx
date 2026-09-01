@@ -1,4 +1,4 @@
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
 // Paleta: #0D0D0D fondo | #F06400 naranja | #FFFFFF texto
 // Stack: Next.js 16 + TypeScript + Tailwind v4 + Framer Motion + Lenis
 // Para agregar secciones: crear en components/sections/ e importar en app/page.tsx
@@ -41,7 +41,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://revkelo.dev";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Kevin Gonzalez — Cloud & DevOps Engineer · Full-Stack Developer",
+    default: "Kevin Gonzalez - Cloud & DevOps Engineer · Full-Stack Developer",
     template: "%s | Kevin Gonzalez",
   },
   description:
@@ -90,7 +90,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Kevin Gonzalez — Cloud & DevOps Engineer · Full-Stack Developer",
+    title: "Kevin Gonzalez - Cloud & DevOps Engineer · Full-Stack Developer",
     description:
       "Cloud & DevOps Engineer · Full-Stack Developer · Data Governance. Python, AWS, FastAPI, Flutter desde Bogotá, Colombia.",
     url: SITE_URL,
@@ -103,13 +103,13 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Kevin Gonzalez — Cloud & DevOps Engineer · Full-Stack Developer",
+        alt: "Kevin Gonzalez - Cloud & DevOps Engineer · Full-Stack Developer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kevin Gonzalez — Cloud & DevOps Engineer",
+    title: "Kevin Gonzalez - Cloud & DevOps Engineer",
     description:
       "Cloud & DevOps · Full-Stack · Data Governance. Python, AWS, FastAPI, Flutter. Bogotá, Colombia.",
     images: ["/opengraph-image"],
@@ -202,7 +202,7 @@ export default function RootLayout({
                 "@id": "https://revkelo.dev/#website",
                 "url": "https://revkelo.dev",
                 "name": "Kevin Gonzalez Portfolio",
-                "description": "Portafolio profesional de Kevin Gonzalez — Cloud & DevOps Engineer, Full-Stack Developer.",
+                "description": "Portafolio profesional de Kevin Gonzalez - Cloud & DevOps Engineer, Full-Stack Developer.",
                 "author": { "@id": "https://revkelo.dev/#person" },
                 "inLanguage": ["es-CO", "en-US"],
                 "potentialAction": {
@@ -216,7 +216,7 @@ export default function RootLayout({
                 "@type": "WebPage",
                 "@id": "https://revkelo.dev/#webpage",
                 "url": "https://revkelo.dev",
-                "name": "Kevin Gonzalez — Cloud & DevOps Engineer · Full-Stack Developer",
+                "name": "Kevin Gonzalez - Cloud & DevOps Engineer · Full-Stack Developer",
                 "isPartOf": { "@id": "https://revkelo.dev/#website" },
                 "about": { "@id": "https://revkelo.dev/#person" },
                 "description": "Portafolio de Kevin Gonzalez. Cloud & DevOps Engineer, Full-Stack Developer y Data Governance desde Bogotá, Colombia.",

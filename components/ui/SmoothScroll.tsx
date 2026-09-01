@@ -1,6 +1,6 @@
 "use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
 // Wrapper de smooth scroll (Lenis) que envuelve toda la app en el layout.
 
 import { useEffect } from "react";

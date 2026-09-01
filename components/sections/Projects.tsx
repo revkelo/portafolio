@@ -1,7 +1,7 @@
 "use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
-// Projects: grid responsive — featured en 2 cols desktop, resto en 3 cols.
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
+// Projects: grid responsive - featured en 2 cols desktop, resto en 3 cols.
 
 import { motion } from "framer-motion";
 import SectionTitle from "@/components/ui/SectionTitle";

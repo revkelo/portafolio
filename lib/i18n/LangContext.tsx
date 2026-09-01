@@ -1,6 +1,6 @@
 "use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
 // Context + Provider + hook useLang() para el sistema bilingue ES/EN.
 // El idioma se persiste en localStorage y se sincroniza con <html lang>.
 

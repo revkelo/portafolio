@@ -1,6 +1,6 @@
 "use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
 // Barra de progreso de scroll: linea naranja fija en el top que crece de 0 a
 // 100% segun cuanto se ha scrolleado la pagina. Solo corre en el browser.
 

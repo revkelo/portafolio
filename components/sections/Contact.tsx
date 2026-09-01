@@ -1,6 +1,6 @@
 "use client";
 
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
 // Contact: ticker horizontal, badge de disponibilidad, email con borde SVG animado,
 // stats animados, botones con hover fill y toast de copiado.
 
@@ -179,7 +179,7 @@ export default function Contact() {
         {/* Layout 2 columnas */}
         <div className="grid gap-12 lg:grid-cols-[1fr_320px] lg:gap-16">
 
-          {/* Columna izquierda — email + botones */}
+          {/* Columna izquierda - email + botones */}
           <div className="flex flex-col gap-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -222,7 +222,7 @@ export default function Contact() {
             </motion.div>
           </div>
 
-          {/* Columna derecha — stats */}
+          {/* Columna derecha - stats */}
           <motion.div
             ref={statsRef}
             initial={{ opacity: 0, x: 20 }}
@@ -263,7 +263,7 @@ export default function Contact() {
       {/* Footer */}
       <div className="relative z-10 mx-auto mt-20 max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-3 border-t border-border pt-8 sm:flex-row sm:justify-between">
-          <p className="text-sm text-text-secondary/50">© {new Date().getFullYear()} Kevin Gonzalez — {t.footer.rights}</p>
+          <p className="text-sm text-text-secondary/50">© {new Date().getFullYear()} Kevin Gonzalez - {t.footer.rights}</p>
           <div className="flex gap-6 text-sm text-text-secondary/50">
             <a href="https://github.com/revkelo" target="_blank" rel="noopener noreferrer" className="hover:text-orange-primary transition-colors">GitHub</a>
             <a href="https://linkedin.com/in/kagonzalezdev" target="_blank" rel="noopener noreferrer" className="hover:text-orange-primary transition-colors">LinkedIn</a>

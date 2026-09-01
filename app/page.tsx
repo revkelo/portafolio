@@ -8,7 +8,7 @@ import Projects from "@/components/sections/Projects";
 import Contact from "@/components/sections/Contact";
 
 export const metadata: Metadata = {
-  title: "Kevin Gonzalez — Cloud & DevOps Engineer · Full-Stack Developer",
+  title: "Kevin Gonzalez - Cloud & DevOps Engineer · Full-Stack Developer",
   description:
     "Portafolio de Kevin Gonzalez (revkelo). Cloud & DevOps Engineer, Full-Stack Developer y Data Governance. Python, FastAPI, AWS, Flutter desde Bogotá, Colombia.",
 };

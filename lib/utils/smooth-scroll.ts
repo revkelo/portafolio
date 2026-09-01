@@ -1,4 +1,4 @@
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
 // Configuracion de Lenis para smooth scroll global.
 // Se consume desde components/ui/SmoothScroll.tsx (client component).
 

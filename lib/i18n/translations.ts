@@ -1,4 +1,4 @@
-// PORTAFOLIO DE KEVIN GONZALEZ — revkelo
+// PORTAFOLIO DE KEVIN GONZALEZ - revkelo
 // Sistema bilingue ES/EN. Todas las cadenas de la UI viven aqui.
 // Para agregar idioma: replicar la estructura del objeto `es` bajo una nueva clave.
 
@@ -68,7 +68,7 @@ export const translations = {
         {
           company: "Corona",
           role: "Analista de Gobierno de Datos",
-          period: "Ago 2026 – presente",
+          period: "Ago 2026 - presente",
           type: "Remoto, Bogotá",
           bullets: [
             "ABAC en Unity Catalog (RLS, CLS, OLS) con governed tags y funciones dinámicas",
@@ -81,7 +81,7 @@ export const translations = {
         {
           company: "Corona",
           role: "Practicante Gobierno de Datos",
-          period: "Feb 2026 – Ago 2026",
+          period: "Feb 2026 - Ago 2026",
           type: "Híbrido, Bogotá",
           bullets: [
             "🏆 Ganador a Mejor Practicante, entre 180 postulados de distintas empresas",
@@ -94,7 +94,7 @@ export const translations = {
         {
           company: "Proyectos Independientes",
           role: "Ingeniero DevOps & Cloud",
-          period: "Jun 2024 – presente",
+          period: "Jun 2024 - presente",
           type: "Remoto",
           bullets: [
             "Arquitecturas Serverless con AWS Lambda",
@@ -104,8 +104,8 @@ export const translations = {
         },
         {
           company: "Universidad El Bosque",
-          role: "Ing. Full-Stack — Proyecto Meritorio",
-          period: "Ene 2025 – Nov 2025",
+          role: "Ing. Full-Stack - Proyecto Meritorio",
+          period: "Ene 2025 - Nov 2025",
           type: "Bogotá",
           bullets: [
             "SOM3D para 3Dvinci Studios: pipeline DICOM → modelo 3D médico",
@@ -211,7 +211,7 @@ export const translations = {
         {
           company: "Corona",
           role: "Data Governance Analyst",
-          period: "Aug 2026 – present",
+          period: "Aug 2026 - present",
           type: "Remote, Bogotá",
           bullets: [
             "ABAC in Unity Catalog (RLS, CLS, OLS) with governed tags and dynamic functions",
@@ -224,7 +224,7 @@ export const translations = {
         {
           company: "Corona",
           role: "Data Governance Intern",
-          period: "Feb 2026 – Aug 2026",
+          period: "Feb 2026 - Aug 2026",
           type: "Hybrid, Bogotá",
           bullets: [
             "🏆 Best Intern award, out of 180 applicants from different companies",
@@ -237,7 +237,7 @@ export const translations = {
         {
           company: "Independent Projects",
           role: "DevOps & Cloud Engineer",
-          period: "Jun 2024 – present",
+          period: "Jun 2024 - present",
           type: "Remote",
           bullets: [
             "Serverless architectures with AWS Lambda",
@@ -247,8 +247,8 @@ export const translations = {
         },
         {
           company: "Universidad El Bosque",
-          role: "Full-Stack Eng. — Meritorious Project",
-          period: "Jan 2025 – Nov 2025",
+          role: "Full-Stack Eng. - Meritorious Project",
+          period: "Jan 2025 - Nov 2025",
           type: "Bogotá",
           bullets: [
             "SOM3D for 3Dvinci Studios: DICOM → 3D medical model pipeline",
