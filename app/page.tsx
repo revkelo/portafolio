@@ -7,10 +7,17 @@ import Stack from "@/components/sections/Stack";
 import Projects from "@/components/sections/Projects";
 import Contact from "@/components/sections/Contact";
 
+/*
+ * Estos metadatos pisan a los del layout: los de la portada mandan.
+ *
+ * Se cambiaron los dos sitios porque tener el titulo escrito dos veces es la
+ * forma de que se separen, y ya habia pasado: el layout decia una cosa y esto
+ * otra. La marca es `kagonzalezdev`; `revkelo` es solo el usuario de GitHub.
+ */
 export const metadata: Metadata = {
-  title: "Kevin Gonzalez - Cloud & DevOps Engineer · Full-Stack Developer",
+  title: "Kevin Gonzalez · Cloud & DevOps Engineer",
   description:
-    "Portafolio de Kevin Gonzalez (revkelo). Cloud & DevOps Engineer, Full-Stack Developer y Data Governance. Python, FastAPI, AWS, Flutter desde Bogotá, Colombia.",
+    "Portafolio de Kevin Gonzalez (kagonzalezdev): Cloud & DevOps y desarrollo full-stack desde Bogotá. Python, Next.js, Flutter, AWS y Azure.",
 };
 
 export default function Home() {

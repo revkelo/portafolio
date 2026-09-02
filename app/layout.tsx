@@ -48,11 +48,21 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://portafolio.kgstudi
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Kevin Gonzalez - Cloud & DevOps Engineer · Full-Stack Developer",
+    // 67 caracteres se cortaban en el resultado de busqueda; este cabe.
+    default: "Kevin Gonzalez · Cloud & DevOps Engineer",
     template: "%s | Kevin Gonzalez",
   },
+  /*
+   * La marca personal es `kagonzalezdev`, no `revkelo`: eso ultimo es solo el
+   * usuario de GitHub, por razones historicas. El hub declara la marca en su
+   * grafo y aqui decia otra cosa, asi que los dos sitios se contradecian sobre
+   * como se llama la misma persona.
+   *
+   * Y 240 caracteres se cortaban a 160: la mitad de la lista de tecnologias no
+   * la leia nadie.
+   */
   description:
-    "Portafolio de Kevin Gonzalez (revkelo). Cloud & DevOps Engineer, Full-Stack Developer y Data Governance. Python, FastAPI, React, Next.js, Flutter, AWS y Azure desde Bogotá, Colombia. Disponible para proyectos freelance y oportunidades full-time.",
+    "Portafolio de Kevin Gonzalez (kagonzalezdev): Cloud & DevOps y desarrollo full-stack desde Bogotá. Python, Next.js, Flutter, AWS y Azure.",
   keywords: [
     "Kevin Gonzalez",
     "revkelo",
