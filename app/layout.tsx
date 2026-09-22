@@ -45,6 +45,13 @@ export const viewport: Viewport = {
  */
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://portafolio.kgstudio.top";
 
+/*
+ * El `@id` de la persona vive en el hub y es el mismo para toda la zona: parla,
+ * examia, reinicia e itep citan este. Un `@id` por sitio serían ocho personas
+ * distintas con el mismo nombre.
+ */
+const KEVIN = "https://kgstudio.top/#kevin";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -84,7 +91,9 @@ export const metadata: Metadata = {
     "Universidad El Bosque",
     "portafolio desarrollador",
   ],
-  authors: [{ name: "Kevin Gonzalez", url: "https://github.com/revkelo" }],
+  // El autor apunta al hub, que es donde vive su ficha, no a GitHub: allí
+  // `revkelo` es solo el usuario, y la marca personal es `kagonzalezdev`.
+  authors: [{ name: "Kevin Gonzalez", url: "https://kgstudio.top/" }],
   creator: "Kevin Gonzalez",
   publisher: "Kevin Gonzalez",
   category: "Technology",
@@ -130,7 +139,7 @@ export const metadata: Metadata = {
     description:
       "Cloud & DevOps · Full-Stack · Data Governance. Python, AWS, FastAPI, Flutter. Bogotá, Colombia.",
     images: ["/opengraph-image"],
-    creator: "@revkelo",
+    creator: "@kagonzalezdev",
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? "",
@@ -167,59 +176,31 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify([
+              /*
+               * La identidad no se vuelve a describir aquí: se cita.
+               *
+               * Este nodo declaraba un `#person` propio con el cargo, los
+               * estudios, la dirección y el empleo repetidos del hub. Eran dos
+               * fichas de la misma persona con `@id` distintos, que es
+               * exactamente lo que impide que Google las una, y dos sitios
+               * donde corregir el mismo dato el día que cambie. El hub es la
+               * fuente de verdad de `https://kgstudio.top/#kevin`; el resto de
+               * la zona lo cita, y aquí se deja solo lo justo para que el nodo
+               * se entienda suelto.
+               */
               {
                 "@context": "https://schema.org",
                 "@type": "Person",
-                "@id": `${SITE_URL}/#person`,
+                "@id": KEVIN,
                 "name": "Kevin Gonzalez",
                 "alternateName": ["kagonzalezdev", "revkelo"],
+                "url": "https://kgstudio.top/",
                 "jobTitle": "Cloud & DevOps Engineer",
-                "description": "Ingeniero de Sistemas de la Universidad El Bosque. Cloud & DevOps Engineer, Full-Stack Developer y especialista en Data Governance desde Bogotá, Colombia. Disponible para proyectos freelance y oportunidades full-time.",
-                "url": SITE_URL,
-                "image": `${SITE_URL}/photo.jpg`,
-                "email": "kgagudelo@gmail.com",
-                /*
-                 * `sameAs` es como se le dice a Google que estos perfiles y esta
-                 * pagina son la misma persona. El hub va primero porque es la
-                 * fuente de verdad de la identidad en la zona: el resto de sitios
-                 * citan su `@id` en vez de volver a describirla.
-                 */
                 "sameAs": [
-                  "https://kgstudio.top/",
                   "https://github.com/revkelo",
                   "https://www.linkedin.com/in/kagonzalezdev",
                   "https://www.tiktok.com/@kagonzalezdev"
-                ],
-                "knowsAbout": [
-                  "Cloud Computing", "DevOps", "AWS", "Azure", "Kubernetes",
-                  "Terraform", "Python", "FastAPI", "React", "Next.js",
-                  "Flutter", "Dart", "TypeScript", "Java", "Spring Boot",
-                  "Data Governance", "DAMA-DMBOK", "Databricks", "Docker",
-                  "PostgreSQL", "Supabase", "GraphQL"
-                ],
-                "worksFor": {
-                  "@type": "Organization",
-                  "name": "Organización Corona",
-                  "url": "https://www.corona.co/"
-                },
-                "hasOccupation": {
-                  "@type": "Occupation",
-                  "name": "Cloud & DevOps Engineer",
-                  "occupationLocation": { "@type": "City", "name": "Bogotá" },
-                  "skills": "AWS, Azure, Kubernetes, Terraform, Python, FastAPI, React, Flutter"
-                },
-                "alumniOf": {
-                  "@type": "CollegeOrUniversity",
-                  "name": "Universidad El Bosque",
-                  "address": { "@type": "PostalAddress", "addressLocality": "Bogotá", "addressCountry": "CO" }
-                },
-                "address": {
-                  "@type": "PostalAddress",
-                  "addressLocality": "Bogotá",
-                  "addressRegion": "Cundinamarca",
-                  "addressCountry": "CO"
-                },
-                "nationality": { "@type": "Country", "name": "Colombia" }
+                ]
               },
               {
                 "@context": "https://schema.org",
@@ -228,7 +209,7 @@ export default function RootLayout({
                 "url": SITE_URL,
                 "name": "Kevin Gonzalez Portfolio",
                 "description": "Portafolio profesional de Kevin Gonzalez - Cloud & DevOps Engineer, Full-Stack Developer.",
-                "author": { "@id": `${SITE_URL}/#person` },
+                "author": { "@id": KEVIN },
                 "inLanguage": ["es-CO", "en-US"],
                 "potentialAction": {
                   "@type": "SearchAction",
@@ -243,7 +224,7 @@ export default function RootLayout({
                 "url": SITE_URL,
                 "name": "Kevin Gonzalez - Cloud & DevOps Engineer · Full-Stack Developer",
                 "isPartOf": { "@id": `${SITE_URL}/#website` },
-                "about": { "@id": `${SITE_URL}/#person` },
+                "about": { "@id": KEVIN },
                 "description": "Portafolio de Kevin Gonzalez. Cloud & DevOps Engineer, Full-Stack Developer y Data Governance desde Bogotá, Colombia.",
                 "breadcrumb": {
                   "@type": "BreadcrumbList",
