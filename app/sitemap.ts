@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 
+export const dynamic = "force-static";
+
 /*
  * Un sitemap solo puede declarar URLs de su propio host: si lista otro
  * dominio, Google lo descarta entero. Por eso sale de la misma variable
